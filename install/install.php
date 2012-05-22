@@ -27,7 +27,6 @@
 
 define('PMS_ROOT', '..');
 
-include_once (PMS_ROOT."/inc/constants.inc");
 include_once (PMS_ROOT."/inc/config.class.php");
 include_once (PMS_ROOT."/inc/common.class.php");
 
