@@ -1,3 +1,29 @@
+// Copyright (c) 2012 Rubén Domínguez
+//  
+// This file is part of phpPMS.
+//
+// phpPMS is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// phpPMS is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
+
+/**
+ *
+ * @author nuxsmin
+ * @version 0.91b
+ * @link http://www.cygnux.org/phppms
+ * 
+ */
+
 //{'overlayShow' : true,'overlayOpacity' : 0,'hideOnOverlayClick' : false,'content' : txt}
 
 var gsorder = 0;
@@ -104,7 +130,7 @@ function verClave(id,full){
         });
     } else{
         $.post( pms_root + '/ajax_viewpass.php', { 'accountid': id, 'full': full }, 
-            function( data ) { var txt = '<div id="fancyView">' + data + '</div>'; 
+            function( data ) { var txt = '<div id="fancyView" class="backGrey">' + data + '</div>'; 
                 $.fancybox(txt);
             }
         );
@@ -432,7 +458,7 @@ function loadUsrMgmt(action){
         data: datos,
         success: function(response){
             if ( response == 0 ){
-                location.href='login.php?sesion=0';
+                doLogout();
             } else {
                 $('#usrMgmt').html(response);
                 $('#usrname_0').focus();
@@ -532,10 +558,12 @@ function userMgmt(action,id){
                     'onClosed' : function() { loadUsrMgmt(1); },
                     'content' : txt
                 });
-            } else if ( status != 0 && action == "pass"){
+            } else if ( status == 1 && action == "pass"){
                 $("#resFancyAccion").html('<span class="altTxtRed">'+description+'</span>');
                 $("#resFancyAccion").show();
                 $.fancybox.resize();                
+            } else if ( status == 3 ){
+                doLogout();               
             } else {
                 var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">'+description+'</span></div>';
                 $.fancybox({
@@ -633,6 +661,8 @@ function groupMgmt(action,id){
             } else if ( status == 2) {
                 var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">'+description+'</span></div>';
                 $.fancybox(txt);
+            } else if ( status == 3 ){
+                doLogout();               
             } else {
                 var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">'+description+'</span></div>';
                 $.fancybox(txt);

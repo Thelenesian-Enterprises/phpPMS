@@ -1,28 +1,28 @@
 <?php
-//Copyright (c) 2012 Rubén Domínguez
+// Copyright (c) 2012 Rubén Domínguez
 //  
-//This file is part of phpPMS.
+// This file is part of phpPMS.
 //
-//phpPMS is free software: you can redistribute it and/or modify
-//it under the terms of the GNU General Public License as published by
-//the Free Software Foundation, either version 3 of the License, or
-//(at your option) any later version.
+// phpPMS is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//phpPMS is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// phpPMS is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//You should have received a copy of the GNU General Public License
-//along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
- * Clase para la encriptación
  *
  * @author nuxsmin
- * @version 0.9b
+ * @version 0.91b
  * @link http://www.cygnux.org/phppms
+ * 
  */
 
 class Crypt {

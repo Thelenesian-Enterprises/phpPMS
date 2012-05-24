@@ -1,28 +1,28 @@
 <?php
-//Copyright (c) 2012 Rubén Domínguez
+// Copyright (c) 2012 Rubén Domínguez
 //  
-//This file is part of phpPMS.
+// This file is part of phpPMS.
 //
-//phpPMS is free software: you can redistribute it and/or modify
-//it under the terms of the GNU General Public License as published by
-//the Free Software Foundation, either version 3 of the License, or
-//(at your option) any later version.
+// phpPMS is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//phpPMS is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// phpPMS is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//You should have received a copy of the GNU General Public License
-//along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
- * Clase para la gestión de usuarios
  *
  * @author nuxsmin
- * @version 0.9b
+ * @version 0.91b
  * @link http://www.cygnux.org/phppms
+ * 
  */
 
 class Users {
@@ -59,7 +59,7 @@ class Users {
         $strQuery = "SELECT intUserId, vacUName, intUGroupFid, vacULogin, vacUEmail, txtUNotes, 
                     intUCount, intUProfile, vacUGroupName, blnIsAdmin, blnFromLdap, blnDisabled 
                     FROM users LEFT JOIN usergroups ON users.intUGroupFid=usergroups.intUGroupId 
-                    WHERE vacULogin = '$strLogin' LIMIT 1";
+                    WHERE vacULogin = '".$this->dbh->real_escape_string($strLogin)."' LIMIT 1";
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -261,8 +261,9 @@ class Users {
         $strEmail = strtoupper($this->strEmail);
         
         $strQuery = "SELECT vacULogin, vacUEmail FROM users 
-                    WHERE (UPPER(vacULogin) = '$strLogin' OR UPPER(vacUEmail) = '$strEmail') 
-                    AND intUserId != $this->intUserId ";
+                    WHERE (UPPER(vacULogin) = '".$this->dbh->real_escape_string($strLogin)."' 
+                    OR UPPER(vacUEmail) = '".$this->dbh->real_escape_string($strEmail)."') 
+                    AND intUserId != ".(int)$this->intUserId;
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -290,9 +291,12 @@ class Users {
         $strGroupName = strtoupper($this->strUGroupName);
         
         if ( $this->intUGroupId ){
-            $strQuery = "SELECT vacUGroupName FROM usergroups WHERE UPPER(vacUGroupName) = '$strGroupName' AND intUGroupId != $this->intUGroupId";
+            $strQuery = "SELECT vacUGroupName FROM usergroups 
+                        WHERE UPPER(vacUGroupName) = '".$this->dbh->real_escape_string($strGroupName)."' 
+                        AND intUGroupId != ".(int)$this->intUGroupId;
         } else {
-            $strQuery = "SELECT vacUGroupName FROM usergroups WHERE UPPER(vacUGroupName) = '$strGroupName'";
+            $strQuery = "SELECT vacUGroupName FROM usergroups 
+                        WHERE UPPER(vacUGroupName) = '".$this->dbh->real_escape_string($strGroupName)."'";
         }
         
         $resQuery = $this->dbh->query($strQuery);
@@ -312,7 +316,7 @@ class Users {
 
     // Función para comprobar si un grupo está en uso
     public function checkGroupInUse() {
-        $strQuery = "SELECT count(intUserId) FROM users WHERE intUGroupFid = $this->intUGroupId";
+        $strQuery = "SELECT count(intUserId) FROM users WHERE intUGroupFid = ".(int)$this->intUGroupId;
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -326,7 +330,7 @@ class Users {
         
         if ( $resNum[0] >= 1 ) return "Usuarios ($resNum[0])";
         
-        $strQuery = "SELECT count(intAccountId) FROM accounts WHERE intUGroupFId = $this->intUGroupId";
+        $strQuery = "SELECT count(intAccountId) FROM accounts WHERE intUGroupFId = ".(int)$this->intUGroupId;
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -340,7 +344,7 @@ class Users {
         
         if ( $resNum[0] >= 1 ) return "Cuentas ($resNum[0])";
         
-        $strQuery = "SELECT count(id) FROM acc_usergroups WHERE intUGroupId = $this->intUGroupId";
+        $strQuery = "SELECT count(id) FROM acc_usergroups WHERE intUGroupId = ".(int)$this->intUGroupId;
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -359,7 +363,8 @@ class Users {
     
     // Función para comprobar la clave del usuario en MySQL
     public function checkUserPass($strLogin, $strPassword) {
-        $strQuery = "SELECT vacULogin, vacUPassword, blnDisabled FROM users WHERE vacULogin = '$strLogin' LIMIT 1";
+        $strQuery = "SELECT vacULogin, vacUPassword, blnDisabled FROM users 
+                    WHERE vacULogin = '".$this->dbh->real_escape_string($strLogin)."' LIMIT 1";
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -385,7 +390,8 @@ class Users {
     public function checkUserLDAP($strLogin) {
         $strLogin = $this->dbh->real_escape_string($strLogin);
 		
-        $strQuery = "SELECT vacULogin FROM users WHERE vacULogin = '$strLogin' LIMIT 1";
+        $strQuery = "SELECT vacULogin FROM users 
+                    WHERE vacULogin = '".$this->dbh->real_escape_string($strLogin)."' LIMIT 1";
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -402,8 +408,11 @@ class Users {
     // Función para insertar usuarios de LDAP en MySQL
     public function newUserLDAP() {
         $strQuery = "INSERT INTO users (vacUName, intUGroupFid, vacULogin, vacUPassword, vacUEmail, txtUNotes, 
-                    intUProfile, blnFromLdap) VALUES ('".$this->strName."',99,'".$this->strLogin ."',
-                    MD5('".$this->strPwd."'),'".$this->strEmail."','LDAP',2,1)";
+                    intUProfile, blnFromLdap) 
+                    VALUES ('".$this->dbh->real_escape_string($this->strName)."',99,
+                    '".$this->dbh->real_escape_string($this->strLogin)."',
+                    MD5('".$this->strPwd."'),
+                    '".$this->dbh->real_escape_string($this->strEmail)."','LDAP',2,1)";
         $strQuerySafe = "INSERT INTO users (vacUName, intUGroupFid, vacULogin, vacUPassword, vacUEmail, txtUNotes, 
                     intUProfile, blnFromLdap) VALUES ('".$this->strName."',99,'".$this->strLogin ."',
                     MD5('***'),'".$this->strEmail."','LDAP',3,1)";
@@ -427,25 +436,35 @@ class Users {
             case "add":
                 $strQuery = "INSERT INTO users (vacUName, vacULogin, vacUEmail, txtUNotes, intUGroupFid, 
                             intUProfile, blnIsAdmin, vacUPassword, blnFromLdap) 
-                            VALUES ('".$this->strName."','".$this->strLogin."','".$this->strEmail."',
-                            '".$this->strNotes."',".$this->intGroupId.",".$this->intProfile.",".$this->blnAdmin.",
-                            MD5('".$this->strPwd."'),0)";
+                            VALUES ('".$this->dbh->real_escape_string($this->strName)."',
+                            '".$this->dbh->real_escape_string($this->strLogin)."',
+                            '".$this->dbh->real_escape_string($this->strEmail)."',
+                            '".$this->dbh->real_escape_string($this->strNotes)."',
+                            ".(int)$this->intGroupId.",
+                            ".(int)$this->intProfile.",
+                            ".(int)$this->blnAdmin.",MD5('".$this->strPwd."'),0)";
                 break;
             case "update":
-                $strQuery = "UPDATE users SET vacUName = '".$this->strName."', vacULogin = '".$this->strLogin."', 
-                            vacUEmail = '".$this->strEmail."', txtUNotes = '".$this->strNotes."', 
-                            intUGroupFid = ".$this->intGroupId.", intUProfile = ".$this->intProfile.", 
-                            blnIsAdmin = ".$this->blnAdmin.", blnDisabled = ".$this->blnDisabled.", datULastUpdate = NOW() 
-                            WHERE intUserId = ".$this->intUserId;
+                $strQuery = "UPDATE users SET vacUName = '".$this->dbh->real_escape_string($this->strName)."',
+                            vacULogin = '".$this->dbh->real_escape_string($this->strLogin)."',
+                            vacUEmail = '".$this->dbh->real_escape_string($this->strEmail)."',
+                            txtUNotes = '".$this->dbh->real_escape_string($this->strNotes)."',
+                            intUGroupFid = ".(int)$this->intGroupId.",
+                            intUProfile = ".(int)$this->intProfile.",
+                            blnIsAdmin = ".(int)$this->blnAdmin.", 
+                            blnDisabled = ".(int)$this->blnDisabled.",
+                            datULastUpdate = NOW() WHERE intUserId = ".(int)$this->intUserId;
                 break;
             case "updatepass":
-                $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->strPwd."') WHERE intUserId = ".$this->intUserId;
+                $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->strPwd."') 
+                            WHERE intUserId = ".(int)$this->intUserId;
                 break;
             case "updateldap":
-                $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->strPwd . "') WHERE intUserId = ".$this->arrUserInfo['intUserId'];
+                $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->strPwd . "') 
+                            WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
                 break;
             case "delete":
-                $strQuery = "DELETE FROM users WHERE intUserId = ".$this->intUserId." LIMIT 1";
+                $strQuery = "DELETE FROM users WHERE intUserId = ".(int)$this->intUserId." LIMIT 1";
                 break;
                 
         }
@@ -466,13 +485,18 @@ class Users {
                 
         switch ($strAction){
             case "add":
-                $strQuery = "INSERT INTO usergroups (vacUGroupName, vacUGroupDesc) VALUES ('".$this->strUGroupName."','".$this->strUGroupDesc."')";
+                $strQuery = "INSERT INTO usergroups (vacUGroupName, vacUGroupDesc) 
+                            VALUES ('".$this->dbh->real_escape_string($this->strUGroupName)."',
+                            '".$this->dbh->real_escape_string($this->strUGroupDesc)."')";
                 break;
             case "update":
-                $strQuery = "UPDATE usergroups SET vacUGroupName = '".$this->strUGroupName."', vacUGroupDesc = '".$this->strUGroupDesc."' WHERE intUGroupId = ".$this->intUGroupId;
+                $strQuery = "UPDATE usergroups SET 
+                            vacUGroupName = '".$this->dbh->real_escape_string($this->strUGroupName)."',
+                            vacUGroupDesc = '".$this->strUGroupDesc."' 
+                            WHERE intUGroupId = ".(int)$this->intUGroupId;
                 break;
             case "delete":
-                $strQuery = "DELETE FROM usergroups WHERE intUGroupId = ".$this->intUGroupId." LIMIT 1";
+                $strQuery = "DELETE FROM usergroups WHERE intUGroupId = ".(int)$this->intUGroupId." LIMIT 1";
                 break;
                 
         }
@@ -490,8 +514,10 @@ class Users {
     
     // Función para actualizar la clave de usuarios de LDAP en MySQL
     public function updateUserLDAP() {
-        $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->strPwd."'), datULastUpdate = NOW() WHERE intUserId = ".$this->arrUserInfo['intUserId'];
-        $strQuerySafe = "UPDATE users SET vacUPassword = MD5('***'), datULastUpdate = NOW() WHERE intUserId = ".$this->arrUserInfo['intUserId'];
+        $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->strPwd."'), 
+                    datULastUpdate = NOW() WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
+        $strQuerySafe = "UPDATE users SET vacUPassword = MD5('***'), datULastUpdate = NOW() 
+                        WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -520,7 +546,7 @@ class Users {
 
     // Función para establecer el último inicio de sesión del usuario
     private function serUserLastLogin() {
-        $strQuery = "UPDATE users SET datULastLogin = NOW() WHERE intUserId = " . $this->arrUserInfo['intUserId'];
+        $strQuery = "UPDATE users SET datULastLogin = NOW() WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -532,9 +558,9 @@ class Users {
 
     // Función para autentificación con LDAP
     public function authUserLDAP($strUser, $strPass) {
-        global $CFG_LDAP;
+        global $CFG_PMS;
 
-        if ($CFG_LDAP["ldap"] == 0) return FALSE;
+        if ($CFG_PMS["ldap"] == 0) return FALSE;
         
         foreach ( $CFG_LDAP as $configVal ){
             if ( ! is_array($configVal) ){
@@ -545,19 +571,22 @@ class Users {
         $ldapAccess = FALSE;
         
         // Base del LDAP
-        $ldapDn = $CFG_LDAP["ldapbase"];
+        $ldapDn = $CFG_PMS["ldapbase"];
 
         // Conexión al servidor LDAP
-        $ldapConn = ldap_connect($CFG_LDAP["ldapserver"]);
+        $ldapConn = ldap_connect($CFG_PMS["ldapserver"]);
         $userCN = "cn=$strUser,$ldapDn";
 
         // Establecemos el timeout en 10 seg.
         @ldap_set_option($ldapConn, LDAP_OPT_NETWORK_TIMEOUT, 10);
+        
+        // Versión LDAP
+        @ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
         // Comprobamos que la conexión se realiza
         if ( @ldap_bind($ldapConn, $userCN, $strPass) ) {
             $filter = "(&(cn=$strUser)(objectCLASS=inetOrgPerson))";
-            $filterAttr = $CFG_LDAP["ldapuserattr"];
+            $filterAttr = $CFG_PMS["ldapuserattr"];
             $searchRes = ldap_search($ldapConn, $ldapDn, $filter, $filterAttr) or die("ERROR: no es posible realizar la búsqueda en LDAP");
             $searchEntries = ldap_get_entries($ldapConn, $searchRes);
             ldap_unbind($ldapConn);
@@ -570,7 +599,7 @@ class Users {
                                 case "groupmembership":
                                     foreach ($attrValue as $group) {
                                         // Comprobamos que el usuario está en el grupo indicado
-                                        if ( $group == $CFG_LDAP["ldapgroup"] ){
+                                        if ( $group == $CFG_PMS["ldapgroup"] ){
                                             $this->strLogin = $strUser;
                                             $this->strPwd = $strPass;
                                             $ldapAccess = TRUE;
@@ -640,7 +669,8 @@ class Users {
             if ( ! $strUserMPwd ) return FALSE;
         } else { return FALSE; }
 
-        $strQuery = "UPDATE users SET vacUserMPwd = '$strUserMPwd[0]', vacUserMIv = '$strUserMPwd[1]', datUserLastUpdateMPass = NOW()  WHERE intUserId = " . $this->arrUserInfo['intUserId'];
+        $strQuery = "UPDATE users SET vacUserMPwd = '$strUserMPwd[0]', vacUserMIv = '$strUserMPwd[1]', 
+                    datUserLastUpdateMPass = NOW()  WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -654,7 +684,8 @@ class Users {
 
     // Función para desencriptar la clave maestra para la sesión
     public function getUserMPass($strUserRealPass, $showPass = FALSE) {
-        $strQuery = "SELECT vacUserMPwd, vacUserMIv  FROM users WHERE intUserId = " . $this->arrUserInfo['intUserId'];
+        $strQuery = "SELECT vacUserMPwd, vacUserMIv  FROM users 
+                    WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {

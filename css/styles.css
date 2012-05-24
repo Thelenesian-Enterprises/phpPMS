@@ -263,10 +263,10 @@ A:focus {text-decoration: none;	color: #FF0000;}
 	line-height: 20px;
 	border: #d9d9d9 1px solid;
         font-size: 14px;
-/*        background-color: #E8EDFF;*/
         background-color: #ecfde4;
 }
 
+#fancyView.backGrey{background-color: #f2f2f2 !important;}
 #fancyView TABLE{border: none; width: 100%;font-size: 14px;text-align: left;}
 #fancyView TD{border-bottom: #d9d9d9 1px solid;}
 #fancycontainer {padding: 15px;}
@@ -456,4 +456,13 @@ A:focus {text-decoration: none;	color: #FF0000;}
 	border: none;
 	padding: 0;
 	background-color: transparent !important;
+}
+
+/*Install Page*/
+#install{
+    width: 50%;
+    margin: auto;
+    padding: 10px;
+    border: #d9d9d9 1px solid;
+    line-height: 2em;
 }

@@ -1,26 +1,26 @@
 <?php
-//Copyright (c) 2012 Rubén Domínguez
+// Copyright (c) 2012 Rubén Domínguez
 //  
-//This file is part of phpPMS.
+// This file is part of phpPMS.
 //
-//phpPMS is free software: you can redistribute it and/or modify
-//it under the terms of the GNU General Public License as published by
-//the Free Software Foundation, either version 3 of the License, or
-//(at your option) any later version.
+// phpPMS is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//phpPMS is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// phpPMS is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//You should have received a copy of the GNU General Public License
-//along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
  *
  * @author nuxsmin
- * @version 0.9b
+ * @version 0.91b
  * @link http://www.cygnux.org/phppms
  * 
  */
@@ -68,55 +68,14 @@ function createDbFile() {
     }
 }
 
-// Función para crear la configuración inicial
-function mkInitialConfig(){
-    $objConfig = new Config();
-
-    if ( $objConfig->getConfigValue("install") == 1 ){
-        echo "<br />&gt; AVISO: Entorno ya instalado &lt;";
-        return;
-    }
-            
-    if ( ! $objConfig->getConfigValue("masterPwd") ){
-        $objCrypt = new Crypt();
-        $hashMPass = $objCrypt->mkHashPassword("0000");
-        $objConfig->arrConfigValue["masterPwd"] = $hashMPass;
-        
-        if ( $objConfig->writeConfig(TRUE) ){
-            echo "<br />&gt; Clave maestra inicial establecida a '0000'. Es recomendable cambiarla &lt;";
-        } else {
-            echo "<br />&gt; ERROR: no se ha podido guardar la clave maestra &lt;";
-            return FALSE;
-        }
-        unset($objCrypt);
-    } else {
-        echo "<br />&gt; AVISO: Clave maestra ya establecida &lt;";
-    }
-    
-    $strQuery = "INSERT INTO users (vacUName,vacULogin,intUGroupFid,intUProfile,blnIsAdmin,vacUPassword,blnFromLdap) 
-                VALUES('PMS Admin','admin',1,0,1,MD5('admin'),0);";
-    $resQuery = $objConfig->dbh->query($strQuery);
-    
-    if ( $resQuery ){
-        echo "<br />&gt; Usuario 'admin' con clave 'admin' creado correctamnete &lt;";
-    } else {
-        echo "<br />&gt; ERROR: no se ha podido crear el usuario 'admin' &lt;";
-        return FALSE;
-    }
-    
-    unset($objConfig->arrConfigValue);
-    
-    $objConfig->arrConfigValue["md5_pass"] = "TRUE";
-    $objConfig->arrConfigValue["password_show"] = "TRUE";
-    $objConfig->arrConfigValue["account_link"] = "TRUE";
-    $objConfig->arrConfigValue["account_count"] = 5;
-    $objConfig->arrConfigValue["install"] = 1;
-    $objConfig->writeConfig(TRUE);
-    
-    unset($objConfig);
+if ( file_exists("config.ini")){
+    Config::getFileConfig(dirname(__FILE__));
+} elseif ( file_exists(dirname(__FILE__)."/".PMS_ROOT."/config.ini") ){
+    Config::getFileConfig(dirname(__FILE__));
+} else {
+    header("Content-Type: text/html; charset=UTF-8");
+    die("El archivo de configuración no existe.");
 }
-
-if ( ! Config::getFileConfig(dirname(__FILE__)."/".PMS_ROOT) ) return;
 
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <HTML xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
@@ -127,17 +86,30 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.or
         <LINK REL="stylesheet" HREF="'.PMS_ROOT.'/css/styles.css" TYPE="text/css">
     </HEAD>
     <BODY>
-        <DIV ID="install">
+        <DIV ID="install" ALIGN="center">
+            <H2>Instalación phpPMS</H2>
             &gt; Configurando entorno...  &lt;';
 
 if ( createDbFile() ) {
     include_once (PMS_ROOT."/inc/db.class.php");
-    include_once (PMS_ROOT."/inc/crypt.class.php");
     
-    mkInitialConfig();
+    $objConfig = new Config;
+    
+    if ( $objConfig->mkInitialConfig(dirname(__FILE__),$_GET["upgrade"]) ){
+        echo '<br />&gt; <span class="altTxtGreen">Configuración del entorno finalizada</span> &lt;';
+    } else {
+        echo '<br />&gt; <span class="altTxtRed">Configuración del entorno finalizada con errores</span> &lt;';
+    }
+    
+    if ( file_exists("config.ini") || file_exists(PMS_ROOT."/config.ini") ){
+        echo '<br />&gt; Por seguridad, elimine el archivo config.ini &lt;';
+    }
+    
+    if ( file_exists("upgrade.sql") ){
+        echo '<br />&gt; Para actualizar la BBDD, ejecute \'mysql -u root -p < install/upgrade.sql\' desde la consola &lt;';
+    }
+    
+    echo '<br /><br /><a href="'.PMS_ROOT.'/login.php">Pulse aquí para acceder</a>
+        </DIV></BODY></HTML>';
 }
-
-echo '<br />&gt; Configuración del entorno finalizada &lt;
-    <br /><br /><a href="'.PMS_ROOT.'/login.php">Pulse aquí para acceder</a>
-    </DIV></BODY></HTML>';
 ?>

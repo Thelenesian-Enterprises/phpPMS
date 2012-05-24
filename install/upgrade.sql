@@ -1,0 +1,1 @@
+ALTER TABLE `phppms`.`config` DROP INDEX `vacParameter`, ADD UNIQUE `vacParameter` (`vacParameter`);

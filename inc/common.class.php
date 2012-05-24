@@ -1,28 +1,28 @@
 <?php
-//Copyright (c) 2012 Rubén Domínguez
+// Copyright (c) 2012 Rubén Domínguez
 //  
-//This file is part of phpPMS.
+// This file is part of phpPMS.
 //
-//phpPMS is free software: you can redistribute it and/or modify
-//it under the terms of the GNU General Public License as published by
-//the Free Software Foundation, either version 3 of the License, or
-//(at your option) any later version.
+// phpPMS is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//phpPMS is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// phpPMS is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//You should have received a copy of the GNU General Public License
-//along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
- * Clase con la implementación de las funciones comunes de phpPMS
  *
  * @author nuxsmin
- * @version 0.9b
+ * @version 0.91b
  * @link http://www.cygnux.org/phppms
+ * 
  */
 
 class Common {
@@ -31,8 +31,8 @@ class Common {
     
     // Función para escribir en el log
     public static function wrLogInfo ($strAccion, $strDescripcion) {
-        $strLogin = $_SESSION["ulogin"];
-        $intUserId = $_SESSION['uid'];
+        $strLogin = ( $_SESSION["ulogin"] ) ? $_SESSION["ulogin"] : "-";
+        $intUserId = ( $_SESSION['uid'] ) ? $_SESSION['uid'] : 0;
         $strAccion = utf8_encode($strAccion);
         $strDescripcion = utf8_encode(addslashes($strDescripcion));
         
@@ -55,13 +55,13 @@ class Common {
     // Función para enviar un email
     // TODO: mail auth
     static function sendEmail($strMensaje,$strTo = ""){
-        global $CFG_PMS, $CFG_SMTP;
+        global $CFG_PMS;
         
-        if ( $CFG_SMTP["mailenabled"] == 0 ) return FALSE;
+        if ( $CFG_PMS["mailenabled"] == 0 ) return FALSE;
         
-        $strTo = isset ($strTo) ? $strTo : $CFG_SMTP["mailfrom"];
+        $strTo = isset ($strTo) ? $strTo : $CFG_PMS["mailfrom"];
         
-        $strFrom = $CFG_SMTP["mailfrom"];
+        $strFrom = $CFG_PMS["mailfrom"];
         $strAsunto = 'Aviso '.$CFG_PMS["siteshortname"];
 
         // Para enviar un correo HTML mail, la cabecera Content-type debe fijarse
@@ -104,10 +104,11 @@ class Common {
     static function PrintFooter() {
         global $CFG_PMS;
 
-        echo "<DIV ID='footer'>phpPMS 0.9b</DIV>";
+        echo "<DIV ID='footer'>phpPMS ".PMS_VERSION."</DIV>";
         if ($CFG_PMS["debug"]){
             echo '<DIV ID="debug"><PRE>';
             print_r($_SESSION);
+            print_r($CFG_PMS);
             echo "</PRE></DIV>";
         }
         echo "</BODY></HTML>";

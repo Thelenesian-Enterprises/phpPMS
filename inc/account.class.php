@@ -1,28 +1,28 @@
 <?php
-//Copyright (c) 2012 Rubén Domínguez
+// Copyright (c) 2012 Rubén Domínguez
 //  
-//This file is part of phpPMS.
+// This file is part of phpPMS.
 //
-//phpPMS is free software: you can redistribute it and/or modify
-//it under the terms of the GNU General Public License as published by
-//the Free Software Foundation, either version 3 of the License, or
-//(at your option) any later version.
+// phpPMS is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//phpPMS is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// phpPMS is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//You should have received a copy of the GNU General Public License
-//along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
- * Clase para la gestión de cuentas
  *
  * @author nuxsmin
- * @version 0.9b
+ * @version 0.91b
  * @link http://www.cygnux.org/phppms
+ * 
  */
 
 class Account {
@@ -74,7 +74,7 @@ class Account {
                     LEFT JOIN usergroups ug ON acc.intUGroupFId=ug.intUGroupId 
                     LEFT JOIN users u1 ON acc.intUserFId=u1.intUserId 
                     LEFT JOIN users u2 ON acc.intUEditFId=u2.intUserId 
-                    WHERE intAccountId = ".addslashes($intAccId)." LIMIT 1";
+                    WHERE intAccountId = ".(int)$intAccId." LIMIT 1";
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -120,14 +120,14 @@ class Account {
         $this->updateAccGroups() || Common::wrLogInfo(__FUNCTION__,"Error al actualizar los grupos secundarios");
                 
         $strQuery = "UPDATE accounts SET ";
-        $strQuery .= "vacCliente = '$this->strAccCliente', ";
-        $strQuery .= "intCategoryFid = $this->intAccCategoryId, ";
-        $strQuery .= "vacName = '$this->strAccName', ";
-        $strQuery .= "vacLogin = '$this->strAccLogin', ";
-        $strQuery .= "vacUrl = '$this->strAccUrl', ";
-        $strQuery .= "txtNotice = '$this->strAccNotes', ";
-        $strQuery .= "intUEditFId = $this->intAccUserEditId";
-        $strQuery .= " WHERE intAccountId = $this->intAccId";
+        $strQuery .= "vacCliente = '".$this->dbh->real_escape_string($this->strAccCliente)."', ";
+        $strQuery .= "intCategoryFid = ".(int)$this->intAccCategoryId.", ";
+        $strQuery .= "vacName = '".$this->dbh->real_escape_string($this->strAccName)."', ";
+        $strQuery .= "vacLogin = '".$this->dbh->real_escape_string($this->strAccLogin)."', ";
+        $strQuery .= "vacUrl = '".$this->dbh->real_escape_string($this->strAccUrl)."', ";
+        $strQuery .= "txtNotice = '".$this->dbh->real_escape_string($this->strAccNotes)."', ";
+        $strQuery .= "intUEditFId = ".(int)$this->intAccUserEditId;
+        $strQuery .= " WHERE intAccountId = ".(int)$this->intAccId;
 
         $resQuery = $this->dbh->query($strQuery);
 
@@ -156,8 +156,8 @@ class Account {
                 $strQuery .= "vacMd5Password = '$this->strAccMd5Pwd', ";
         }
         $strQuery .= "vacInitialValue = '$this->strAccIv', ";
-        $strQuery .= "intUEditFId = $this->intAccUserEditId";
-        $strQuery .= " WHERE intAccountId = $this->intAccId";
+        $strQuery .= "intUEditFId = ".(int)$this->intAccUserEditId;
+        $strQuery .= " WHERE intAccountId = ".(int)$this->intAccId;
         
         $resQuery = $this->dbh->query($strQuery);
 
@@ -185,20 +185,20 @@ class Account {
         }
 
         $strQuery .= " VALUES(";
-        $strQuery .= "'$this->strAccCliente', ";
-        $strQuery .= "$this->intAccCategoryId, ";
-        $strQuery .= "'$this->strAccName', ";
-        $strQuery .= "'$this->strAccLogin', ";
-        $strQuery .= "'$this->strAccUrl', ";
+        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccCliente)."', ";
+        $strQuery .= (int)$this->intAccCategoryId.", ";
+        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccName)."', ";
+        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccLogin)."', ";
+        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccUrl)."', ";
         $strQuery .= "'$this->strAccPwd', ";
         if ( $clsConfig->getConfigValue("md5_pass") == TRUE ) {
                 $strQuery .= "'$this->strAccMd5Pwd', ";
         }
         $strQuery .= "'$this->strAccIv', ";
-        $strQuery .= "'$this->strAccNotes', ";
+        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccNotes)."', ";
         $strQuery .= "NOW(), ";
-        $strQuery .= "$this->intAccUserId, ";
-        $strQuery .= "$this->intAccUserGroupId) ";
+        $strQuery .= (int)$this->intAccUserId.", ";
+        $strQuery .= (int)$this->intAccUserGroupId.")";
         
         $resQuery = $this->dbh->query($strQuery);
         
@@ -220,7 +220,7 @@ class Account {
         // Guardamos una copia de la cuenta en el histórico
         $doHistorico = $this->addHistorico($intAccId, $intUId, true) or die ("ERROR: Error en la operación.");
 
-        $strQuery = "DELETE FROM accounts WHERE intAccountId = ".$intAccId;
+        $strQuery = "DELETE FROM accounts WHERE intAccountId = ".(int)$intAccId;
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -229,7 +229,7 @@ class Account {
             return FALSE;
         }
         
-        $strQuery = "DELETE FROM acc_usergroups WHERE intAccId = ".$intAccId;
+        $strQuery = "DELETE FROM acc_usergroups WHERE intAccId = ".(int)$intAccId;
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -248,18 +248,18 @@ class Account {
         $accNewUGroups = $this->strAccUserGroupsId;
         
         if ( is_array($accOldUGroups) AND ! is_array($accNewUGroups) ){
-            $strQueryDel = "DELETE FROM acc_usergroups WHERE intAccId = $this->intAccId";
+            $strQueryDel = "DELETE FROM acc_usergroups WHERE intAccId = ".(int)$this->intAccId;
         } else if ( is_array($accNewUGroups) ){
             if ( ! is_array($accOldUGroups) ){
                 // Obtenemos los grupos a añadir
                 foreach ( $accNewUGroups as $userNewGroupId ){
-                    $valuesNew .= "(".$this->intAccId.",".$userNewGroupId."),";
+                    $valuesNew .= "(".(int)$this->intAccId.",".$userNewGroupId."),";
                 }
             } else {
                 // Obtenemos los grupos a añadir a partir de los existentes
                 foreach ( $accNewUGroups as $userNewGroupId ){
                     if ( ! in_array($userNewGroupId, $accOldUGroups)){
-                        $valuesNew .= "(".$this->intAccId.",".$userNewGroupId."),";
+                        $valuesNew .= "(".(int)$this->intAccId.",".$userNewGroupId."),";
                     }
                 }
 
@@ -271,7 +271,7 @@ class Account {
                 }
 
                 if ( is_array($valuesDel) ){
-                    $strQueryDel = "DELETE FROM acc_usergroups WHERE intAccId = $this->intAccId AND (";
+                    $strQueryDel = "DELETE FROM acc_usergroups WHERE intAccId = ".(int)$this->intAccId." AND (";
                     $numValues = count($valuesDel);
                     $i = 0;
 
@@ -369,7 +369,7 @@ class Account {
 
     // Función para obtener los grupos secundarios de la cuenta
     public function getGroupsAccount ($intAccId) {
-        $strQuery = "SELECT intUGroupId FROM acc_usergroups WHERE intAccId = ".$intAccId;		
+        $strQuery = "SELECT intUGroupId FROM acc_usergroups WHERE intAccId = ".(int)$intAccId;		
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -425,7 +425,7 @@ class Account {
 
     // Función para modificar el contador de vistas de la cuenta
     public function incrementViewCounter ($intAccId) {
-        $strQuery = "SELECT intCountView FROM accounts WHERE intAccountId = ".$intAccId." LIMIT 1";
+        $strQuery = "SELECT intCountView FROM accounts WHERE intAccountId = ".(int)$intAccId." LIMIT 1";
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -439,7 +439,7 @@ class Account {
         $intCounter = $resResult["intCountView"];
         $intCounter++;
 
-        $strQuery = "UPDATE accounts SET intCountView = $intCounter WHERE intAccountId = ".$intAccId;
+        $strQuery = "UPDATE accounts SET intCountView = $intCounter WHERE intAccountId = ".(int)$intAccId;
         $resQuery = $this->dbh->query($strQuery);
 
         if ( ! $resQuery ) {
@@ -453,7 +453,7 @@ class Account {
 
     // Función para modificar el contador de vistas de clave de la cuenta
     public function incrementDecryptCounter ($intAccId) {
-        $strQuery = "SELECT intCountDecrypt FROM accounts WHERE intAccountId = ".$intAccId." LIMIT 1";
+        $strQuery = "SELECT intCountDecrypt FROM accounts WHERE intAccountId = ".(int)$intAccId." LIMIT 1";
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -467,7 +467,7 @@ class Account {
         $intCounter = $resResult["intCountDecrypt"];
         $intCounter++;
 
-        $strQuery = "UPDATE accounts SET intCountDecrypt = $intCounter WHERE intAccountId = ".$intAccId;
+        $strQuery = "UPDATE accounts SET intCountDecrypt = $intCounter WHERE intAccountId = ".(int)$intAccId;
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -486,8 +486,9 @@ class Account {
 
         $strQuery = "SELECT COUNT(DISTINCT intAccountId) FROM accounts acc
                     LEFT JOIN acc_usergroups aug ON acc.intAccountId=aug.intAccId 
-                    WHERE acc.intUGroupFId = $intUGroupFId OR acc.intUserFId = $intUId 
-                    OR aug.intUGroupId = $intUGroupFId";
+                    WHERE acc.intUGroupFId = ".(int)$intUGroupFId." 
+                    OR acc.intUserFId = ".(int)$intUId."
+                    OR aug.intUGroupId = ".(int)$intUGroupFId;
         
         $resQuery = $this->dbh->query($strQuery);
         
@@ -519,7 +520,7 @@ class Account {
 
     // Función para modificar la clave MD5 de la cuenta
     public function writeAccountMd5Pass ($strAccMd5Pwd, $intAccId) {
-        $strQuery = "UPDATE accounts SET vacMd5Password = '$strAccMd5Pwd' WHERE intAccountId = ".$intAccId;
+        $strQuery = "UPDATE accounts SET vacMd5Password = '$strAccMd5Pwd' WHERE intAccountId = ".(int)$intAccId;
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
