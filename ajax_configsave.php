@@ -38,25 +38,80 @@
     
     Users::checkUserAccess("config") || die ('<DIV CLASS="error">No tiene permisos para acceder a esta página.</DIV>');
     
+    // Variables POST del formulario
+    extract($_POST, EXTR_PREFIX_ALL, "post");
+    
     $strAction = $_POST["action"];
     $objConfig = new Config;
 
-    if ( $strAction == "config" ){
-        $blnPasswordShow = $_POST["password_show"];
-        $blnAccountLink = $_POST["account_link"];
-        $blnMd5Password = $_POST["md5_pass"];
-        $blnMd5PasswordOld = $_POST["md5_pass_old"];
+    if ( $post_action == "config" ){
         
-        if ( $_POST["account_count"] == "all" ) {
+        if ( $post_account_count == "all" ) {
             $intAccountCount = 99;
         } else {
-            $intAccountCount = $_POST["account_count"];
+            $intAccountCount = $post_account_count;
         }
 
-        $objConfig->arrConfigValue["password_show"] = $blnPasswordShow;
-        $objConfig->arrConfigValue["account_link"] = $blnAccountLink;
-        $objConfig->arrConfigValue["account_count"] = $intAccountCount;
-        $objConfig->arrConfigValue["md5_pass"] = $blnMd5Password;
+        $objConfig->arrConfigValue["password_show"] = $post_password_show;
+        $objConfig->arrConfigValue["account_link"] = $post_account_link;
+        $objConfig->arrConfigValue["account_count"] = $post_account_count;
+        $objConfig->arrConfigValue["md5_pass"] = $post_md5_pass;
+        
+        if ( ! $post_sitename OR ! $post_siteshortname ){
+            $resXML["status"] = 1;
+            $resXML["description"] = "Faltan parámetros del Sitio";
+            Common::printXML($resXML);
+            return;                
+        } else{
+            $objConfig->arrConfigValue["sitename"] = $post_sitename;
+            $objConfig->arrConfigValue["siteshortname"] = $post_siteshortname;
+        }
+
+        $objConfig->arrConfigValue["session_timeout"] = ( $post_session_timeout ) ? (int)$post_session_timeout : "300";
+        $objConfig->arrConfigValue["logenabled"] = ( $post_logenabled ) ? $post_logenabled : "0";
+        $objConfig->arrConfigValue["debug"] = ( $post_debug ) ? $post_debug : "0";
+        
+        if ( $post_wikienabled AND ( ! $post_wikisearchurl OR ! $post_wikipageurl OR ! $post_wikifilter )){
+            $resXML["status"] = 1;
+            $resXML["description"] = "Faltan parámetros de Wiki";
+            Common::printXML($resXML);
+            return;            
+        } elseif ( $post_wikienabled ) {
+            $objConfig->arrConfigValue["wikienabled"] = 1;
+            $objConfig->arrConfigValue["wikisearchurl"] = $post_wikisearchurl;
+            $objConfig->arrConfigValue["wikipageurl"] = $post_wikipageurl;
+            $objConfig->arrConfigValue["wikifilter"] = $post_wikifilter;            
+        } else{
+            $objConfig->arrConfigValue["wikienabled"] = 0;
+        }
+        
+        if ( $post_ldapenabled AND ( ! $post_ldapserver OR ! $post_ldapbase OR ! $post_ldapgroup OR ! $post_ldapuserattr)){
+            $resXML["status"] = 1;
+            $resXML["description"] = "Faltan parámetros de LDAP";
+            Common::printXML($resXML);
+            return;            
+        } elseif ( $post_ldapenabled ){
+            $objConfig->arrConfigValue["ldapenabled"] = 1;
+            $objConfig->arrConfigValue["ldapserver"] = $post_ldapserver;
+            $objConfig->arrConfigValue["ldapbase"] = $post_ldapbase;
+            $objConfig->arrConfigValue["ldapgroup"] = $post_ldapgroup;
+            $objConfig->arrConfigValue["ldapuserattr"] = $post_ldapuserattr;            
+        } else {
+            $objConfig->arrConfigValue["ldapenabled"] = 0;
+        }
+        
+        if ( $post_mailenabled AND ( ! $post_mailserver OR ! $post_mailfrom ) ){
+            $resXML["status"] = 1;
+            $resXML["description"] = "Faltan parámetros de Correo";
+            Common::printXML($resXML);
+            return;             
+        } elseif ( $post_mailenabled ) {
+            $objConfig->arrConfigValue["mailenabled"] = 1;
+            $objConfig->arrConfigValue["mailserver"] = $post_mailserver;
+            $objConfig->arrConfigValue["mailfrom"] = $post_mailfrom;            
+        } else {
+            $objConfig->arrConfigValue["mailenabled"] = 0;
+        }
 
 //        if ($blnMd5Password == "FALSE" AND $blnMd5PasswordOld == "TRUE") {
 //            $clsAccount = new Account;
@@ -66,7 +121,7 @@
         if ( $objConfig->writeConfig() ){
             $resXML["status"] = 0;
             $resXML["description"] = "Configuración guardada correctamente";
-            Common::wrLogInfo("Modifcar configuración", "ID: $post_accountid;");
+            Common::wrLogInfo("Modifcar configuración", "");
             Common::sendEmail("Configuración modificada");			
         } else {
             $resXML["status"] = 1;
@@ -126,6 +181,9 @@
             $resXML["status"] = 1;
             $resXML["description"] = "Clave maestra no indicada";
         }
+    } else {
+        $resXML["status"] = 1;
+        $resXML["description"] = "Acción no definida";
     }
         
     Common::printXML($resXML);

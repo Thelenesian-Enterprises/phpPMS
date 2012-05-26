@@ -53,12 +53,12 @@
                 <FORM METHOD="post" NAME="frmSearch" ID="frmSearch" OnSubmit="return Buscar(0);">
                 <TD WIDTH="60%"  ALIGN="left">
                     Buscar
-                    <INPUT TYPE="text" NAME="search" ID="txtSearch" onKeyUp="Buscar(0,1)"/>
+                    <INPUT TYPE="text" NAME="search" ID="txtSearch" onKeyUp="Buscar(1)" VALUE="<?php echo $_POST["search"]; ?>"/>
                     <INPUT TYPE="hidden" NAME="page" VALUE="1">
                     <INPUT TYPE="hidden" NAME="skey" />
                     <INPUT TYPE="hidden" NAME="sorder" />					
                     <IMG SRC="imgs/search.png" title="Buscar" class="inputImg" id="btnBuscar" onClick="Buscar(0);" />
-                    <IMG SRC="imgs/clear.png" title="Limpiar" class="inputImg" id="btnLimpiar" onClick="Buscar(1);" />
+                    <IMG SRC="imgs/clear.png" title="Limpiar" class="inputImg" id="btnLimpiar" onClick="Clear('frmSearch',1); Buscar(0);" />
                 </TD>
                 <TD ALIGN="right" ROWSPAN="2">
 <?php               
@@ -75,44 +75,44 @@
                     }
 ?>	
                 </TD>
-                </TR>	
+            </TR>	
                 <TR WIDTH="60%">
-                    <TD WIDTH="60%" ALIGN="left">
-                        Cliente
-                        <SELECT NAME="cliente" SIZE="1">
-                                <OPTION>TODOS</OPTION>
+                <TD WIDTH="60%" ALIGN="left">
+                    Cliente
+                    <SELECT NAME="cliente" SIZE="1" OnChange="Buscar(0)">
+                        <OPTION>TODOS</OPTION>
 <?php
-                                $strCliente = $_POST["cliente"];
-                                $arrClientes = $clsAccount->getClientes();
-                                
-                                foreach ( $arrClientes as $cliente ){
-                                    if ( $cliente == $strCliente ){
-                                        echo "<OPTION SELECTED>$cliente</OPTION>\n";
-                                    } else {
-                                        echo "<OPTION>$cliente</OPTION>\n";
-                                    }
-                                }
-?>
-                        </SELECT>		
-                        Categoría
-                        <SELECT NAME="categoria" SIZE="1">
-                            <OPTION>TODAS</OPTION>
-<?php
-                            $strCategoria = $_POST["categoria"];
+                        $strCliente = $_POST["cliente"];
+                        $arrClientes = $clsAccount->getClientes();
 
-                            foreach ( $clsAccount->getCategorias() as $catName => $catId){
-                                if ( $strCategoria == $catId ){
-                                    echo "<OPTION VALUE='".$catId."' SELECTED>".$catName."</OPTION>\n";
-                                } else {
-                                    echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>\n";
-                                }                                    
-                            }                          
+                        foreach ( $arrClientes as $cliente ){
+                            if ( $cliente == $strCliente ){
+                                echo "<OPTION SELECTED>$cliente</OPTION>\n";
+                            } else {
+                                echo "<OPTION>$cliente</OPTION>\n";
+                            }
+                        }
 ?>
-                        </SELECT>
-                    </TD>
-                    </FORM>
-                </TR>
-            </TABLE>
-            <DIV ID="resBuscar"></DIV>
+                    </SELECT>		
+                    Categoría
+                    <SELECT NAME="categoria" SIZE="1" OnChange="Buscar(0)">
+                        <OPTION>TODAS</OPTION>
+<?php
+                        $strCategoria = $_POST["categoria"];
+
+                        foreach ( $clsAccount->getCategorias() as $catName => $catId){
+                            if ( $strCategoria == $catId ){
+                                echo "<OPTION VALUE='".$catId."' SELECTED>".$catName."</OPTION>\n";
+                            } else {
+                                echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>\n";
+                            }                                    
+                        }                          
+?>
+                    </SELECT>
+                </TD>
+                </FORM>
+            </TR>
+        </TABLE>
+        <DIV ID="resBuscar"></DIV>
 <?php Common::PrintFooter(); ?>
-        </DIV>
+    </DIV>

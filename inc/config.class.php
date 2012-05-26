@@ -106,7 +106,9 @@ class Config {
         $arrKeys = array_keys($this->arrConfigValue);
 
         foreach ($arrKeys as $strKey) {
-            $strValue = $this->arrConfigValue[$strKey];
+            $strKey = $this->dbh->real_escape_string($strKey);
+            $strValue = $this->dbh->real_escape_string($this->arrConfigValue[$strKey]);
+            
             if ( $mkInsert ){
                 $strQuery = "INSERT INTO config VALUES ('$strKey','$strValue') ON DUPLICATE KEY UPDATE vacValue = '$strValue' ";
             } else {
@@ -277,6 +279,7 @@ class Config {
         if ( $this->writeFileConfig2DB($filePath) ) return TRUE;
     }    
     
+    // Método para realizar los backups
     public function doDbBackup($bakDirPMS){
         global $CFG_PMS;
         
@@ -311,6 +314,183 @@ class Config {
         }
         
         return $arrOut;
+    }
+    
+    public function getConfigTable(){
+        $this->getConfig();
+        
+        echo '<TABLE CLASS="data tblConfig">';
+        echo '<FORM METHOD="post" NAME="frmConfig" ID="frmConfig" />';      
+
+        echo '<TR><TD COLSPAN="2" CLASS="rowHeader">Sitio</TD></TR>';
+        echo '<TR><TD CLASS="descCampo">Nombre del sitio</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="sitename" CLASS="txtLong" ID="sitename" VALUE="'.$this->arrConfigValue["sitename"].'" /></TD>';
+        echo '</TR>';
+
+        echo '<TR><TD CLASS="descCampo">Siglas del sitio</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="siteshortname" VALUE="'.$this->arrConfigValue["siteshortname"].'" /></TD>';
+        echo '</TR>';
+
+        echo '<TR><TD CLASS="descCampo">Timeout de sesión (s)</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="session_timeout" VALUE="'.$this->arrConfigValue["session_timeout"].'" /></TD>';
+        echo '</TR>';
+        
+        $chkLog = ( $this->arrConfigValue["logenabled"] ) ? 'checked="checked"' : '';
+        echo '<TR><TD CLASS="descCampo">Habilitar log de eventos</TD>';
+        echo '<TD><INPUT TYPE="checkbox" NAME="logenabled" CLASS="checkbox" '.$chkLog.' /></TD>';
+        echo '</TR>';        
+
+        $chkDebug = ( $this->arrConfigValue["debug"] ) ? 'checked="checked"' : '';
+        echo '<TR><TD CLASS="descCampo">Habilitar depuración</TD>';
+        echo '<TD><INPUT TYPE="checkbox" NAME="debug" CLASS="checkbox" '.$chkDebug.' /></TD>';
+        echo '</TR>';
+        
+        echo '<TR><TD CLASS="descCampo">Mostrar claves encriptadas</TD>';
+        echo '<TD><SELECT NAME="password_show" SIZE="1">';
+        if ( $this->arrConfigValue["password_show"] == "TRUE" ){
+            echo '<OPTION SELECTED>TRUE</OPTION><OPTION>FALSE</OPTION>';
+        } else {
+            echo '<OPTION>TRUE</OPTION><OPTION SELECTED>FALSE</OPTION>';
+        }
+        echo '</SELECT></TD></TR>';
+        
+        echo '<TR><TD CLASS="descCampo">Nombre de cuenta como enlace</TD>';
+        echo '<TD><SELECT NAME="account_link" SIZE="1">';
+        if ( $this->arrConfigValue["account_link"] == "TRUE" ){
+            echo '<OPTION SELECTED>TRUE</OPTION><OPTION>FALSE</OPTION>';
+        } else {
+            echo '<OPTION>TRUE</OPTION><OPTION SELECTED>FALSE</OPTION>';
+        }
+        echo '</SELECT></TD></TR>';
+        
+        echo '<TR><TD CLASS="descCampo">Resultados por página</TD>';
+        echo '<TD><SELECT NAME="account_count" SIZE="1">';
+        
+        $arrAccountCount = array(1,2,3,5,10,15,20,25,30,50,"all");
+        
+        foreach ($arrAccountCount as $num ){
+            if ( $this->arrConfigValue["account_count"] == $num){
+                echo "<OPTION SELECTED>$num</OPTION>";
+            } else {
+                echo "<OPTION>$num</OPTION>";
+            }
+        }
+        echo '</SELECT></TD></TR>';
+        
+        echo '<TR><TD CLASS="descCampo">Comprobar clave al desencriptar</TD>';
+        echo '<INPUT TYPE="hidden" NAME="md5_pass_old" VALUE="'.$this->arrConfigValue["md5_pass"].'">';
+        echo '<TD><SELECT NAME="md5_pass" SIZE="1">';
+        if ( $this->arrConfigValue["md5_pass"] == "TRUE" ){
+            echo '<OPTION SELECTED>TRUE</OPTION><OPTION>FALSE</OPTION>';
+        } else {
+            echo '<OPTION>TRUE</OPTION><OPTION SELECTED>FALSE</OPTION>';
+        }
+        echo '</SELECT></TD></TR>';        
+
+        echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >Wiki</TD></TR>';
+        $chkWiki = ( $this->arrConfigValue["wikienabled"] ) ? 'checked="checked"' : '';
+        echo '<TR><TD CLASS="descCampo">Habilitar enlaces Wiki</TD>';
+        echo '<TD><INPUT TYPE="checkbox" NAME="wikienabled" CLASS="checkbox" '.$chkWiki.' /></TD>';
+        echo '</TR>';
+        
+        echo '<TR><TD CLASS="descCampo">URL de búsqueda Wiki</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="wikisearchurl" CLASS="txtLong" VALUE="'.$this->arrConfigValue["wikisearchurl"].'" /></TD>';
+        echo '</TR>';
+
+        echo '<TR><TD CLASS="descCampo">URL de página en Wiki</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="wikipageurl" CLASS="txtLong" VALUE="'.$this->arrConfigValue["wikipageurl"].'" /></TD>';
+        echo '</TR>';
+
+        echo '<TR><TD CLASS="descCampo">Prefijo para nombre de cuenta</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="wikifilter" VALUE="'.$this->arrConfigValue["wikifilter"].'" /></TD>';
+        echo '</TR>';
+
+        echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >LDAP</TD></TR>';
+        $chkLdap = ( $this->arrConfigValue["ldapenabled"] ) ? 'checked="checked"' : '';
+        echo '<TR><TD CLASS="descCampo">Habilitar LDAP</TD>';
+        echo '<TD><INPUT TYPE="checkbox" NAME="ldapenabled" CLASS="checkbox" '.$chkLdap.' /></TD>';
+        echo '</TR>';
+        
+        echo '<TR><TD CLASS="descCampo">Servidor</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="ldapserver" VALUE="'.$this->arrConfigValue["ldapserver"].'" /></TD>';
+        echo '</TR>';
+
+        echo '<TR><TD CLASS="descCampo">Base de búsqueda</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="ldapbase" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapbase"].'" /></TD>';
+        echo '</TR>';
+
+        echo '<TR><TD CLASS="descCampo">Grupo</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="ldapgroup" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapgroup"].'" /></TD>';
+        echo '</TR>';
+        
+        echo '<TR><TD CLASS="descCampo">Atributos de usuario</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="ldapuserattr" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapuserattr"].'" /></TD>';
+        echo '</TR>';
+
+        echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >Correo</TD></TR>';
+        $chkMail = ( $this->arrConfigValue["mailenabled"] ) ? 'checked="checked"' : '';
+        echo '<TR><TD CLASS="descCampo">Habilitar notificaciones de correo</TD>';
+        echo '<TD><INPUT TYPE="checkbox" NAME="mailenabled" CLASS="checkbox" '.$chkMail.' /></TD>';
+        echo '</TR>';
+      
+        echo '<TR><TD CLASS="descCampo">Servidor</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="mailserver" SIZE="20" VALUE="'.$this->arrConfigValue["mailserver"].'" /></TD>';
+        echo '</TR>';
+        
+        echo '<TR><TD CLASS="descCampo">Dirección de correo de envío</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="mailfrom" SIZE="20" VALUE="'.$this->arrConfigValue["mailfrom"].'" /></TD>';
+        echo '</TR>'; 
+        
+        echo '<INPUT TYPE="hidden" NAME="action" VALUE="config" />';
+        echo '</FORM></TABLE>';
+    }
+    
+    // Método para comprobar si hay actualizaciones
+    static function checkUpdates(){
+        $ch = curl_init("http://sourceforge.net/api/file/index/project-id/775555/mtime/desc/limit/20/rss");
+        
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        
+        if ( ! $data = curl_exec($ch) ) return FALSE;
+        
+        curl_close($ch);
+        
+	$xmlUpd = simplexml_load_string($data);
+
+	if ( $xmlUpd->channel->title ){
+
+            $url = $xmlUpd->channel->item[0]->link;
+            $title = $xmlUpd->channel->item[0]->title;
+            $desc = $xmlUpd->channel->item[0]->description;
+            
+            preg_match("/phpPMS_(\d\.\d{1,}[a-z])\.tar.gz$/", $title, $pubVer);
+            
+            if ( $pubVer[1] == PMS_VERSION ){
+                if ( session_id() ){
+                    $_SESSION["pms_upd"] = TRUE;
+                }
+                
+                return TRUE;
+            } else {
+               if ( session_id() ){
+                    $_SESSION["pms_upd"] = array($pubVer[1], $url);
+                }
+                
+                $resCheck = array($pubVer[1], $url);
+                return $resCheck;
+            }
+            
+//            $cnt = count($xmlUpd->channel->item);    
+//            for($i=0; $i<$cnt; $i++){
+//                $url = $xmlUpd->channel->item[$i]->link;
+//                $title = $xmlUpd->channel->item[$i]->title;
+//                $desc = $xmlUpd->channel->item[$i]->description;
+//                //echo '<a href="'.$url.'">'.$title.'</a>'.$desc.'';
+//                preg_match("/phpPMS_(\d\.\d{1,}[a-z])\.tar.gz$/", $title, $matches);
+//                print_r($matches);
+//            }
+        }
     }
 }
 ?>

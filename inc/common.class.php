@@ -81,7 +81,9 @@ class Common {
     
     // Función para imprimir la cabecera HTML
     static function printBodyHeader() {
-        global $CFG_PMS;
+        global $CFG_PMS, $startTime;
+        
+        $startTime = microtime();
         
         $strAdmin = ( $_SESSION["uisadmin"] == 1 ) ? "(A)" : "";
         $strUserName = ( $_SESSION["uname"] ) ? $_SESSION["uname"] : $_SESSION["ulogin"];
@@ -89,7 +91,7 @@ class Common {
         
         $strUser = $strUserName." (".$strUserGroup.") $strAdmin";
         $chpass = ( $_SESSION['uisldap'] == 0 ) ? '<IMG SRC="imgs/key.png" CLASS="iconMini" TITLE="Cambiar clave de usuario" Onclick="usrUpdPass('.$_SESSION["uid"].',\''.$_SESSION["ulogin"].'\')" />' : '';
-
+        
         echo '<noscript><DIV ID="nojs">Javascript ha de estar habilitado para el correcto funcionamiento</DIV></noscript>';
         echo '<DIV ID="header" CLASS="round"><DIV ID="logo"><IMG SRC="imgs/logo.png" />'.$CFG_PMS["sitename"].'</DIV>';
         echo '<DIV ID="sesion">'.$strUser.$chpass.'<IMG SRC="imgs/exit1.png" TITLE="Salir" OnClick="doLogout();" /></DIV></DIV>';
@@ -102,15 +104,30 @@ class Common {
 
     // Función para imprimir el pie HTML
     static function PrintFooter() {
-        global $CFG_PMS;
-
-        echo "<DIV ID='footer'>phpPMS ".PMS_VERSION."</DIV>";
+        global $CFG_PMS, $startTime;
+        
+        echo '<DIV ID="footer">
+            <DIV ID="updates"></DIV>
+            <SCRIPT>$("#updates").load(pms_root + "/ajax_checkupds");</SCRIPT>
+            <DIV ID="project">
+                <A HREF="http://sourceforge.net/projects/phppms/" TARGET="_blank">phpPMS '.PMS_VERSION.'</A> - 
+                <A HREF="http://cygnux.org" TARGET="_blank">cygnux.org</A>
+                </DIV>
+            </DIV>';
+        
         if ($CFG_PMS["debug"]){
+            $stopTime = microtime();
+            
             echo '<DIV ID="debug"><PRE>';
+            echo "Render start : ".$startTime;
+            echo "\nRender stop : ".$stopTime;
+            echo "\nRender total: ".($stopTime - $startTime)."\n\n";
+            
             print_r($_SESSION);
             print_r($CFG_PMS);
             echo "</PRE></DIV>";
         }
+        
         echo "</BODY></HTML>";
     }
 

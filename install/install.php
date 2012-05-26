@@ -95,6 +95,10 @@ if ( createDbFile() ) {
     
     $objConfig = new Config;
     
+    if ( file_exists("upgrade.sql") ){
+        echo '<br />&gt; <span class="altTxtBlue">Si está actualizando, es necesario ejecutar antes: <br /> \'mysql -u root -p < install/upgrade.sql\' desde la consola </span>&lt;';
+    }
+    
     if ( $objConfig->mkInitialConfig(dirname(__FILE__),$_GET["upgrade"]) ){
         echo '<br />&gt; <span class="altTxtGreen">Configuración del entorno finalizada</span> &lt;';
     } else {
@@ -103,10 +107,6 @@ if ( createDbFile() ) {
     
     if ( file_exists("config.ini") || file_exists(PMS_ROOT."/config.ini") ){
         echo '<br />&gt; Por seguridad, elimine el archivo config.ini &lt;';
-    }
-    
-    if ( file_exists("upgrade.sql") ){
-        echo '<br />&gt; Para actualizar la BBDD, ejecute \'mysql -u root -p < install/upgrade.sql\' desde la consola &lt;';
     }
     
     echo '<br /><br /><a href="'.PMS_ROOT.'/login.php">Pulse aquí para acceder</a>

@@ -52,6 +52,12 @@
             $objFile = new Files;
             $objFile->fileDownload($fileId);
             break;
+        case "view":
+            $fileId = $_POST['fileId'];
+
+            $objFile = new Files;
+            $objFile->fileDownload($fileId,TRUE);
+            break;        
         case "delete":
             $fileId = $_POST['fileId'];
 

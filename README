@@ -1,26 +1,26 @@
 //
-//Copyright (c) 2012 Rubén Domínguez
+// Copyright (c) 2012 Rubén Domínguez
 //  
-//This file is part of phpPMS.
+// This file is part of phpPMS.
 //
-//phpPMS is free software: you can redistribute it and/or modify
-//it under the terms of the GNU General Public License as published by
-//the Free Software Foundation, either version 3 of the License, or
-//(at your option) any later version.
+// phpPMS is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//phpPMS is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// phpPMS is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//You should have received a copy of the GNU General Public License
-//along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-//
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
 
 /**
  *
  * @author nuxsmin
- * @version 0.9b
+ * @version 0.91b
  * @link http://www.cygnux.org/phppms
  * 
  */
@@ -28,7 +28,7 @@
 phpPMS es una aplicación web en PHP para la gestión de claves en un entorno
 multiusuario.
 
-Esta aplicación es derivada de phppPasswordManager, la cual ha sido reescrita 
+Esta aplicación es derivada de phpPasswordManager, la cual ha sido reescrita 
 casi por completo, añadiendo nuevas funcionalidades que permiten:
 
     - Seguridad basada en grupos y pefiles de usuario.
@@ -39,5 +39,30 @@ casi por completo, añadiendo nuevas funcionalidades que permiten:
     - Log de eventos de auditoría.
     - Backup "portable".
 
+Para realizar la instalación siga los pasos que se indican en el archivo 
+'install/INSTALL' o en http://sourceforge.net/p/phppms/wiki/Instalaci%C3%B3n/
+
 Esta aplicación está bajo licencia GNU GPLv3. Para más detalles sobre la misma, 
 en el archivo COPYING se encuentra una copia de esta.
+
+-----------------------------------------------------------------------------------------
+
+phpPMS is a PHP web based application, for passwords management in a multiuser
+environment.
+
+This application derives from phpPasswordManager, that was almost fully rewritten,
+and added new features that allows:
+
+    - Group/Profile based security.
+    - LDAP and DB access.
+    - Password encryption with global master password.
+    - Users/Groups management.
+    - Attachments could be uploaded.
+    - Audit event log.
+    - Backup "portable".
+
+To install you could follow steps on 'install/INSTALL' file or at 
+http://sourceforge.net/p/phppms/wiki/Installation/
+
+This software is published under GNU GPLv3 license. For details about that, there is
+a copy on 'COPYING' file.

@@ -65,7 +65,7 @@
                 </TR>
                 <TR>
                     <TD WIDTH="25%" CLASS="descCampo">Categoría</TD>
-                    <TD><?php echo $objAccount->strAccGroupName; ?></TD>
+                    <TD><?php echo $objAccount->strAccCategoryName; ?></TD>
                 </TR>
                 <TR>
                     <TD WIDTH="25%" CLASS="descCampo">Login</TD>

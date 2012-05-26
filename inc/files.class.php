@@ -37,7 +37,7 @@ class Files {
     // Función para subir el archivo
     public function fileUpload($intAccId){
         // Extensiones aceptadas.
-        $extsOk = array("pdf","PDF","jpg","JPG","gif","GIF","png","PNG","odt","ODT","ods","ODS","doc","DOC","docx","DOCX","xls","XLS","xsl","XSL","vsd","VSD","txt","TXT","csv","CSV","lic","LIC","ppk","PPK");
+        $extsOk = array("PDF","JPG","GIF","PNG","ODT","ODS","DOC","DOCX","XLS","XSL","VSD","TXT","CSV","LIC","PPK");
 
         $validated = 0;
 
@@ -45,7 +45,7 @@ class Files {
             // Comprobamos la extensión del archivo
             $fileExt = pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION);
 
-            if ( ! in_array($fileExt, $extsOk) ){
+            if ( ! in_array(strtoupper($fileExt), $extsOk) ){
                 echo "Extensión no permitida '$fileExt'";
                 return;
             }
@@ -77,9 +77,13 @@ class Files {
         $fileData = addslashes($fileData);
         fclose($fileHandle);
 
-        if( ! get_magic_quotes_gpc() ) $fileName = addslashes($fileName);
+        $fileName = $this->dbh->real_escape_string($fileName);
 
-        $strQuery = "INSERT INTO files SET intAccountId = '$intAccId', vacName = '$fileName', vacType = '$fileType', intSize = '$fileSize', blobContent = '$fileData', vacExtension = '$fileExt'";
+        $strQuery = "INSERT INTO files SET intAccountId = ".(int)$intAccId.", 
+                    vacName = '".$this->dbh->real_escape_string($fileName)."', 
+                    vacType = '$fileType', intSize = '$fileSize', 
+                    blobContent = '$fileData', 
+                    vacExtension = '".$this->dbh->real_escape_string($fileExt)."'";
         $resQuery = $this->dbh->query($strQuery);
 
         if ( ! $resQuery ) {
@@ -91,7 +95,7 @@ class Files {
     }
 
     // Función para descargar el archivo
-    public function fileDownload($fileId){
+    public function fileDownload($fileId,$view = FALSE){
         // Verificamos que el ID sea numérico
         if( ! is_numeric($fileId) ){
             echo "No es un ID de archivo válido";
@@ -99,7 +103,7 @@ class Files {
         }
 
         // Obtenemos el archivo de la BBDD
-        $strQuery = "SELECT * FROM files WHERE intId = $fileId LIMIT 1";
+        $strQuery = "SELECT * FROM files WHERE intId = ".(int)$fileId." LIMIT 1";
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -118,14 +122,30 @@ class Files {
         $fileSize = $resResult['intSize'];
         $fileType = $resResult['vacType'];
         $fileName = $resResult['vacName'];
+        $fileExt = $resResult['vacExtension'];
         $fileData = $resResult['blobContent'];
 
-        // Enviamos el archivo al navegador
-        header("Content-length: $fileSize");
-        header("Content-type: $fileType");
-        header("Content-Disposition: attachment; filename=$fileName");
-
-        echo $fileData;
+        if ( ! $view ){
+            // Enviamos el archivo al navegador
+            header("Content-length: $fileSize");
+            header("Content-type: $fileType");
+            header("Content-Disposition: attachment; filename=$fileName");
+            
+            echo $fileData;
+        } else {
+            $extsOkImg = array("JPG","GIF","PNG");
+            if ( in_array(strtoupper($fileExt), $extsOkImg) ){
+                $imgData = chunk_split(base64_encode($fileData));
+                echo '<img src="data:'.$fileType.';base64, '.$imgData.'" border="0" />';
+//            } elseif ( strtoupper($fileExt) == "PDF" ){
+//                echo '<object data="data:application/pdf;base64, '.base64_encode($fileData).'" type="application/pdf"></object>';
+            } elseif ( strtoupper($fileExt) == "TXT" ){
+                echo '<div id="fancyView" class="backGrey"><pre>'.$fileData.'</pre></div>';
+            } else{
+                echo '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">Tipo de archivo no soportado</span></div>';
+            }
+        }
+        
     }
 
     public function fileDelete($fileId){
@@ -136,7 +156,7 @@ class Files {
         }
 
         // Eliminamos el archivo de la BBDD
-        $strQuery = "DELETE FROM files WHERE intId = $fileId";  
+        $strQuery = "DELETE FROM files WHERE intId = ".(int)$fileId;  
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -150,7 +170,7 @@ class Files {
     // Función para generar el listado de archivos guardados
     public function mkFileList($intAccId,$blnDelete){
         // Obtenemos los archivos de la BBDD para dicha cuenta
-        $strQuery = "SELECT intId, vacName, intSize FROM files WHERE intAccountId = $intAccId";  
+        $strQuery = "SELECT intId, vacName, intSize FROM files WHERE intAccountId = ".(int)$intAccId;
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -161,7 +181,7 @@ class Files {
 
         // Mostramos el listado de archivos para descargarlos
         echo '<form action="ajax_files.php" method="POST" name="files_form" id="files_form">';
-        echo '<select name="fileId" size="3" class="files" id="files">';
+        echo '<select name="fileId" size="4" class="files" id="files">';
         while ($file = $resQuery->fetch_assoc()) {
             $fileId = $file["intId"];
             $fileName = $file["vacName"];
@@ -171,19 +191,20 @@ class Files {
         }
         echo '</select>';
         echo '<input name="action" type="hidden" id="action" value="download">';
-        //echo '<input name="download" type="image" src="imgs/download.png" title="Descargar archivo" id="btnDownload" class="inputImg" />';
+        echo '</form>';
+        echo '<DIV CLASS="actionFiles">';
         echo '<IMG SRC="imgs/download.png" TITLE="Descargar archivo" ID="btnDownload" CLASS="inputImg" OnClick="downFile();" />';
+        echo '<IMG SRC="imgs/view.png" TITLE="Ver archivo" ID="btnView" CLASS="inputImg" OnClick="downFile(1);" />';
 
         if ( $blnDelete != 0) echo '<IMG SRC="imgs/delete.png" TITLE="Eliminar archivo" ID="btnDelete" CLASS="inputImg" OnClick="delFile('.$intAccId.');" />';
-        
-        echo '</form>';
+        echo '</DIV>';      
         
         $resQuery->free();
     }
 
     public function countFiles($intAccId){
         // Obtenemos los archivos de la BBDD para dicha cuenta
-        $strQuery = "SELECT intId FROM files WHERE intAccountId = $intAccId";  
+        $strQuery = "SELECT intId FROM files WHERE intAccountId = ".(int)$intAccId;  
         $resQuery = $this->dbh->query($strQuery);
 
         if ( ! $resQuery ) {

@@ -68,6 +68,7 @@ INPUT.inputImg, IMG.inputImg {
 }
 
 INPUT.txtFile{width:200px;}
+INPUT.txtLong{width:300px;}
 
 TEXTAREA {width: 350px;	resize: none;}
 
@@ -157,8 +158,22 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #container .data{width: 100%; border: none; margin-top: 3.5em;}
 #container .data TD{text-align: left;}
 #container .data TD.descCampo {text-align:right;font-size:12px;font-weight:bold;}
+#container .data #downFiles FORM{width: 50%;display: inline;}
+#container .data #upldFiles FORM{width: 50%;display: inline;}
+#container .data .actionFiles {display: inline;}
+
 #container .tblConfig TD.descCampo{width:27%;font-size:11px; font-weight:bold;}
+#container .tblConfig TD.rowHeader{
+    padding: 5px 0 5px 0;
+    background-color:#f9f9f9;
+    text-align: center;
+    font-weight: bold;
+    border-bottom:3px solid #a9c1d7;
+    letter-spacing: 0.5em;
+    color: #696969;
+}
 #container .tblConfig INPUT.checkbox{width: 15px;text-align: left;padding:0;}
+
 
 #container #tblAccion {width: 100%;}
 
@@ -172,7 +187,15 @@ A:focus {text-decoration: none;	color: #FF0000;}
         padding-top: 0.1em;
 }
 
-#container .section{margin-top: 1.5em;border-bottom:1px solid #d9d9d9;text-align: left;font-size: 14px;font-weight: bold;color: #045FB4;}
+#container .section{
+    margin-top: 2.5em;
+    border-bottom:1px solid #d9d9d9;
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+    color: #045FB4;
+}
+
 #container .action{
         display: inline-block;
         height: 3em;
@@ -181,6 +204,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
         text-align: right;
         float:right;
 }
+
 #container .action IMG{background-color: transparent;margin-top: 0.5em;display: inline;bordero 0;}
 #container .row_even>TD{background-color: #f5f5f5;}
 #container .row_odd>TD{background-color: white;}
@@ -217,6 +241,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #container #tblActions INPUT{border: 0;}
 #container #usrMgmt {margin-top: 3.5em;}
 
+#container #resEventLog {width: 100%; height: 500px; overflow-y: auto;margin-bottom: 30px;}
 #container #resEventLog TD{border-bottom: 1px solid #d9d9d9;}
 
 #tblTools SELECT, #tblTools INPUT{margin-left: 15px;}
@@ -267,6 +292,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 }
 
 #fancyView.backGrey{background-color: #f2f2f2 !important;}
+#fancyView PRE{text-align: left;}
 #fancyView TABLE{border: none; width: 100%;font-size: 14px;text-align: left;}
 #fancyView TD{border-bottom: #d9d9d9 1px solid;}
 #fancycontainer {padding: 15px;}
@@ -308,10 +334,17 @@ A:focus {text-decoration: none;	color: #FF0000;}
         margin-left: auto;
         margin-right: auto;
 	color:#b9b9b9;
-	text-align:right;
 	font-size:13px;
 	border-top: 1px solid #d9d9d9;
 }
+
+#footer #project{float: right;width: 20%;text-align:right;}
+#footer #updates{float: left;width: 20%;text-align:left;}
+
+#footer A{color:#b9b9b9;}
+#footer #project A:hover{color:#a9c1d7;border-bottom: 1px solid #a9c1d7;}
+#footer #updates A:hover{color:#a9c1d7;}
+#footer IMG{border: none;width: 16px;height: 16px;vertical-align: middle;}
 
 .round{
 	border-radius: 15px;

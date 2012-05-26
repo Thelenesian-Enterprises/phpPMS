@@ -1,100 +1,100 @@
-//
-//Copyright (c) 2012 Rubén Domínguez
+// Copyright (c) 2012 Rubén Domínguez
 //  
-//This file is part of phpPMS.
+// This file is part of phpPMS.
 //
-//phpPMS is free software: you can redistribute it and/or modify
-//it under the terms of the GNU General Public License as published by
-//the Free Software Foundation, either version 3 of the License, or
-//(at your option) any later version.
+// phpPMS is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//phpPMS is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// phpPMS is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//You should have received a copy of the GNU General Public License
-//along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-//
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
 
 /**
  *
  * @author nuxsmin
- * @version 0.9b
+ * @version 0.91b
  * @link http://www.cygnux.org/phppms
  * 
  */
 
-*****************************************
-*           Instalación phpPMS          *
-*****************************************
+## Instalación phpPMS ##
 
-1. Prerequisitos:
+1. ** Prerequisitos **
+    * Servidor web (Apache/Lighttpd) con SSL habilitado.
+    * MySQL 5
+    * PHP 5 >= 5.1.2
+    * Módulo PHP mysql
+    * Módulo PHP mcrypt
+    * Módulo PHP ldap
 
-    - Servidor web (Apache/Lighttpd) con SSL habilitado.
-    - MySQL 5
-    - PHP 5 >= 5.1.2
-    - Módulo php mcrypt
-    - Módulo php ldap
+2. ** Instalación **
+    
+    Si está actualizando, pase al punto 2.3
 
-2. Instalación:
+2.1. ** Configuración de directorios y permisos **
 
-2.1.
-    Crear un directorio para la aplicación en la raíz del servidor web:
+Crear un directorio para la aplicación en la raíz del servidor web:
 
-    mkdir /var/www/phppms
+    # mkdir /var/www/phppms
 
-    Copiar y descomprimir el archivo phpPMS en el directorio creado:
+Copiar y descomprimir el archivo phpPMS en el directorio creado:
     
     # cp phpPMS.tar.gz /var/www/phppms
     # cd /var/www/phppms
     # tar xzf phpPMS.tar.gz
 
-    Cambiar el propietario del directorio 'phppms/inc' (sólo necesario para la instalación).
-    Ha de coincidir con el usuario del servidor web:
+Cambiar el propietario del directorio 'phppms/inc' (sólo necesario para la instalación).
+Ha de coincidir con el usuario del servidor web:
 
-    chown www-data /var/www/phppms/inc
+    # chown www-data /var/www/phppms/inc
 
-    Cambiar el propietario del direcorio 'phppms/backup':
+Cambiar el propietario del directorio 'phppms/backup':
 
-    chown www-data /var/www/phppms/backup
+    # chown www-data /var/www/phppms/backup
 
-2.2. BBDD:
-    
-    Importar el archivo install/phpPMS.sql en la BBDD:
+2.2. ** Base de Datos **
+
+Importar el archivo install/phpPMS.sql en la BBDD.
 
     # mysql -u root -p < install/phpPMS.sql
     
-    Crear el usuario de conexión a la BBDD:
+Crear el usuario de conexión a la BBDD:
 
-    # mysql -u root -p
+    mysql -u root -p
     mysql> CREATE USER 'pms'@'localhost' IDENTIFIED BY 'clave';
     mysql> GRANT USAGE ON *.* TO 'pms'@'localhost' IDENTIFIED BY 'clave' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
     mysql> GRANT SELECT,INSERT,UPDATE,DELETE,LOCK TABLES ON phppms.* TO 'pms'@'localhost';
     mysql> exit
 
-    Los datos de usuario/clave deben de ser incluidos en el archivo config.ini
+Los datos de usuario/clave deben de ser incluidos en el archivo 'config.ini'
 
-2.3. Configuración del entorno:
+2.3. ** Actualización **
 
-    Editar el archivo 'config.ini' para establecer las opciones de la aplicación.
+    En caso de existir el archivo 'install/upgrade.sql' es necesario importarlo:
 
-    Abir un navegador y escribir la URL del servidor web:
+    # mysql -u root -p < install/upgrade.sql
 
-    https://servidor/phppms/install/install.php
+2.4. ** Configuración del entorno **
 
-    Tras la correcta finalización, ya es posible acceder al sistema.
+Editar el archivo 'config.ini' (en futuras versiones desaparecerá) para establecer las opciones de la aplicación (sólo durante la instalación), y debe de ser eliminado tras finalizar.
 
-3. Post-Instalación:
+Abir un navegador y escribir la URL:
 
-    - Cambiar la clave del usuario admin.
-    - Cambiar la clave maestra del sistema.
-    - Si la URL del servidor web no es "/phppms" se ha de modificar la 
-      variable pms_root del archivo "/javascript/functions"
+https://IP_O_NOMBRE_SERVIDOR/phppms/install/install.php
 
-4. Notas:
+Tras la correcta finalización, ya es posible acceder al sistema.
 
-    Si utiliza LDAP como sistema de identificación, ha de saber que las claves
-    de usuario son enviadas en texto plano. 
-    En proximas versiones, se dará opción para acceder mediante LDAPS.
-    
+3. ** Post-Instalación **
+    * Cambiar la clave del usuario admin.
+    * Cambiar la clave maestra del sistema.
+    * Si la URL del servidor web no es '/phppms' se ha de modificar la variable 'pms_root' del archivo '/javascript/functions'
+
+4. ** Notas**
+    * Si un usuario accede desde LDAP, estará inactivo hasta que el administrador le asigne un grupo correcto.

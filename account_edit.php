@@ -46,7 +46,7 @@
      
     Common::printHeader(FALSE,TRUE);
 ?>
-    <BODY ONLOAD="document.editaccount.sel_cliente.focus(); upldFile(<? echo $intAccId; ?>);">
+    <BODY ONLOAD="document.editaccount.sel_cliente.focus(););">
         <?php 
             Common::printBodyHeader();
             $objAccount->checkAccountAccess("edit") || die ('<DIV CLASS="error">No tiene permisos para modificar esta cuenta</DIV');
@@ -144,13 +144,17 @@
                     <TD WIDTH="25%" CLASS="descCampo">Archivos</TD>
                     <TD>
                         <DIV id="downFiles"></DIV>
-                        <SCRIPT>$("#downFiles").load(pms_root + "/ajax_files.php?id=<?echo $intAccId?>&del=1");</SCRIPT>                        
+                        <SCRIPT>$("#downFiles").load(pms_root + "/ajax_files.php?id=<?echo $intAccId?>&del=1");</SCRIPT>
+                        <DIV ID="upldFiles">
+                            <DIV CLASS="actionFiles">
+                                <IMG ID="btnUpload" SRC="imgs/upload.png" TITLE="Subir archivo (max. 1MB)" CLASS="inputImg" OnClick="upldFile(<? echo $intAccId; ?>)" />
+                            </DIV>                            
                             <FORM METHOD="POST" ENCTYPE="multipart/form-data" ACTION="ajax_files.php" NAME="upload_form" ID="upload_form">
                                 <INPUT TYPE="file" NAME="file" CLASS="txtFile" />
                                 <INPUT TYPE="hidden" NAME="accountId"  ID="account" VALUE="<?echo $intAccId;?>" />
                                 <INPUT TYPE="hidden" NAME="action" ID="action" VALUE="upload" />
-                                <INPUT TYPE="image" NAME="upload"  ID="btnUpload" SRC="imgs/upload.png" TITLE="Subir archivo (max. 1MB)" CLASS="inputImg" />
                             </FORM>
+                        </DIV>
                     </TD>
                 </TR>
             </TABLE>

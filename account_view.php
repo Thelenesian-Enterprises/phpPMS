@@ -159,7 +159,7 @@
             </TR>
         </TABLE>
         <?php if ( $blnNoMd5 == TRUE ) {?>
-	<TABLE WIDTH="80%" CLASS="altTable">
+	<TABLE WIDTH="80%">
             <TR>
                 <TD ALIGN="right"><B CLASS="altTxtRed">** no se puede verificar la clave porque el checksum interno no está disponible.<BR />Para escribir el checksum pulsa el botón.</B></TD>
                 <TD>
