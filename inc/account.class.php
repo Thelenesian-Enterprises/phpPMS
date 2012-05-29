@@ -368,8 +368,13 @@ class Account {
     }
 
     // Función para obtener los grupos secundarios de la cuenta
-    public function getGroupsAccount ($intAccId) {
-        $strQuery = "SELECT intUGroupId FROM acc_usergroups WHERE intAccId = ".(int)$intAccId;		
+    public function getGroupsAccount ($intAccId = "") {
+        if ( $intAccId ){
+            $strQuery = "SELECT intUGroupId FROM acc_usergroups WHERE intAccId = ".(int)$intAccId;
+        } else {
+            $strQuery = "SELECT intUGroupId FROM acc_usergroups WHERE intAccId = ".(int)$this->intAccId;
+        }
+        
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {

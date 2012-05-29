@@ -93,7 +93,7 @@
                             }
                         }
 ?>
-                    </SELECT>		
+                    </SELECT>
                     Categoría
                     <SELECT NAME="categoria" SIZE="1" OnChange="Buscar(0)">
                         <OPTION>TODAS</OPTION>
@@ -115,4 +115,3 @@
         </TABLE>
         <DIV ID="resBuscar"></DIV>
 <?php Common::PrintFooter(); ?>
-    </DIV>

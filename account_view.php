@@ -142,15 +142,18 @@
                 
                 $arrAccountGroups = $objAccount->getGroupsAccount($intAccountId);
                 
-                foreach ( $objAccount->getSecGroups() as $groupName => $groupId ){
-                    if ( $groupId != $objAccount->intAccUserGroupId ){
-                        if ( in_array($groupId, $arrAccountGroups)){
-                            $accUGroups[] = $groupName;
+                if ( is_array($arrAccountGroups) ){
+                    foreach ( $objAccount->getSecGroups() as $groupName => $groupId ){
+                        if ( $groupId != $objAccount->intAccUserGroupId ){
+                            if ( in_array($groupId, $arrAccountGroups)){
+                                $accUGroups[] = $groupName;
+                            }
                         }
                     }
+                    echo '<TD>'.implode(" | ",$accUGroups).'</TD></TR>';
+                } else {
+                    echo '<TD>&nbsp;</TD></TR>';
                 }
-                
-                echo '<TD>'.implode(" | ",$accUGroups).'</TD></TR>';
             }
 ?>      
             <TR>
@@ -158,21 +161,5 @@
                 <TD><?php echo $objAccount->strAccUserEditName; ?></TD>
             </TR>
         </TABLE>
-        <?php if ( $blnNoMd5 == TRUE ) {?>
-	<TABLE WIDTH="80%">
-            <TR>
-                <TD ALIGN="right"><B CLASS="altTxtRed">** no se puede verificar la clave porque el checksum interno no está disponible.<BR />Para escribir el checksum pulsa el botón.</B></TD>
-                <TD>
-                    <FORM ACTION="pms_account_md5_save.php" METHOD="post">
-                        <INPUT TYPE="hidden" NAME="accountid" VALUE="<?php echo $intAccountId; ?>">
-                        <INPUT TYPE="hidden" NAME="md5sum" VALUE="<?php echo md5($strDecrypted); ?>">
-                        <INPUT TYPE="submit" VALUE="Guardar Checksum" CLASS="altButtonFormat" ACCESSKEY="d">
-                    </FORM>
-                </TD>
-            </TR>
-	</TABLE>
-        <?php } ?>
         <DIV ID="resAccion"></DIV>
-        
 <?php Common::PrintFooter(); ?>
-    </DIV>

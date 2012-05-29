@@ -107,11 +107,12 @@ class Common {
         global $CFG_PMS, $startTime;
         
         echo '<DIV ID="footer">
-            <DIV ID="updates"></DIV>
-            <SCRIPT>$("#updates").load(pms_root + "/ajax_checkupds");</SCRIPT>
-            <DIV ID="project">
-                <A HREF="http://sourceforge.net/projects/phppms/" TARGET="_blank">phpPMS '.PMS_VERSION.'</A> - 
-                <A HREF="http://cygnux.org" TARGET="_blank">cygnux.org</A>
+                <DIV ID="updates"></DIV>
+                    <SCRIPT>$("#updates").load(pms_root + "/ajax_checkupds");</SCRIPT>
+                <DIV ID="project">
+                    <A HREF="http://sourceforge.net/projects/phppms/" TARGET="_blank">phpPMS '.PMS_VERSION.'</A> 
+                    &nbsp;::&nbsp;
+                    <A HREF="http://cygnux.org" TARGET="_blank">cygnux.org</A>
                 </DIV>
             </DIV>';
         
@@ -128,7 +129,7 @@ class Common {
             echo "</PRE></DIV>";
         }
         
-        echo "</BODY></HTML>";
+        echo "</DIV></BODY></HTML>";
     }
 
     function StartRenderTimer() {

@@ -37,10 +37,13 @@ function createDbFile() {
     $filePath = dirname(__FILE__)."/".PMS_ROOT."/inc";
     $fileName = $filePath."/db.class.php";
     
-    if( file_exists($fileName) ) return TRUE;
+    if( file_exists($fileName) ) {
+        echo '<TR><TD>El archivo de conexión a la BBDD, ya existe</TD><TD CLASS="result"><span class="altTxtOrange">AVISO</span></TD></TR>';
+        return TRUE;
+    }
     
     if ( ! $CFG_DB["hostname"] OR ! $CFG_DB["username"] OR ! $CFG_DB["userpass"] OR ! $CFG_DB["dbname"] ){
-        echo "<br />&gt; ERROR: faltan parámetros para la conexión a la BBDD &lt;";
+        echo '<TR><TD>Faltan parámetros para la conexión a la BBDD</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
         return FALSE;
     }
 
@@ -52,7 +55,7 @@ function createDbFile() {
             \n } \n?>";
 
     if ( ! is_writable($filePath) ){
-        echo "<br />&gt; ERROR: los permisos del directorio '$filePath' son incorrectos &lt;";
+        echo '<TR><TD>Los permisos del directorio \''.$filePath.'\' son incorrectos</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
         return FALSE;
     }
     
@@ -60,56 +63,126 @@ function createDbFile() {
         $fw = fwrite($fp,$DB_str);
         fclose($fp);
         
-        echo "<br />&gt; Archivo de conexión a la BBDD creado correctamente &lt;";
+        echo '<TR><TD>Creando archivo de conexión a la BBDD</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
         return TRUE;
     }  else {
-        echo "<br />&gt; ERROR: No es posible crear el archivo de conexión a la BBDD &lt;";
+        echo '<TR><TD>No es posible crear el archivo de conexión a la BBDD</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
         return FALSE;
     }
 }
 
-if ( file_exists("config.ini")){
-    Config::getFileConfig(dirname(__FILE__));
-} elseif ( file_exists(dirname(__FILE__)."/".PMS_ROOT."/config.ini") ){
-    Config::getFileConfig(dirname(__FILE__));
-} else {
-    header("Content-Type: text/html; charset=UTF-8");
-    die("El archivo de configuración no existe.");
+function checkDB(){
+    include_once (PMS_ROOT."/inc/db.class.php");
+    
+    $objDB = new DB;
+    
+    @$mysqli = new mysqli($objDB->dbhost, $objDB->dbuser, $objDB->dbpassword, $objDB->dbname);
+    
+    if ( $mysqli->connect_errno ){
+        echo '<TR><TD>No es posible conectar con la BBDD: <br />'.$mysqli->connect_errno.' - '.$mysqli->connect_error.'</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
+        unset($mysqli);
+        unset($objDB);
+        return FALSE;
+    } else{
+        echo '<TR><TD>Conexión con la BBDD '.$objDB->dbuser.'@'.$objDB->dbhost.' -> '.$objDB->dbname.'</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
+        unset($mysqli);
+        unset($objDB);        
+        return TRUE;
+    }
+    
+}
+
+function checkFileConfig(){
+    if ( file_exists("config.ini")){
+        if ( Config::getFileConfig(dirname(__FILE__)) ) {
+            echo '<TR><TD>Archivo de configuración procesado</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
+        } else {
+            echo '<TR><TD>Error al procesar el archivo de configuración \'config.ini\'</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
+            return FALSE;
+        }
+    } elseif ( file_exists(dirname(__FILE__)."/".PMS_ROOT."/config.ini") ){
+        if ( Config::getFileConfig(dirname(__FILE__)."/".PMS_ROOT."/config.ini") ){
+            echo '<TR><TD>Archivo de configuración procesado</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
+        } else {
+            echo '<TR><TD>Error al procesar el archivo de configuración \'config.ini\'</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
+            return FALSE;
+        }
+    } else {
+        echo '<TR><TD>El archivo de configuración \'config.ini\', no existe</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
+        return FALSE;
+    }
+    
+    return TRUE;
+}
+
+function checkVersion(){
+    preg_match("/(^\d\.\d)\..*/",PHP_VERSION, $version);
+
+    if ( $version[1] >= 5.1 ){
+        echo '<TR><TD>Versión PHP  \''.$version[0].'\'</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
+        return TRUE;
+    } else {
+        echo '<TR><TD>Versión PHP  \''.$version[0].'\', requerida >= 5.1</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
+        return FALSE;
+    }    
 }
 
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <HTML xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
     <HEAD>
-        <TITLE>'.$CFG_PMS["siteshortname"].' - '.$CFG_PMS["sitename"].'</TITLE>
+        <TITLE>Instalación phpPMS</TITLE>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <LINK REL="icon" TYPE="image/png" HREF="'.PMS_ROOT.'/imgs/logo.png">
         <LINK REL="stylesheet" HREF="'.PMS_ROOT.'/css/styles.css" TYPE="text/css">
     </HEAD>
     <BODY>
         <DIV ID="install" ALIGN="center">
-            <H2>Instalación phpPMS</H2>
-            &gt; Configurando entorno...  &lt;';
+        <DIV ID="logo" CLASS="round"><IMG SRC="../imgs/logo.png" />Instalación phpPMS</DIV>
+        <TABLE ID="tblInstall">';
 
-if ( createDbFile() ) {
-    include_once (PMS_ROOT."/inc/db.class.php");
+if ( checkVersion() AND checkFileConfig() AND createDbFile() ) {
     
-    $objConfig = new Config;
+    if ( checkDB() ) { 
     
-    if ( file_exists("upgrade.sql") ){
-        echo '<br />&gt; <span class="altTxtBlue">Si está actualizando, es necesario ejecutar antes: <br /> \'mysql -u root -p < install/upgrade.sql\' desde la consola </span>&lt;';
+        $modsError = 0;
+        $modsAvail = get_loaded_extensions();
+        $modsNeed = array("mysql","ldap","mcrypt","curl","SimpleXML");
+
+        foreach($modsNeed as $module){
+            if ( in_array($module, $modsAvail) ){
+                echo '<TR><TD>Módulo \''.$module.'\'</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
+            } else {
+                echo '<TR><TD>Módulo \''.$module.'\'</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
+                $modsError++;
+            }
+        }            
+
+        if ( $modsError > 0 ){
+            echo '<TR><TD>Módulos requeridos no disponibles. Abortado</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
+        } else {        
+            $objConfig = new Config;
+
+            if ( ! preg_match("/^\/phppms\//", $_SERVER["REQUEST_URI"],$matches) ){
+                echo '<TR><TD><span class="altTxtBlue">No está utilizando la URL por defecto "/phppms". Debe de modificar la variable "phppms_root" del archivo "javascript/funxtions.js"</span></TD><TD CLASS="result"><span class="altTxtOrange">AVISO</span></TD></TR>';
+
+            }
+
+            if ( file_exists("upgrade.sql") ){
+                echo '<TR><TD><span class="altTxtBlue">Si está actualizando, es necesario ejecutar antes: <br /> \'mysql -u root -p < install/upgrade.sql\' desde la consola </span></TD><TD CLASS="result"><span class="altTxtOrange">AVISO</span></TD></TR>';
+            }
+
+            if ( $objConfig->mkInitialConfig(dirname(__FILE__),$_GET["upgrade"]) ){
+                echo '<TR><TD>Configuración del entorno finalizada</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
+            }
+
+            if ( file_exists("config.ini") || file_exists(PMS_ROOT."/config.ini") ){
+                echo '<TR><TD>Por seguridad, guarde y elimine el archivo config.ini</TD><TD CLASS="result"><span class="altTxtOrange">AVISO</span></TD></TR>';
+            }
+
+            echo '<TR><TD COLSPAN="2" STYLE="text-align: center;font-weight: bold;font-size: 12px;"><A HREF="'.PMS_ROOT.'/login.php">Pulse aquí para acceder</A></TD></TR>';
+        }
     }
     
-    if ( $objConfig->mkInitialConfig(dirname(__FILE__),$_GET["upgrade"]) ){
-        echo '<br />&gt; <span class="altTxtGreen">Configuración del entorno finalizada</span> &lt;';
-    } else {
-        echo '<br />&gt; <span class="altTxtRed">Configuración del entorno finalizada con errores</span> &lt;';
-    }
-    
-    if ( file_exists("config.ini") || file_exists(PMS_ROOT."/config.ini") ){
-        echo '<br />&gt; Por seguridad, elimine el archivo config.ini &lt;';
-    }
-    
-    echo '<br /><br /><a href="'.PMS_ROOT.'/login.php">Pulse aquí para acceder</a>
-        </DIV></BODY></HTML>';
+    echo '</DIV></BODY></HTML>';
 }
 ?>

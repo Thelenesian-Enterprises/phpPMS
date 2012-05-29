@@ -92,7 +92,7 @@ class Users {
         $usersprofiles = array("Acceso total","Editar&Borrar","Editar","Ver&Clave","Ver");
         
         echo '<FORM NAME="frm_tblusers" ID="frm_tblusers" OnSubmit="return false;" >';
-        echo '<TABLE ID="tblUsers"><THEAD><TR CLASS="header">';
+        echo '<TABLE ID="tblUsers"><THEAD><TR CLASS="headerGrey">';
 //        $headers = array("Nombre", "Login", "Perfil", "Grupo", "Admin", "Email", "Notas", "Acciones");
 //        
 //        foreach ($headers as $header){
@@ -212,7 +212,7 @@ class Users {
         }
                 
         echo '<FORM NAME="frm_tblgroups" ID="frm_tblgroups" OnSubmit="return false;" >';
-        echo '<TABLE ID="tblGroups"><THEAD><TR CLASS="header">';
+        echo '<TABLE ID="tblGroups"><THEAD><TR CLASS="headerGrey">';
         echo '<TH>Nombre</TH>';
         echo '<TH>Descripción</TH>';
         echo '<TH>Acciones</TH>';
@@ -560,12 +560,10 @@ class Users {
     public function authUserLDAP($strUser, $strPass) {
         global $CFG_PMS;
 
-        if ($CFG_PMS["ldap"] == 0) return FALSE;
+        if ( $CFG_PMS["ldapenabled"] == 0 ) return FALSE;
         
-        foreach ( $CFG_LDAP as $configVal ){
-            if ( ! is_array($configVal) ){
-                if ( $configVal == "" ) return FALSE;
-            }
+        if ( ! $CFG_PMS["ldapbase"] OR ! $CFG_PMS["ldapserver"] OR ! $CFG_PMS["ldapuserattr"] OR ! $CFG_PMS["ldapgroup"] ){
+            return FALSE;
         }
         
         $ldapAccess = FALSE;

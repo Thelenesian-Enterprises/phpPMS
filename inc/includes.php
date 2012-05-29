@@ -29,7 +29,7 @@ if (!defined('PMS_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
 
-define('PMS_VERSION', '0.91b');
+
 
 $fileName = dirname(__FILE__) . "/db.class.php";
 
@@ -47,11 +47,14 @@ include_once (PMS_ROOT . "/inc/sesion.php");
 // PHP 5 >= 5.1.2
 spl_autoload_register("class_autoload");
 
-//Config::getFileConfig();
-
 $objConfig = new Config;
-if (!$objConfig->getDBConfig()) {
+
+if ( ! $objConfig->getDBConfig()) {
     header("Content-Type: text/html; charset=UTF-8");
-    die("No se ha podido cargar la configuración");
+    die("<br />No se ha podido cargar la configuración");
 }
+
+define('PMS_VERSION', $objConfig->getConfigValue("version"));
+
+unset($objConfig);
 ?>

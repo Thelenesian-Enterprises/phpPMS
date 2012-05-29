@@ -103,7 +103,7 @@
 ?>
 <TABLE ID="tblBuscar">
     <THEAD>
-        <TR CLASS="header">
+        <TR CLASS="headerBlue">
             <TH WIDTH="15%"><A onClick="searchSort(5,<? echo $intPage; ?>);">Cliente</A></TH>
             <TH WIDTH="15%"><A onClick="searchSort(1,<? echo $intPage; ?>);">Servicio / Recurso</A></TH>
             <TH WIDTH="10%"><A onClick="searchSort(2,<? echo $intPage; ?>);">Categoría</A></TH>

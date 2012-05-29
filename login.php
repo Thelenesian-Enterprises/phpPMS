@@ -32,6 +32,7 @@
     Common::printHeader(TRUE,TRUE);
 ?>
     <body onload="document.frmLogin.user.focus(); checkLogout();">
+        <noscript><DIV ID="nojs">Javascript ha de estar habilitado para el correcto funcionamiento</DIV></noscript>
         <DIV ALIGN="center" id="container">
             <div id='boxLogin'>
                 <div id="logo" class="round"><img src="imgs/logo.png" /><?php echo "Acceso ".$CFG_PMS["siteshortname"]; ?></div>
@@ -46,4 +47,3 @@
                 <div id="loading"></div>
             </div>
 <?php Common::PrintFooter(); ?>
-        </DIV>

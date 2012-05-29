@@ -41,5 +41,4 @@
     } elseif ( $checkVersion == TRUE ){
         echo '<IMG SRC="imgs/ok.png" TITLE="Actualizado"/>';
     }
-
 ?>

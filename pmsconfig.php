@@ -56,7 +56,7 @@
                 <IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" OnClick="configMgmt('saveconfig');">
             </DIV>        
             <? $objConfig->getConfigTable() ?>
-            <DIV CLASS="section"">Categorías</DIV>
+            <DIV CLASS="section">Categorías</DIV>
                 <TABLE CLASS="data tblConfig">
                     <TR>
                         <TD CLASS="descCampo">Nueva categoría</TD>
@@ -126,7 +126,7 @@
                     <TR>
                         <TD CLASS="descCampo">Confirmar Cambio de Clave</TD>
                         <TD>
-                            <INPUT TYPE="checkbox" NAME="confirmPassChange" value="1" />
+                            <INPUT TYPE="checkbox" CLASS="checkbox" NAME="confirmPassChange" value="1" />
                             <BR />
                             <IMG SRC="imgs/warning.png" ALT="Atención" CLASS="iconMini" />Se volverán a encriptar las claves de todas las cuentas.
                             <BR />
@@ -138,4 +138,3 @@
                 </TABLE>        
                 <DIV ID="resAccion"></DIV>
 <?php Common::PrintFooter(); ?>
-        </DIV>

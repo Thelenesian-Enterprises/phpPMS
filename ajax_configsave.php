@@ -52,10 +52,8 @@
             $intAccountCount = $post_account_count;
         }
 
-        $objConfig->arrConfigValue["password_show"] = $post_password_show;
         $objConfig->arrConfigValue["account_link"] = $post_account_link;
         $objConfig->arrConfigValue["account_count"] = $post_account_count;
-        $objConfig->arrConfigValue["md5_pass"] = $post_md5_pass;
         
         if ( ! $post_sitename OR ! $post_siteshortname ){
             $resXML["status"] = 1;

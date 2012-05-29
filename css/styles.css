@@ -26,12 +26,13 @@ TABLE#tblBuscar { border: none;}
 	vertical-align: middle;
 }
 
-TABLE TR.header	{ background-color:#e9e9e9;}
+TABLE TR.headerBlue { background-color:#E6F2FF;}
+TABLE TR.headerGrey { background-color:#e9e9e9;}
 TABLE TH{border-bottom:2px solid white;}
-TABLE TR.odd {background-color:#e8edff;}
+TABLE TR.odd {background-color:#f9f9f9;}
 TABLE TR.even>TD, TABLE TR.odd>TD{border-bottom:1px solid #d9d9d9 !important;}
-TABLE TR.even:hover{background-color:#d0dafd;}
-TABLE TR.odd:hover{background-color:#d0dafd;}
+TABLE TR.even:hover{background-color:#E8FF99;}
+TABLE TR.odd:hover{background-color:#E8FF99;}
 TABLE TR{height:20px;}
 TABLE TD{padding:3px;}
 TABLE TD.txtCliente{font-weight:bold;text-align:center;}
@@ -235,7 +236,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 /*#container #tblUsers INPUT.txtemail{width: 200px;}*/
 #container #tblUsers INPUT.icheck{width: 10px;}
 #container #tblUsers .txtdisabled{background-color: #dde5eb;}
-#container #tblUsers .inedit, #container #tblGroups .inedit{background-color:#d6fed1; }
+#container #tblUsers .inedit, #container #tblGroups .inedit{background-color:#E8FF99; }
 #container #tblUsers SELECT{width: 120px;}
 #container #tblActions {border: 0;}
 #container #tblActions INPUT{border: 0;}
@@ -292,6 +293,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 }
 
 #fancyView.backGrey{background-color: #f2f2f2 !important;}
+#fancyView.backOrange{background-color: #FFF2D9 !important;}
 #fancyView PRE{text-align: left;}
 #fancyView TABLE{border: none; width: 100%;font-size: 14px;text-align: left;}
 #fancyView TD{border-bottom: #d9d9d9 1px solid;}
@@ -495,7 +497,21 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #install{
     width: 50%;
     margin: auto;
-    padding: 10px;
+    padding: 20px;
     border: #d9d9d9 1px solid;
     line-height: 2em;
 }
+#install #logo{
+	width: 100%;
+        margin-bottom: 30px;
+	font-size: 18px;
+	font-weight: bold;
+	text-align:left;
+	color: #045FB4;
+	letter-spacing: 3px;
+	background: url("../imgs/bar.png") repeat-x scroll left top #e9e9e9;
+}
+
+#install #tblInstall {border: none; width: 100%;}
+#install TD {border-bottom: 1px solid #e9e9e9;}
+#install TD.result {text-align: center;}

@@ -127,4 +127,3 @@
             </TABLE>
             <DIV ID="resAccion"></DIV>
 <?php Common::PrintFooter(); ?>
-        </DIV>

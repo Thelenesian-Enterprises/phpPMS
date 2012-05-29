@@ -41,9 +41,10 @@ class Config {
     public function connectDb(){
         $this->getChildVars();
         
-        $mysqli = new mysqli($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
+        @$mysqli = new mysqli($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
+        
         if ( $mysqli->connect_errno ){
-            echo "No es posible conectar con la BBDD: (".$mysqli->connect_errno . ") ".$mysqli->connect_error;
+            die("No es posible conectar con la BBDD: (".$mysqli->connect_errno . ") ".$mysqli->connect_error);
             return FALSE;
         }
         
@@ -59,10 +60,18 @@ class Config {
         unset ($objDB);
     }
     
+    private function checkDBCon(){
+        if ( ! is_object($this->dbh) ) {
+            if ( ! $this->dbh = $this->connectDb () ) return FALSE;
+        }
+        
+        return TRUE;
+    }
 
-    // Método para obtener en valor de un parámetro
+
+        // Método para obtener en valor de un parámetro
     public function getConfigValue ($strConfigParam) {
-        if (! is_object($this->dbh)) $this->dbh = $this->connectDb ();
+        if ( ! $this->checkDBCon() ) return FALSE;
         
         $strQuery = "SELECT vacValue FROM config WHERE vacParameter = '$strConfigParam'";
         $resQuery = $this->dbh->query($strQuery);
@@ -81,7 +90,7 @@ class Config {
 
     // Método para guardar los valores de configuración en un array
     public function getConfig () {
-        if (! is_object($this->dbh)) $this->dbh = $this->connectDb ();
+        if ( ! $this->checkDBCon() ) return FALSE;
 
         $strQuery = "SELECT vacParameter, vacValue FROM config";
         $resQuery = $this->dbh->query($strQuery);
@@ -101,7 +110,7 @@ class Config {
 
     // Método para escribir la configuración
     public function writeConfig ($mkInsert = FALSE) {
-        if (! is_object($this->dbh)) $this->dbh = $this->connectDb ();
+        if ( ! $this->checkDBCon() ) return FALSE;
         
         $arrKeys = array_keys($this->arrConfigValue);
 
@@ -128,7 +137,7 @@ class Config {
     
     // Método para cargar la configuración desde un archivo
     static function getFileConfig($filePath = ""){
-        global $CFG_PMS, $CFG_DB, $CFG_SMTP, $CFG_LDAP;
+        global $CFG_PMS, $CFG_DB;
 
         if ( isset ($CFG_PMS) ) return TRUE;
 
@@ -140,8 +149,6 @@ class Config {
             if ( $config = parse_ini_file($fileName,TRUE) ){
                 $CFG_PMS = $config["global"];
                 $CFG_DB = $config["database"];
-                $CFG_SMTP = $config["smtp"];
-                $CFG_LDAP = $config["ldap"];
             } else{
                 return FALSE;
             }
@@ -163,7 +170,7 @@ class Config {
             if ( ! $this->writeFileConfig2DB() ) return FALSE;
         }
 
-        if (! is_object($this->dbh)) $this->dbh = $this->connectDb ();
+        if ( ! $this->checkDBCon() ) return FALSE;
         
         $strQuery = "SELECT vacParameter, vacValue FROM config";
         $resQuery = $this->dbh->query($strQuery);
@@ -216,7 +223,6 @@ class Config {
             }
         } else {
             if ( $this->getConfigValue("install") == 1 ){
-                //header("Content-Type: text/html; charset=UTF-8");
                 die("El archivo de configuración no existe (".$fileName.")");
             }
             return FALSE;
@@ -226,7 +232,7 @@ class Config {
     // Método para crear la configuración inicial
     public function mkInitialConfig($filePath = "",$upgrade = 0){
         if ( $this->getConfigValue("install") == 1 && $upgrade == 0){
-            echo "<br />&gt; <span class='altTxtOrange'>AVISO: Entorno ya instalado</span> ::<a href='install.php?upgrade=1'>ACTUALIZAR</a>:: &lt;";
+            echo '<TR><TD>Entorno ya instalado ::<a href="install.php?upgrade=1">ACTUALIZAR</a>::</TD><TD CLASS="result"><span class="altTxtOrange">AVISO</span></TD></TR>';
             return FALSE;
         }
 
@@ -237,14 +243,14 @@ class Config {
                 $this->arrConfigValue["masterPwd"] = $hashMPass;
 
                 if ( $this->writeConfig(TRUE) ){
-                    echo "<br />&gt; Clave maestra inicial establecida a '0000'. Es recomendable cambiarla &lt;";
+                    echo "<TR><TD>Clave maestra inicial establecida a '0000'. Es recomendable cambiarla</TD><TD CLASS='result'><span class='altTxtGreen'>OK</TD></TR>";
                 } else {
-                    echo "<br />&gt; <span class='altTxtRed'>ERROR: no se ha podido guardar la clave maestra</span> &lt;";
+                    echo "<TR><TD>No se ha podido guardar la clave maestra</TD><TD CLASS='result'><span class='altTxtRed'>ERROR</span></TD></TR>";
                     return FALSE;
                 }
                 unset($objCrypt);
             } else {
-                echo "<br />&gt; <span class='altTxtOrange'>AVISO: Clave maestra ya establecida</span> &lt;";
+                echo "<TR><TD>Clave maestra ya establecida</TD><TD CLASS='result'><span class='altTxtOrange'>AVISO</span></TD></TR>";
             }
 
             $strQuery = "SELECT vacULogin FROM users WHERE vacULogin = 'admin'";
@@ -256,13 +262,13 @@ class Config {
                 $resQuery = $this->dbh->query($strQuery);
 
                 if ( $resQuery ){
-                    echo "<br />&gt; Usuario 'admin' con clave 'admin' creado correctamnete &lt;";
+                    echo "<TR><TD>Usuario 'admin' con clave 'admin' creado correctamnete</TD><TD CLASS='result'><span class='altTxtGreen'>OK</TD></TR>";
                 } else {
-                    echo "<br />&gt; <span class='altTxtRed'>ERROR: no se ha podido crear el usuario 'admin'</span> &lt;";
+                    echo "<TR><TD>No se ha podido crear el usuario 'admin'</TD><TD CLASS='result'><span class='altTxtRed'>ERROR</span></TD></TR>";
                     return FALSE;
                 }
             } else {
-                echo "<br />&gt; <span class='altTxtOrange'>AVISO: el usuario 'admin', ya existe </span>&lt;";
+                echo "<TR><TD>El usuario 'admin', ya existe</TD><TD CLASS='result'><span class='altTxtOrange'>AVISO</TD></TR>";
             }
 
             unset($this->arrConfigValue);
@@ -274,7 +280,7 @@ class Config {
         }
         
         $this->arrConfigValue["install"] = 1;
-        $this->arrConfigValue["version"] = "0.91b";
+        $this->arrConfigValue["version"] = "0.94b";
         
         if ( $this->writeFileConfig2DB($filePath) ) return TRUE;
     }    
@@ -344,16 +350,7 @@ class Config {
         echo '<TR><TD CLASS="descCampo">Habilitar depuración</TD>';
         echo '<TD><INPUT TYPE="checkbox" NAME="debug" CLASS="checkbox" '.$chkDebug.' /></TD>';
         echo '</TR>';
-        
-        echo '<TR><TD CLASS="descCampo">Mostrar claves encriptadas</TD>';
-        echo '<TD><SELECT NAME="password_show" SIZE="1">';
-        if ( $this->arrConfigValue["password_show"] == "TRUE" ){
-            echo '<OPTION SELECTED>TRUE</OPTION><OPTION>FALSE</OPTION>';
-        } else {
-            echo '<OPTION>TRUE</OPTION><OPTION SELECTED>FALSE</OPTION>';
-        }
-        echo '</SELECT></TD></TR>';
-        
+               
         echo '<TR><TD CLASS="descCampo">Nombre de cuenta como enlace</TD>';
         echo '<TD><SELECT NAME="account_link" SIZE="1">';
         if ( $this->arrConfigValue["account_link"] == "TRUE" ){
@@ -377,16 +374,6 @@ class Config {
         }
         echo '</SELECT></TD></TR>';
         
-        echo '<TR><TD CLASS="descCampo">Comprobar clave al desencriptar</TD>';
-        echo '<INPUT TYPE="hidden" NAME="md5_pass_old" VALUE="'.$this->arrConfigValue["md5_pass"].'">';
-        echo '<TD><SELECT NAME="md5_pass" SIZE="1">';
-        if ( $this->arrConfigValue["md5_pass"] == "TRUE" ){
-            echo '<OPTION SELECTED>TRUE</OPTION><OPTION>FALSE</OPTION>';
-        } else {
-            echo '<OPTION>TRUE</OPTION><OPTION SELECTED>FALSE</OPTION>';
-        }
-        echo '</SELECT></TD></TR>';        
-
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >Wiki</TD></TR>';
         $chkWiki = ( $this->arrConfigValue["wikienabled"] ) ? 'checked="checked"' : '';
         echo '<TR><TD CLASS="descCampo">Habilitar enlaces Wiki</TD>';
@@ -467,29 +454,19 @@ class Config {
             preg_match("/phpPMS_(\d\.\d{1,}[a-z])\.tar.gz$/", $title, $pubVer);
             
             if ( $pubVer[1] == PMS_VERSION ){
-                if ( session_id() ){
+                if ( $_SESSION["ulogin"] ){
                     $_SESSION["pms_upd"] = TRUE;
                 }
                 
                 return TRUE;
             } else {
-               if ( session_id() ){
-                    $_SESSION["pms_upd"] = array($pubVer[1], $url);
+               if ( $_SESSION["ulogin"] ){
+                    $_SESSION["pms_upd"] = array($pubVer[1], (string)$url);
                 }
                 
-                $resCheck = array($pubVer[1], $url);
+                $resCheck = array($pubVer[1], (string)$url);
                 return $resCheck;
             }
-            
-//            $cnt = count($xmlUpd->channel->item);    
-//            for($i=0; $i<$cnt; $i++){
-//                $url = $xmlUpd->channel->item[$i]->link;
-//                $title = $xmlUpd->channel->item[$i]->title;
-//                $desc = $xmlUpd->channel->item[$i]->description;
-//                //echo '<a href="'.$url.'">'.$title.'</a>'.$desc.'';
-//                preg_match("/phpPMS_(\d\.\d{1,}[a-z])\.tar.gz$/", $title, $matches);
-//                print_r($matches);
-//            }
         }
     }
 }

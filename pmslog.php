@@ -51,7 +51,7 @@
             <DIV ID="resEventLog">
                 <TABLE CLASS="data">
                     <THEAD>
-                        <TR CLASS="header"><TH>Fecha/Hora</TH><TH>Evento</TH><TH>Usuario</TH><TH>Descripción</TH></TR>
+                        <TR CLASS="headerGrey"><TH>Fecha/Hora</TH><TH>Evento</TH><TH>Usuario</TH><TH>Descripción</TH></TR>
                     </THEAD>
                     <TBODY>
             <?php
@@ -74,4 +74,3 @@
                 </TABLE>
             </DIV>
 <?php Common::PrintFooter(); ?>
-        </DIV>

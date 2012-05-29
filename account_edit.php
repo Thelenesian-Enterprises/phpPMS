@@ -125,11 +125,11 @@
                     <TD>
                         <SELECT NAME="ugroups[]" MULTIPLE="multiple" SIZE="5" >                        
         <?php
-                        $arrAccountGroups = $objAccount->getGroupsAccount($intAccId);
-
+                        $arrAccountGroups = $objAccount->getGroupsAccount();
+                        
                         foreach ( $objAccount->getSecGroups() as $groupName => $groupId ){
                             if ( $groupId != $objAccount->intAccUserGroupId ){
-                                $uGroupSelected = ( in_array($groupId, $arrAccountGroups)) ? "SELECTED" : "";
+                                if ( is_array($arrAccountGroups) ) $uGroupSelected = ( in_array($groupId, $arrAccountGroups)) ? "SELECTED" : "";
                                 echo  "<OPTION VALUE='".$groupId."' $uGroupSelected>".$groupName."</OPTION>";
                             }
                         }
@@ -160,4 +160,3 @@
             </TABLE>
             <DIV ID="resAccion"></DIV>
 <?php Common::PrintFooter(); ?>
-        </DIV>

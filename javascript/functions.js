@@ -24,8 +24,6 @@
  * 
  */
 
-//{'overlayShow' : true,'overlayOpacity' : 0,'hideOnOverlayClick' : false,'content' : txt}
-
 var gsorder = 0;
 var lastlen = 0;
 var usr_inedit = 0;
@@ -185,7 +183,7 @@ function doLogin(){
             if( status == 0 ){
                 location.href='index.php';
             } else if ( status == 2 ){
-//                var txt = '<div id="fancyView" class="fancyNone"><span class="altTxtOrange">' + description + '</span></div>';
+//                var txt = '<div id="fancyView" class="backOrange"><span class="altTxtOrange">' + description + '</span></div>';
 //                $.fancybox({
 //                    'content': txt,
 //                    'onClosed' : function() { location.href = 'index.php';}
@@ -198,7 +196,7 @@ function doLogin(){
                 });
                 $('#smpass').show();
             } else if ( status == 5 ){
-                var txt = '<div id="fancyView" class="fancyNone"><span class="altTxtOrange">' + description + '</span></div>';
+                var txt = '<div id="fancyView" class="backOrange"><span class="altTxtOrange">' + description + '</span></div>';
                  $.fancybox({
                     'content': txt,
                     'onClosed' : function() {location.href = 'index.php';}
@@ -232,7 +230,7 @@ function checkLogout(){
     var session = getUrlVars()["session"];
 
     if ( session == 0 ){
-        var txt = '<div id="fancyView" class="fancyNone"><span class="altTxtOrange">Sesión finalizada</span></div>';
+        var txt = '<div id="fancyView" class="backOrange"><span class="altTxtOrange">Sesión finalizada</span></div>';
         $.fancybox(txt,{'onClosed' : function() {location.search = '';}});				
     }
 }

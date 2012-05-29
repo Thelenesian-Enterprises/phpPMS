@@ -32,5 +32,5 @@
     Common::wrLogInfo("Fin sesión", "Nombre:".$_SESSION['uname'].";Perfil:".$_SESSION['uprofile'].";Grupo:".$_SESSION['ugroup'].";IP:".$_SERVER['REMOTE_ADDR']);
     session_destroy();
     
-    echo '<div id="fancyView" class="fancyNone"><span class="altTxtOrange">Sesión finalizada</span></div>';
+    echo '<div id="fancyView" class="backOrange"><span class="altTxtOrange">Sesión finalizada</span></div>';
 ?>
