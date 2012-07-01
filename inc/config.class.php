@@ -39,12 +39,14 @@ class Config {
     }
     
     public function connectDb(){
+        global $LANG;
+        
         $this->getChildVars();
         
         @$mysqli = new mysqli($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
         
         if ( $mysqli->connect_errno ){
-            die("No es posible conectar con la BBDD: (".$mysqli->connect_errno . ") ".$mysqli->connect_error);
+            die($LANG['msg'][75].": (".$mysqli->connect_errno . ") ".$mysqli->connect_error);
             return FALSE;
         }
         
@@ -154,7 +156,7 @@ class Config {
             }
         } else {
             header("Content-Type: text/html; charset=UTF-8");
-            die("El archivo de configuración no existe (".$fileName.")");
+            die($LANG['msg'][77]." (".$fileName.")");
         }
 
         return TRUE;
@@ -167,7 +169,7 @@ class Config {
         if ( isset ($CFG_PMS) ) return TRUE;
         
         if ( $this->getConfigValue("siteshortname") == "" ){
-            if ( ! $this->writeFileConfig2DB() ) return FALSE;
+            $CFG_PMS["siteshortname"] = "PMS";
         }
 
         if ( ! $this->checkDBCon() ) return FALSE;
@@ -192,102 +194,71 @@ class Config {
         
         return TRUE;
     }     
-    
-    // Método para escribir la configuración desde el archivo de configuración a la BBDD
-    public function writeFileConfig2DB($filePath = ""){
-        if( ! $filePath ) $filePath = pathinfo($_SERVER['SCRIPT_FILENAME'],PATHINFO_DIRNAME)."/install";
+      
+    // Método para crear la configuración inicial
+    public function mkInitialConfig($arrConfigParams){
+        global $LANG;
         
-        $fileName = $filePath."/config.ini";
+        if ( $this->getConfigValue("install") == 1 ){
+            echo '<TR><TD>'.$LANG['install'][0].'</TD><TD CLASS="result"><span class="altTxtOrange">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
+            return FALSE;
+        }
 
-        if ( file_exists($fileName) ){
-            if ( $config = parse_ini_file($fileName,TRUE) ){
-                foreach ( $config as $cfg_type => $cfg_param ){
-                    if ( $cfg_type == "database" ) continue;
-                    
-                    foreach ( $cfg_param as $cfg_param_name => $cfg_param_value ){
-                        if ( is_array($cfg_param_value) ) $cfg_param_value = implode("||", $cfg_param_value);                        
-                        $this->arrConfigValue["$cfg_param_name"] = $cfg_param_value;
-                    }
-                }
+        if ( ! $this->getConfigValue("masterPwd") ){
+            $objCrypt = new Crypt();
+            $hashMPass = $objCrypt->mkHashPassword("0000");
+            $this->arrConfigValue["masterPwd"] = $hashMPass;
 
-                if ( $this->writeConfig(TRUE) ){
-                    if ( is_writable($filePath) ) {
-                        unlink($fileName);
-                    } else{
-                        Common::wrLogInfo(__FUNCTION__, "No es posible borrar el archivo de configuración '$fileName', por seguridad, bórrelo");
-                    }
-                    return TRUE;
-                }
-            } else{
+            if ( $this->writeConfig(TRUE) ){
+                echo '<TR><TD>'.$LANG['install'][1].'</TD><TD CLASS="result"><span class="altTxtGreen">'.strtoupper($LANG['common'][6]).'</TD></TR>';
+            } else {
+                echo '<TR><TD>'.$LANG['install'][2].'</TD><TD CLASS="result"><span class="altTxtRed">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
+                return FALSE;
+            }
+            unset($objCrypt);
+        } else {
+            echo '<TR><TD>'.$LANG['install'][3].'</TD><TD CLASS="result"><span class="altTxtOrange">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
+        }
+
+        $strQuery = "SELECT COUNT(vacULogin) FROM users WHERE vacULogin = 'admin'";
+        $resQuery = $this->dbh->query($strQuery);
+        $adminCount = $resQuery->fetch_array(MYSQLI_NUM);
+
+        if ( $adminCount[0] == 0 ){
+            $strQuery = "INSERT INTO users (vacUName,vacULogin,intUGroupFid,intUProfile,blnIsAdmin,vacUPassword,blnFromLdap) 
+                        VALUES('PMS Admin','admin',1,0,1,MD5('admin'),0);";
+            $resQuery = $this->dbh->query($strQuery);
+
+            if ( $resQuery ){
+                echo '<TR><TD>'.$LANG['install'][4].'</TD><TD CLASS="result"><span class="altTxtGreen">'.strtoupper($LANG['common'][6]).'</TD></TR>';
+            } else {
+                echo '<TR><TD>'.$LANG['install'][5].'</TD><TD CLASS="result"><span class="altTxtRed">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
                 return FALSE;
             }
         } else {
-            if ( $this->getConfigValue("install") == 1 ){
-                die("El archivo de configuración no existe (".$fileName.")");
-            }
-            return FALSE;
-        }
-    }   
-    
-    // Método para crear la configuración inicial
-    public function mkInitialConfig($filePath = "",$upgrade = 0){
-        if ( $this->getConfigValue("install") == 1 && $upgrade == 0){
-            echo '<TR><TD>Entorno ya instalado ::<a href="install.php?upgrade=1">ACTUALIZAR</a>::</TD><TD CLASS="result"><span class="altTxtOrange">AVISO</span></TD></TR>';
-            return FALSE;
+            echo '<TR><TD>'.$LANG['install'][6].'</TD><TD CLASS="result"><span class="altTxtOrange">'.strtoupper($LANG['common'][4]).'</TD></TR>';
         }
 
-        if ( $upgrade == 0 ){
-            if ( ! $this->getConfigValue("masterPwd") ){
-                $objCrypt = new Crypt();
-                $hashMPass = $objCrypt->mkHashPassword("0000");
-                $this->arrConfigValue["masterPwd"] = $hashMPass;
+        unset($this->arrConfigValue);
 
-                if ( $this->writeConfig(TRUE) ){
-                    echo "<TR><TD>Clave maestra inicial establecida a '0000'. Es recomendable cambiarla</TD><TD CLASS='result'><span class='altTxtGreen'>OK</TD></TR>";
-                } else {
-                    echo "<TR><TD>No se ha podido guardar la clave maestra</TD><TD CLASS='result'><span class='altTxtRed'>ERROR</span></TD></TR>";
-                    return FALSE;
-                }
-                unset($objCrypt);
-            } else {
-                echo "<TR><TD>Clave maestra ya establecida</TD><TD CLASS='result'><span class='altTxtOrange'>AVISO</span></TD></TR>";
+        foreach ($arrConfigParams as $configParam => $configValue ){
+            if ( ($configParam == "sitename" OR $configParam == "siteshortname" OR $configParam == "siteroot") AND ! $configValue ){
+                echo '<TR><TD>'.$LANG['install'][48].' (\''.$configParam.'\')</TD><TD CLASS="result"><span class="altTxtRed">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
+                return FALSE;
             }
-
-            $strQuery = "SELECT vacULogin FROM users WHERE vacULogin = 'admin'";
-            $resQuery = $this->dbh->query($strQuery);
-
-            if ( ! $resQuery ){
-                $strQuery = "INSERT INTO users (vacUName,vacULogin,intUGroupFid,intUProfile,blnIsAdmin,vacUPassword,blnFromLdap) 
-                            VALUES('PMS Admin','admin',1,0,1,MD5('admin'),0);";
-                $resQuery = $this->dbh->query($strQuery);
-
-                if ( $resQuery ){
-                    echo "<TR><TD>Usuario 'admin' con clave 'admin' creado correctamnete</TD><TD CLASS='result'><span class='altTxtGreen'>OK</TD></TR>";
-                } else {
-                    echo "<TR><TD>No se ha podido crear el usuario 'admin'</TD><TD CLASS='result'><span class='altTxtRed'>ERROR</span></TD></TR>";
-                    return FALSE;
-                }
-            } else {
-                echo "<TR><TD>El usuario 'admin', ya existe</TD><TD CLASS='result'><span class='altTxtOrange'>AVISO</TD></TR>";
-            }
-
-            unset($this->arrConfigValue);
-
-            $this->arrConfigValue["md5_pass"] = "TRUE";
-            $this->arrConfigValue["password_show"] = "TRUE";
-            $this->arrConfigValue["account_link"] = "TRUE";
-            $this->arrConfigValue["account_count"] = 5;
+            $this->arrConfigValue[$configParam] = $configValue;
         }
         
         $this->arrConfigValue["install"] = 1;
-        $this->arrConfigValue["version"] = "0.94b";
+        $this->arrConfigValue["version"] = PMS_VERSION;
         
-        if ( $this->writeFileConfig2DB($filePath) ) return TRUE;
+
+        if ( $this->writeConfig(TRUE) ) return TRUE;
     }    
     
     // Método para realizar los backups
     public function doDbBackup($bakDirPMS){
-        global $CFG_PMS;
+        global $CFG_PMS, $LANG;
         
         $siteName = $CFG_PMS["siteshortname"];
         $bakDstDir = $bakDirPMS.'/backup';
@@ -296,18 +267,18 @@ class Config {
 
         if ( ! is_dir($bakDstDir) ){
             if ( ! @mkdir($bakDstDir, 0550) ){
-                $arrOut[] = '<span class="altTxtRed">No es posible crear el directorio de backups ('.$bakDstDir.')</span>';
+                $arrOut[] = '<span class="altTxtRed">'.$LANG['msg'][94].' ('.$bakDstDir.')</span>';
                 Common::wrLogInfo("Backup BBDD",$strError.";IP:".$_SERVER['REMOTE_ADDR']);
             }
         }
 
         if ( ! is_writable($bakDstDir) ){
-            $arrOut[] = '<span class="altTxtRed">Compruebe los permisos del directorio de backups</span>';
+            $arrOut[] = '<span class="altTxtRed">'.$LANG['msg'][89].'</span>';
         }
 
         if ( ! is_array($arrOut) ){
-            Common::wrLogInfo("Backup BBDD","IP:".$_SERVER['REMOTE_ADDR']);
-            Common::sendEmail("Realizado backup");
+            Common::wrLogInfo($LANG['event'][19],"IP:".$_SERVER['REMOTE_ADDR']);
+            Common::sendEmail($LANG['mailevent'][3]);
             
             $this->getChildVars();
             
@@ -323,35 +294,53 @@ class Config {
     }
     
     public function getConfigTable(){
+        global $LANG;
+        
+        $arrLangAvailable = array('es_ES','en_US');
+        
         $this->getConfig();
         
         echo '<TABLE CLASS="data tblConfig">';
         echo '<FORM METHOD="post" NAME="frmConfig" ID="frmConfig" />';      
 
-        echo '<TR><TD COLSPAN="2" CLASS="rowHeader">Sitio</TD></TR>';
-        echo '<TR><TD CLASS="descCampo">Nombre del sitio</TD>';
+        echo '<TR><TD COLSPAN="2" CLASS="rowHeader">'.$LANG['config'][1].'</TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][2].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="sitename" CLASS="txtLong" ID="sitename" VALUE="'.$this->arrConfigValue["sitename"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">Siglas del sitio</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][3].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="siteshortname" VALUE="'.$this->arrConfigValue["siteshortname"].'" /></TD>';
         echo '</TR>';
+        
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36].'</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="'.$this->arrConfigValue["siteroot"].'" /></TD>';
+        echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">Timeout de sesión (s)</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][37].'</TD>';
+        echo '<TD><SELECT NAME="sitelang" SIZE="1">';
+        foreach ( $arrLangAvailable as $langOption ){
+            $selected = ( $this->arrConfigValue["sitelang"] == $langOption ) ?  "SELECTED" : "";
+            
+            echo '<OPTION '.$selected.'>'.$langOption.'</OPTION>';
+        }
+        echo '</SELECT></TD></TR>';
+        
+
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][4].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="session_timeout" VALUE="'.$this->arrConfigValue["session_timeout"].'" /></TD>';
         echo '</TR>';
         
         $chkLog = ( $this->arrConfigValue["logenabled"] ) ? 'checked="checked"' : '';
-        echo '<TR><TD CLASS="descCampo">Habilitar log de eventos</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][5].'</TD>';
         echo '<TD><INPUT TYPE="checkbox" NAME="logenabled" CLASS="checkbox" '.$chkLog.' /></TD>';
         echo '</TR>';        
 
         $chkDebug = ( $this->arrConfigValue["debug"] ) ? 'checked="checked"' : '';
-        echo '<TR><TD CLASS="descCampo">Habilitar depuración</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][6].'</TD>';
         echo '<TD><INPUT TYPE="checkbox" NAME="debug" CLASS="checkbox" '.$chkDebug.' /></TD>';
         echo '</TR>';
                
-        echo '<TR><TD CLASS="descCampo">Nombre de cuenta como enlace</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][7].'</TD>';
         echo '<TD><SELECT NAME="account_link" SIZE="1">';
         if ( $this->arrConfigValue["account_link"] == "TRUE" ){
             echo '<OPTION SELECTED>TRUE</OPTION><OPTION>FALSE</OPTION>';
@@ -360,7 +349,7 @@ class Config {
         }
         echo '</SELECT></TD></TR>';
         
-        echo '<TR><TD CLASS="descCampo">Resultados por página</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][8].'</TD>';
         echo '<TD><SELECT NAME="account_count" SIZE="1">';
         
         $arrAccountCount = array(1,2,3,5,10,15,20,25,30,50,"all");
@@ -374,57 +363,57 @@ class Config {
         }
         echo '</SELECT></TD></TR>';
         
-        echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >Wiki</TD></TR>';
+        echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][9].'</TD></TR>';
         $chkWiki = ( $this->arrConfigValue["wikienabled"] ) ? 'checked="checked"' : '';
-        echo '<TR><TD CLASS="descCampo">Habilitar enlaces Wiki</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][10].'</TD>';
         echo '<TD><INPUT TYPE="checkbox" NAME="wikienabled" CLASS="checkbox" '.$chkWiki.' /></TD>';
         echo '</TR>';
         
-        echo '<TR><TD CLASS="descCampo">URL de búsqueda Wiki</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][11].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="wikisearchurl" CLASS="txtLong" VALUE="'.$this->arrConfigValue["wikisearchurl"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">URL de página en Wiki</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][12].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="wikipageurl" CLASS="txtLong" VALUE="'.$this->arrConfigValue["wikipageurl"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">Prefijo para nombre de cuenta</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][13].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="wikifilter" VALUE="'.$this->arrConfigValue["wikifilter"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >LDAP</TD></TR>';
+        echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][14].'</TD></TR>';
         $chkLdap = ( $this->arrConfigValue["ldapenabled"] ) ? 'checked="checked"' : '';
-        echo '<TR><TD CLASS="descCampo">Habilitar LDAP</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][15].'</TD>';
         echo '<TD><INPUT TYPE="checkbox" NAME="ldapenabled" CLASS="checkbox" '.$chkLdap.' /></TD>';
         echo '</TR>';
         
-        echo '<TR><TD CLASS="descCampo">Servidor</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][16].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="ldapserver" VALUE="'.$this->arrConfigValue["ldapserver"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">Base de búsqueda</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][17].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="ldapbase" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapbase"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">Grupo</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][18].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="ldapgroup" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapgroup"].'" /></TD>';
         echo '</TR>';
         
-        echo '<TR><TD CLASS="descCampo">Atributos de usuario</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][19].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="ldapuserattr" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapuserattr"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >Correo</TD></TR>';
+        echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][20].'</TD></TR>';
         $chkMail = ( $this->arrConfigValue["mailenabled"] ) ? 'checked="checked"' : '';
-        echo '<TR><TD CLASS="descCampo">Habilitar notificaciones de correo</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][21].'</TD>';
         echo '<TD><INPUT TYPE="checkbox" NAME="mailenabled" CLASS="checkbox" '.$chkMail.' /></TD>';
         echo '</TR>';
       
-        echo '<TR><TD CLASS="descCampo">Servidor</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][22].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="mailserver" SIZE="20" VALUE="'.$this->arrConfigValue["mailserver"].'" /></TD>';
         echo '</TR>';
         
-        echo '<TR><TD CLASS="descCampo">Dirección de correo de envío</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][23].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="mailfrom" SIZE="20" VALUE="'.$this->arrConfigValue["mailfrom"].'" /></TD>';
         echo '</TR>'; 
         

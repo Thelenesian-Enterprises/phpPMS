@@ -31,12 +31,12 @@
     // Comprobamos si la sesión ha caducado
     if ( check_session(TRUE) ) {
         $resXML["status"] = 1;
-        $resXML["description"] = "La sesión no se ha iniciado o ha caducado";
+        $resXML["description"] = $LANG['msg'][35];
         Common::printXML($resXML);
         return;
     }
     
-    Users::checkUserAccess("config") || die ('<DIV CLASS="error">No tiene permisos para acceder a esta página.</DIV>');
+    Users::checkUserAccess("config") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
     
     // Variables POST del formulario
     extract($_POST, EXTR_PREFIX_ALL, "post");
@@ -51,27 +51,17 @@
         } else {
             $intAccountCount = $post_account_count;
         }
-
-        $objConfig->arrConfigValue["account_link"] = $post_account_link;
-        $objConfig->arrConfigValue["account_count"] = $post_account_count;
         
         if ( ! $post_sitename OR ! $post_siteshortname ){
             $resXML["status"] = 1;
-            $resXML["description"] = "Faltan parámetros del Sitio";
+            $resXML["description"] = $LANG['msg'][36];
             Common::printXML($resXML);
             return;                
-        } else{
-            $objConfig->arrConfigValue["sitename"] = $post_sitename;
-            $objConfig->arrConfigValue["siteshortname"] = $post_siteshortname;
         }
 
-        $objConfig->arrConfigValue["session_timeout"] = ( $post_session_timeout ) ? (int)$post_session_timeout : "300";
-        $objConfig->arrConfigValue["logenabled"] = ( $post_logenabled ) ? $post_logenabled : "0";
-        $objConfig->arrConfigValue["debug"] = ( $post_debug ) ? $post_debug : "0";
-        
         if ( $post_wikienabled AND ( ! $post_wikisearchurl OR ! $post_wikipageurl OR ! $post_wikifilter )){
             $resXML["status"] = 1;
-            $resXML["description"] = "Faltan parámetros de Wiki";
+            $resXML["description"] = $LANG['msg'][37];
             Common::printXML($resXML);
             return;            
         } elseif ( $post_wikienabled ) {
@@ -85,7 +75,7 @@
         
         if ( $post_ldapenabled AND ( ! $post_ldapserver OR ! $post_ldapbase OR ! $post_ldapgroup OR ! $post_ldapuserattr)){
             $resXML["status"] = 1;
-            $resXML["description"] = "Faltan parámetros de LDAP";
+            $resXML["description"] = $LANG['msg'][38];
             Common::printXML($resXML);
             return;            
         } elseif ( $post_ldapenabled ){
@@ -97,10 +87,10 @@
         } else {
             $objConfig->arrConfigValue["ldapenabled"] = 0;
         }
-        
+
         if ( $post_mailenabled AND ( ! $post_mailserver OR ! $post_mailfrom ) ){
             $resXML["status"] = 1;
-            $resXML["description"] = "Faltan parámetros de Correo";
+            $resXML["description"] = $LANG['msg'][39];
             Common::printXML($resXML);
             return;             
         } elseif ( $post_mailenabled ) {
@@ -110,7 +100,17 @@
         } else {
             $objConfig->arrConfigValue["mailenabled"] = 0;
         }
-
+        
+        $objConfig->arrConfigValue["account_link"] = $post_account_link;
+        $objConfig->arrConfigValue["account_count"] = $post_account_count;        
+        $objConfig->arrConfigValue["sitename"] = $post_sitename;
+        $objConfig->arrConfigValue["siteshortname"] = $post_siteshortname;
+        $objConfig->arrConfigValue["siteroot"] = $post_siteroot;
+        $objConfig->arrConfigValue["sitelang"] = $post_sitelang;
+        $objConfig->arrConfigValue["session_timeout"] = ( $post_session_timeout ) ? (int)$post_session_timeout : "300";
+        $objConfig->arrConfigValue["logenabled"] = ( $post_logenabled ) ? $post_logenabled : "0";
+        $objConfig->arrConfigValue["debug"] = ( $post_debug ) ? $post_debug : "0";
+                
 //        if ($blnMd5Password == "FALSE" AND $blnMd5PasswordOld == "TRUE") {
 //            $clsAccount = new Account;
 //            $clsAccount->ResetAllAccountMd5Pass();
@@ -118,12 +118,12 @@
 
         if ( $objConfig->writeConfig() ){
             $resXML["status"] = 0;
-            $resXML["description"] = "Configuración guardada correctamente";
-            Common::wrLogInfo("Modifcar configuración", "");
-            Common::sendEmail("Configuración modificada");			
+            $resXML["description"] = $LANG['msg'][40];
+            Common::wrLogInfo($LANG['event'][21], "");
+            Common::sendEmail($LANG['mailevent'][5]);
         } else {
             $resXML["status"] = 1;
-            $resXML["description"] = "Error al guardar la configuración";
+            $resXML["description"] = $LANG['msg'][41];
         }
 
     } elseif ( $strAction == "crypt"){
@@ -139,7 +139,7 @@
 
                     if ( ! $objCrypt->checkHashPass($strCurMasterPass, $objConfig->getConfigValue("masterPwd")) ){
                         $resXML["status"] = 1;
-                        $resXML["description"] = "La clave maestra actual no coincide";
+                        $resXML["description"] = $LANG['msg'][42];
                         Common::printXML($resXML);
                         return;                    
                     }
@@ -148,7 +148,7 @@
                     
                     if ( ! $objAccount->updateAllAccountsMPass($strCurMasterPass,$strNewMasterPass) ){
                         $resXML["status"] = 1;
-                        $resXML["description"] = "Errores al actualizar las claves de las cuentas";
+                        $resXML["description"] = $LANG['msg'][43];
                         Common::printXML($resXML);
                         return;
                     }
@@ -158,30 +158,30 @@
                     
                     if ( $objConfig->writeConfig() ){
                         $resXML["status"] = 0;
-                        $resXML["description"] = "Clave maestra cambiada correctamente";
+                        $resXML["description"] = $LANG['msg'][44];
                     } else {
                         $resXML["status"] = 1;
-                        $resXML["description"] = "Error al guardar el hash de la clave maestra";
+                        $resXML["description"] = $LANG['msg'][45];
                     }
                 } else {
                     $resXML["status"] = 1;
-                    $resXML["description"] = "Las claves maestras no coinciden";
+                    $resXML["description"] = $LANG['msg'][46];
                     Common::printXML($resXML);
                     return;
                 }
             } else{
                 $resXML["status"] = 1;
-                $resXML["description"] = "Se ha de confirmar el cambio de clave";
+                $resXML["description"] = $LANG['msg'][47];
                 Common::printXML($resXML);
                 return;
             }
         } else {
             $resXML["status"] = 1;
-            $resXML["description"] = "Clave maestra no indicada";
+            $resXML["description"] = $LANG['msg'][48];
         }
     } else {
         $resXML["status"] = 1;
-        $resXML["description"] = "Acción no definida";
+        $resXML["description"] = $LANG['msg'][24];
     }
         
     Common::printXML($resXML);

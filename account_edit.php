@@ -45,118 +45,101 @@
     $objAccount->getAccount($intAccId);
      
     Common::printHeader(FALSE,TRUE);
-?>
-    <BODY ONLOAD="document.editaccount.sel_cliente.focus(););">
-        <?php 
-            Common::printBodyHeader();
-            $objAccount->checkAccountAccess("edit") || die ('<DIV CLASS="error">No tiene permisos para modificar esta cuenta</DIV');
-        ?>
-        <DIV ID="container" ALIGN="center">
-            <H2>Editar Cuenta</H2>
-            <DIV CLASS="action midround">
-<?php           
-                if ( $objAccount->checkAccountAccess("chpass") ){ 
-                    echo '<FORM ACTION="account_edit_pass.php" METHOD="post" ID="frmEditPass" >';
-                    echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$objAccount->intAccId.'">';
-                    echo '<INPUT TYPE="hidden" NAME="decode" VALUE="0">';
-                    $objCommon->printBackLinks();
-                    echo '</FORM>';
-                    echo '<IMG SRC="imgs/key.png" title="Editar clave" class="inputImg" OnClick="$(\'#frmEditPass\').submit();"/>';
-                }
-                echo '<IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" OnClick="saveAccount(\'frmEditAccount\');">';
-                $objCommon->printBackLinks(TRUE);
-?>                
-                
-            </DIV>         
-            
-            <TABLE CLASS="data">
-                <FORM ACTION="" METHOD="post" NAME="editaccount" ID="frmEditAccount">
-                <TR>
-                    <TD CLASS="descCampo">Cliente</TD>
-                    <TD>
-                        <SELECT NAME="sel_cliente" SIZE="1">
-        <?php
-                        foreach ( $objAccount->getClientes() as $cliente ){
-                            if ( $cliente == $objAccount->strAccCliente ){
-                                echo "<OPTION SELECTED>$cliente</OPTION>";
-                            } else {
-                                echo "<OPTION>$cliente</OPTION>";
-                            }
-                        }
-        ?>
-                        </SELECT>
-                        <BR /><BR />
-                        <INPUT TYPE="text" NAME="cliente_new" SIZE="50" VALUE="<?php echo $objAccount->strAccCliente;?>" onClick="this.value='';">
-                        <INPUT TYPE="hidden" NAME="cliente_old" SIZE="50" VALUE="<?php echo $objAccount->strAccCliente;?>" >
-                    </TD>
-                </TR>
-                <TR >
-                    <TD WIDTH="25%" CLASS="descCampo">Categoría</TD>
-                    <TD>
-                        <SELECT NAME="categoryId" SIZE="1">
-        <?php
-                            foreach ( $objAccount->getCategorias() as $catName => $catId){
-                                $catSelected = ( $objAccount->intAccCategoryId == $catId ) ? "SELECTED" : "";
-                                echo "<OPTION VALUE='".$catId."' $catSelected>".$catName."</OPTION>";
-                            }       
+    
+    echo '<BODY ONLOAD="document.editaccount.sel_cliente.focus(););">';
+    
+    Common::printBodyHeader();
+    
+    $objAccount->checkAccountAccess("edit") || die ('<DIV CLASS="error"'.$LANG['msg'][91].'</DIV');
 
-        ?>
-                        </SELECT>
-                    </TD>
-                </TR>
-                <TR>
-                    <TD CLASS="descCampo">Servicio / Recurso</TD>
-                    <TD><INPUT TYPE="text" NAME="name" SIZE="100" VALUE="<?php echo $objAccount->strAccName; ?>"></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Login</TD>
-                    <TD><INPUT TYPE="text" NAME="login" SIZE="100" VALUE="<?php echo $objAccount->strAccLogin; ?>"></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">URL / IP</TD>
-                    <TD><INPUT TYPE="text" NAME="url" SIZE="100" VALUE="<?php echo $objAccount->strAccUrl; ?>"></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Notas</TD>
-                    <TD><TEXTAREA NAME="notice" COLS="97" ROWS="5"><?php echo $objAccount->strAccNotes; ?></TEXTAREA></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Grupos Secundarios</TD>
-                    <TD>
-                        <SELECT NAME="ugroups[]" MULTIPLE="multiple" SIZE="5" >                        
-        <?php
-                        $arrAccountGroups = $objAccount->getGroupsAccount();
-                        
-                        foreach ( $objAccount->getSecGroups() as $groupName => $groupId ){
-                            if ( $groupId != $objAccount->intAccUserGroupId ){
-                                if ( is_array($arrAccountGroups) ) $uGroupSelected = ( in_array($groupId, $arrAccountGroups)) ? "SELECTED" : "";
-                                echo  "<OPTION VALUE='".$groupId."' $uGroupSelected>".$groupName."</OPTION>";
-                            }
-                        }
-        ?>
-                        </SELECT>
-                    </TD>
-                </TR>
-                <INPUT TYPE="hidden" NAME="savetyp" VALUE="2" />
-                <INPUT TYPE="hidden" NAME="accountid" VALUE="<?php echo $objAccount->intAccId; ?>" />
-            </FORM>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Archivos</TD>
-                    <TD>
-                        <DIV id="downFiles"></DIV>
-                        <SCRIPT>$("#downFiles").load(pms_root + "/ajax_files.php?id=<?echo $intAccId?>&del=1");</SCRIPT>
-                        <DIV ID="upldFiles">
-                            <DIV CLASS="actionFiles">
-                                <IMG ID="btnUpload" SRC="imgs/upload.png" TITLE="Subir archivo (max. 1MB)" CLASS="inputImg" OnClick="upldFile(<? echo $intAccId; ?>)" />
-                            </DIV>                            
-                            <FORM METHOD="POST" ENCTYPE="multipart/form-data" ACTION="ajax_files.php" NAME="upload_form" ID="upload_form">
-                                <INPUT TYPE="file" NAME="file" CLASS="txtFile" />
-                                <INPUT TYPE="hidden" NAME="accountId"  ID="account" VALUE="<?echo $intAccId;?>" />
-                                <INPUT TYPE="hidden" NAME="action" ID="action" VALUE="upload" />
-                            </FORM>
-                        </DIV>
-                    </TD>
-                </TR>
-            </TABLE>
-            <DIV ID="resAccion"></DIV>
-<?php Common::PrintFooter(); ?>
+    echo '<DIV ID="container" ALIGN="center">';
+    echo '<H2>'.$LANG['buttons'][9].'</H2>';
+    
+    echo '<DIV CLASS="action midround">';
+
+    if ( $objAccount->checkAccountAccess("chpass") ){ 
+        echo '<FORM ACTION="account_edit_pass.php" METHOD="post" ID="frmEditPass" >';
+        echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$objAccount->intAccId.'">';
+        echo '<INPUT TYPE="hidden" NAME="decode" VALUE="0">';
+        $objCommon->printBackLinks();
+        echo '</FORM>';
+        echo '<IMG SRC="imgs/key.png" title="'.$LANG['buttons'][10].'" class="inputImg" OnClick="$(\'#frmEditPass\').submit();"/>';
+    }
+    echo '<IMG SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" OnClick="saveAccount(\'frmEditAccount\');">';
+    
+    $objCommon->printBackLinks(TRUE);
+    
+    echo '</DIV>';
+            
+    echo '<TABLE CLASS="data">';
+    echo '<FORM ACTION="" METHOD="post" NAME="editaccount" ID="frmEditAccount">';
+
+    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][17].'</TD>';
+    echo '<TD><INPUT TYPE="text" NAME="name" SIZE="100" VALUE="'.$objAccount->strAccName.'"></TD></TR>';
+    
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][0].'</TD>';
+    echo '<TD><SELECT NAME="sel_cliente" SIZE="1">';
+    
+    foreach ( $objAccount->getClientes() as $cliente ){
+        if ( $cliente == $objAccount->strAccCliente ){
+            echo "<OPTION SELECTED>$cliente</OPTION>";
+        } else {
+            echo "<OPTION>$cliente</OPTION>";
+        }
+    }
+    echo '</SELECT><BR /><BR />';
+    echo '<INPUT TYPE="text" NAME="cliente_new" SIZE="50" VALUE="'.$objAccount->strAccCliente.'" onClick="this.value=\'\';" />';
+    echo '<INPUT TYPE="hidden" NAME="cliente_old" SIZE="50" VALUE="'.$objAccount->strAccCliente.'" />';
+    echo '</TD></TR>';
+    
+    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][16].'</TD>';
+    echo '<TD><SELECT NAME="categoryId" SIZE="1">';
+    
+    foreach ( $objAccount->getCategorias() as $catName => $catId){
+        $catSelected = ( $objAccount->intAccCategoryId == $catId ) ? "SELECTED" : "";
+        echo "<OPTION VALUE='".$catId."' $catSelected>".$catName."</OPTION>";
+    }       
+    
+    echo '</SELECT></TD></TR>';
+    
+    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][19].'</TD>';
+    echo '<TD><INPUT TYPE="text" NAME="login" SIZE="100" VALUE="'.$objAccount->strAccLogin.'"></TD></TR>';
+    
+    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][18].'</TD>';
+    echo '<TD><INPUT TYPE="text" NAME="url" SIZE="100" VALUE="'.$objAccount->strAccUrl.'"></TD></TR>';
+    
+    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][24].'</TD>';
+    echo '<TD><TEXTAREA NAME="notice" COLS="97" ROWS="5">'.$objAccount->strAccNotes.'</TEXTAREA></TD></TR>';
+    
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][30].'</TD>';
+    echo '<TD><SELECT NAME="ugroups[]" MULTIPLE="multiple" SIZE="5" >';
+    
+    $arrAccountGroups = $objAccount->getGroupsAccount();
+
+    foreach ( $objAccount->getSecGroups() as $groupName => $groupId ){
+        if ( $groupId != $objAccount->intAccUserGroupId ){
+            if ( is_array($arrAccountGroups) ) $uGroupSelected = ( in_array($groupId, $arrAccountGroups)) ? "SELECTED" : "";
+            echo  "<OPTION VALUE='".$groupId."' $uGroupSelected>".$groupName."</OPTION>";
+        }
+    }
+    echo '</SELECT></TD></TR>';
+    
+    echo '<INPUT TYPE="hidden" NAME="savetyp" VALUE="2" />';
+    echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$objAccount->intAccId.'" />';
+    echo '</FORM>';
+    
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][23].'</TD>';
+    echo '<TD><DIV id="downFiles"></DIV>';
+    echo '<SCRIPT>$("#downFiles").load(pms_root + "/ajax_files.php?id='.$intAccId.'?>&del=1");</SCRIPT>';
+    echo '<DIV ID="upldFiles">';
+    echo '<DIV CLASS="actionFiles"><IMG ID="btnUpload" SRC="imgs/upload.png" TITLE="'.$LANG['accounts'][32].'" CLASS="inputImg" OnClick="upldFile('.$intAccId.')" /></DIV>';
+    echo '<FORM METHOD="POST" ENCTYPE="multipart/form-data" ACTION="ajax_files.php" NAME="upload_form" ID="upload_form">';
+    echo '<INPUT TYPE="file" NAME="file" CLASS="txtFile" />';
+    echo '<INPUT TYPE="hidden" NAME="accountId"  ID="account" VALUE="'.$intAccId.'" />';
+    echo '<INPUT TYPE="hidden" NAME="action" ID="action" VALUE="upload" />';
+    echo '</FORM></DIV></TD></TR></TABLE>';
+    
+    echo '<DIV ID="resAccion"></DIV>';
+    
+    Common::PrintFooter();
+?>

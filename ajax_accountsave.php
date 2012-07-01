@@ -33,7 +33,7 @@
     // Comprobamos si la sesión ha caducado
     if ( check_session(TRUE) ) {
         $resXML["status"] = 1;
-        $resXML["description"] = "La sesión no se ha iniciado o ha caducado";
+        $resXML["description"] = $LANG['msg'][35];
         printXML($resXML);
     }
     
@@ -48,20 +48,20 @@
     
     // Comprobaciones para nueva cuenta
     if ( $post_savetyp == 1 ) {
-        if ( $post_sel_cliente == "" && ( $post_cliente_new == "" || preg_match("/^Buscar.*/i", $post_cliente_new) ) ) {
-            $resXML["description"] = "Es obligatorio un nombre de cliente";
+        if ( $post_sel_cliente == "" && ( $post_cliente_new == "" || preg_match("/^".$LANG['accounts'][15]."/i", $post_cliente_new) ) ) {
+            $resXML["description"] = $LANG['msg'][8];
             $resXML["status"] = 1;
         } elseif ( $post_name == "" ) {
-            $resXML["description"] = "Es obligatorio un nombre de servicio/recurso";
+            $resXML["description"] = $LANG['msg'][9];
             $resXML["status"] = 1;
         } elseif ( $post_login == "" ) {
-            $resXML["description"] = "Es obligatorio un login";
+            $resXML["description"] = $LANG['msg'][10];
             $resXML["status"] = 1;
         } elseif ( $post_password == "" ) {
-            $resXML["description"] = "Es obligatorio una clave";
+            $resXML["description"] = $LANG['msg'][11];
             $resXML["status"] = 1;
         } elseif ( $post_password != $post_password2 ) {
-            $resXML["description"] = "Las claves no coinciden";
+            $resXML["description"] = $LANG['msg'][12];
             $resXML["status"] = 1;
         }
     }
@@ -69,13 +69,13 @@
     // Comprobaciones para modificación de cuenta
     if ( $post_savetyp == 2 ) {
         if ( $post_sel_cliente == "" ) {
-            $resXML["description"] = "Es obligatorio un nombre de cliente";
+            $resXML["description"] = $LANG['msg'][8];
             $resXML["status"] = 1;
         } elseif ( $post_name == "" ) {
-            $resXML["description"] = "Es obligatorio un nombre de servicio/recurso";
+            $resXML["description"] = $LANG['msg'][9];
             $resXML["status"] = 1;
         } elseif ( $post_login == "" ) {	
-            $resXML["description"] = "Es obligatorio un login";
+            $resXML["description"] = $LANG['msg'][10];
             $resXML["status"] = 1;
         }
     }	
@@ -83,10 +83,10 @@
     // Comprobaciones para modficación de clave
     if ( $post_savetyp == 4 ) {
         if ( $post_password == "" && $post_password2 == "" ){
-            $resXML["description"] = "La clave no puede estar en blanco";
+            $resXML["description"] = $LANG['msg'][13];
             $resXML["status"] = 1;
         } elseif ( $post_password != $post_password2 ) {
-            $resXML["description"] = "Las claves no coinciden";
+            $resXML["description"] = $LANG['msg'][12];
             $resXML["status"] = 1;
         }
         $changepass = 1;
@@ -102,14 +102,14 @@
         $objCrypt = new Crypt;
         $blnCryptModule = $objCrypt->checkCryptModule();
         if ($blnCryptModule == FALSE ) {
-            $resXML["description"] = "ERROR: no se puede usuar el módulo de encriptación<BR /><BR />posibles causas:<BR>módulo php-mcrypt no instalado<BR>problemas con la librería libmcrypt";
+            $resXML["description"] = $LANG['msg'][14];
             $resXML["status"] = 1;
             Common::printXML($resXML);
             return;
         }
         
         if ( ! $objCrypt->mkPassEncrypt($post_password) ) {
-            $resXML["description"] = "Error al generar la contraseña cifrada";
+            $resXML["description"] = $LANG['msg'][15];
             $resXML["status"] = 1;
             Common::printXML($resXML);
             return;
@@ -121,7 +121,7 @@
 
     switch ($post_savetyp){
         case 1:
-            if ( $post_cliente_new != "" && ! preg_match("/^Buscar.*/i", $post_cliente_new) ){
+            if ( $post_cliente_new != "" && ! preg_match("/^".$LANG['accounts'][15]."/i", $post_cliente_new) ){
                 $objAccount->strAccCliente = $post_cliente_new;
             } else {
                 $objAccount->strAccCliente = $post_sel_cliente;
@@ -139,13 +139,13 @@
             $objAccount->intAccUserGroupId = $intUGroupFId;
             
             if ( $objAccount->createAccount() ){
-                $resXML["description"] = "Cuenta creada correctamente";
+                $resXML["description"] = $LANG['msg'][16];
                 $resXML["status"] = 0;
 
-                Common::wrLogInfo("Nueva cuenta", "Nombre: $post_name;");
-                Common::sendEmail("Nueva cuenta '$post_name'");                
+                Common::wrLogInfo($LANG['event'][2],$LANG['eventdesc'][16].": $post_name;");
+                Common::sendEmail($LANG['mailevent'][0]." '$post_name'");                
             } else{
-                $resXML["description"] = "Error al crear la cuenta";
+                $resXML["description"] = $LANG['msg'][17];
                 $resXML["status"] = 1;
             }
             break;
@@ -165,25 +165,25 @@
             $objAccount->intAccUserEditId = $intUId;
             
             if ( $objAccount->updateAccount() ){
-                $resXML["description"] = "Cuenta modificada correctamente";
+                $resXML["description"] = $LANG['msg'][18];
                 $resXML["status"] = 0;
 
-                Common::wrLogInfo("Modificar cuenta", "ID: $post_accountid;Nombre: $post_name");
-                Common::sendEmail("Modificación de cuenta '$post_name'");
+                Common::wrLogInfo($LANG['event'][3], "ID: $post_accountid;".$LANG['eventdesc'][16].": $post_name");
+                Common::sendEmail($LANG['mailevent'][1]." '$post_name'");
             } else {
-                $resXML["description"] = "Error al modificar la cuenta";
+                $resXML["description"] = $LANG['msg'][19];
                 $resXML["status"] = 1;
             }
             break;
         case 3:
             if ( $objAccount->deleteAccount($post_accountid, $intUId) ){
-                $resXML["description"] = "Cuenta eliminada correctamente";
+                $resXML["description"] = $LANG['msg'][20];
                 $resXML["status"] = 0;
 
-                Common::wrLogInfo("Eliminar cuenta", "ID: $post_accountid;");
-                Common::sendEmail("Eliminación de cuenta '$post_accountid'");
+                Common::wrLogInfo($LANG['event'][5], "ID: $post_accountid;");
+                Common::sendEmail($LANG['mailevent'][2]." '$post_accountid'");
             } else{
-                $resXML["description"] = "Error al eliminar la cuenta";
+                $resXML["description"] = $LANG['msg'][21];
                 $resXML["status"] = 1;
             }
             break;
@@ -195,19 +195,19 @@
             $objAccount->intAccUserEditId = $intUId;
             
             if ( $objAccount->updateAccountPass() ){
-                $resXML["description"] = "Clave actualizada correctamente";
+                $resXML["description"] = $LANG['msg'][22];
                 $resXML["status"] = 0;
                 
-                Common::wrLogInfo("Modificar clave", "ID: $post_accountid");
-                Common::sendEmail("Modificación de clave '$post_accountid'");
+                Common::wrLogInfo($LANG['event'][4], "ID: $post_accountid");
+                Common::sendEmail($LANG['mailevent'][4]." '$post_accountid'");
             } else {
-                $resXML["description"] = "Error al actualizar la clave";
+                $resXML["description"] = $LANG['msg'][23];
                 $resXML["status"] = 1;
             }
             
             break;
         default:
-            $resXML["description"] = "No es una acción válida";
+            $resXML["description"] = $LANG['msg'][24];
             $resXML["status"] = 1;
 	}
        

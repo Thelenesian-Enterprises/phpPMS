@@ -39,91 +39,80 @@
     }
     
     Common::printHeader(FALSE,TRUE);
-?>
-    <BODY ONLOAD="document.addaccount.sel_cliente.focus()">
 
-        <?php Common::printBodyHeader(); ?>
+    echo '<BODY ONLOAD="document.addaccount.sel_cliente.focus()">';
 
-        <DIV ID="container" ALIGN="center">
-            <H2>Nueva Cuenta</H2>
-            <DIV CLASS="action midround">
-                <IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" OnClick="saveAccount('frmAddAccount');" />
-                <?php $objCommon->printBackLinks(TRUE); ?>
-            </DIV>  
-            <TABLE CLASS="data">
-                <FORM ACTION="" METHOD="post" NAME="addaccount" ID="frmAddAccount">
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Cliente</TD>
-                    <TD>
-                        <SELECT NAME="sel_cliente" SIZE="1">
-<?php
-                        foreach ( $objAccount->getClientes() as $cliente ){
-                            if ( $cliente == $objAccount->strCliente ){
-                                echo "<OPTION SELECTED>$cliente</OPTION>";
-                            } else {
-                                echo "<OPTION>$cliente</OPTION>";
-                            }
-                        }
-?>
-                        </SELECT>		
-                        <BR /><BR />
-                        <INPUT TYPE="text" NAME="cliente_new" SIZE="50" VALUE="Buscar en desplegable o introducir aquí" onClick="this.value='';">
-                    </TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Categoría</TD>
-                    <TD WIDTH="75%">
-                        <SELECT NAME="categoryId" SIZE="1">
-<?php
-                        foreach ( $objAccount->getCategorias() as $catName => $catId){
-                            echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>";
-                        }       
-?>
-                        </SELECT>
-                    </TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Servicio / Recurso</TD>
-                    <TD WIDTH="75%"><INPUT NAME="name" TYPE="text" SIZE="30" MAXLENGTH="255"></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH=25% CLASS="descCampo">URL / IP</TD>
-                    <TD WIDTH=75%><INPUT NAME="url" TYPE="text" SIZE="30" MAXLENGTH="255"></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH=25% CLASS="descCampo">Login</TD>
-                    <TD WIDTH=75%><INPUT NAME="login" TYPE="text" SIZE="30" MAXLENGTH="255"></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH=25% CLASS="descCampo">Clave</TD>
-                    <TD WIDTH=75%><INPUT NAME="password" TYPE="password" SIZE="30" MAXLENGTH="255"></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH=25% CLASS="descCampo">Clave (repetir)</TD>
-                    <TD WIDTH=75%><INPUT NAME="password2" TYPE="password" SIZE="30" MAXLENGTH="255"></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH=25% CLASS="descCampo">Notas</TD>
-                    <TD WIDTH=75%><TEXTAREA NAME="notice" TYPE="text" COLS="30" ROWS="5" MAXLENGTH="255"></TEXTAREA></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Grupos Secundarios</TD>
-                    <TD>
-                       <SELECT NAME="ugroups[]" MULTIPLE="multiple" SIZE="5" >
-<?php 
-                        $arrGroups = $objAccount->getSecGroups();
+    Common::printBodyHeader();
 
-                        foreach ( $arrGroups as $groupName => $groupId ){
-                            if ( $groupId != $_SESSION["ugroup"] ){
-                                echo "<OPTION VALUE='$groupId'>$groupName</OPTION>";
-                            }
-                        }
+    echo '<DIV ID="container" ALIGN="center">';
+    echo '<H2>'.$LANG['buttons'][7].'</H2>';
+    echo '<DIV CLASS="action midround">';
+    echo '<IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" OnClick="saveAccount(\'frmAddAccount\');" />';
+
+    $objCommon->printBackLinks(TRUE);
+
+    echo '</DIV>';
+    echo '<TABLE CLASS="data">';
+    echo '<FORM ACTION="" METHOD="post" NAME="addaccount" ID="frmAddAccount">';
+
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][17].'</TD>';
+    echo '<TD WIDTH="75%"><INPUT NAME="name" TYPE="text" SIZE="30" MAXLENGTH="255"></TD></TR>';
+
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][0].'</TD>';
+    echo '<TD><SELECT NAME="sel_cliente" SIZE="1">';
+
+    foreach ( $objAccount->getClientes() as $cliente ){
+        if ( $cliente == $objAccount->strCliente ){
+            echo "<OPTION SELECTED>$cliente</OPTION>";
+        } else {
+            echo "<OPTION>$cliente</OPTION>";
+        }
+    }
+
+    echo '</SELECT><BR /><BR />';
+    echo '<INPUT TYPE="text" NAME="cliente_new" SIZE="50" VALUE="'.$LANG['accounts'][15].'" onClick="this.value=\'\';"></TD></TR>';
+    
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][16].'</TD>';
+    echo '<TD WIDTH="75%">';
+    echo '<SELECT NAME="categoryId" SIZE="1">';
+
+    foreach ( $objAccount->getCategorias() as $catName => $catId){
+        echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>";
+    }
+    
+    echo '</SELECT></TD></TR>';
+    
+    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][18].'</TD>';
+    echo '<TD WIDTH=75%><INPUT NAME="url" TYPE="text" SIZE="30" MAXLENGTH="255"></TD></TR>';
+
+    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][19].'</TD>';
+    echo '<TD WIDTH=75%><INPUT NAME="login" TYPE="text" SIZE="30" MAXLENGTH="255"></TD></TR>';
+
+    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][20].'</TD>';
+    echo '<TD WIDTH=75%><INPUT NAME="password" TYPE="password" SIZE="30" MAXLENGTH="255"></TD></TR>';
+
+    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][22].'</TD>';
+    echo '<TD WIDTH=75%><INPUT NAME="password2" TYPE="password" SIZE="30" MAXLENGTH="255"></TD></TR>';
+
+    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][24].'</TD>';
+    echo '<TD WIDTH=75%><TEXTAREA NAME="notice" TYPE="text" COLS="30" ROWS="5" MAXLENGTH="255"></TEXTAREA></TD></TR>';
+
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][30].'</TD>';
+    echo '<TD><SELECT NAME="ugroups[]" MULTIPLE="multiple" SIZE="5" >';
+    
+    $arrGroups = $objAccount->getSecGroups();
+
+    foreach ( $arrGroups as $groupName => $groupId ){
+        if ( $groupId != $_SESSION["ugroup"] ){
+            echo "<OPTION VALUE='$groupId'>$groupName</OPTION>";
+        }
+    }
+
+    echo '</SELECT></TD></TR>';
+
+    echo '<INPUT TYPE="hidden" NAME="savetyp" VALUE="1">';
+    echo '</FORM></TABLE>';
+    echo '<DIV ID="resAccion"></DIV>';
+    
+    Common::PrintFooter();
 ?>
-                        </SELECT>
-                    </TD>
-                </TR>
-                <INPUT TYPE="hidden" NAME="savetyp" VALUE="1">
-                </FORM>
-            </TABLE>
-            <DIV ID="resAccion"></DIV>
-<?php Common::PrintFooter(); ?>

@@ -25,30 +25,26 @@
  * 
  */
 
-    define('PMS_ROOT', '.');
-    include_once (PMS_ROOT."/inc/includes.php");
+Header("content-type: application/x-javascript");
 
-    $resXML = array( "status" => 0, "description" => "");
-    
-    // Comprobamos si la sesión ha caducado
-   if ( check_session(TRUE) ) return "0";
-    
-    Users::checkUserAccess("users") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
-    
-    $objUsers = new Users;
-    
-    switch ( $_POST["action"] ){
-        case 1:
-            $objUsers->getUsersTable();
-            break;
-        case 2:
-            $objUsers->getNewUserTable();
-            break;
-        case 3:
-            $objUsers->getGroupsTable();
-            break;
-        case 4:
-            $objUsers->getNewGroupTable();
-            break;
-    }
+define('PMS_ROOT', '..');
+
+$jsLang = ( $_GET["lang"] ) ? $_GET["lang"] : "es_ES";
+$pmsRoot = $_GET["root"];
+
+include_once (PMS_ROOT."/locales/".$jsLang.".php");;
+
+foreach ( $LANG["js"] as $langIndex => $langDesc ){
+    $arrJsLang .= "'".$langDesc."',";
+}
+
+$arrJsLang = trim($arrJsLang,",");
+
+echo "// i18n language $jsLang array from PHP\n";
+echo "var LANG = [".$arrJsLang."]; \n\n";
+
+//echo ( $pmsRoot ) ? "var pms_root = '/".$pmsRoot."';\n" : "var pms_root = '/phppms';\n";
+echo "var pms_root = '".$pmsRoot."';\n";
+
+include_once 'functions.js';
 ?>

@@ -35,10 +35,12 @@
     } else {
         $checkVersion = $_SESSION["pms_upd"];
     }
+    
+    session_write_close();
 
     if ( is_array($checkVersion) ){
-        echo '<A HREF="'.$checkVersion[1].'" TARGET="_blank" TITLE="Descargar nueva versión"><IMG SRC="imgs/update.png" />&nbsp;'.$checkVersion[0].'</A>';
+        echo '<A HREF="'.$checkVersion[1].'" TARGET="_blank" TITLE="'.$LANG['common'][1].'"><IMG SRC="imgs/update.png" />&nbsp;'.$checkVersion[0].'</A>';
     } elseif ( $checkVersion == TRUE ){
-        echo '<IMG SRC="imgs/ok.png" TITLE="Actualizado"/>';
+        echo '<IMG SRC="imgs/ok.png" TITLE="'.$LANG['common'][0].'"/>';
     }
 ?>

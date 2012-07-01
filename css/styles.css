@@ -247,6 +247,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 
 #tblTools SELECT, #tblTools INPUT{margin-left: 15px;}
 #tblTools #txtSearch{width: 55%;}
+#tblTools label{margin-left:15px;}
 
 #datos{
 	float:left;
@@ -340,8 +341,9 @@ A:focus {text-decoration: none;	color: #FF0000;}
 	border-top: 1px solid #d9d9d9;
 }
 
-#footer #project{float: right;width: 20%;text-align:right;}
+#footer #project{float: right;width: 50%;text-align:right;}
 #footer #updates{float: left;width: 20%;text-align:left;}
+#footer #status{float: left;width: 20%;text-align:left;color: #ffbbb4;}
 
 #footer A{color:#b9b9b9;}
 #footer #project A:hover{color:#a9c1d7;border-bottom: 1px solid #a9c1d7;}
@@ -495,12 +497,13 @@ A:focus {text-decoration: none;	color: #FF0000;}
 
 /*Install Page*/
 #install{
-    width: 50%;
+    width: 60%;
     margin: auto;
-    padding: 20px;
-    border: #d9d9d9 1px solid;
+    padding: 10px;
+/*    border: #d9d9d9 1px solid;*/
     line-height: 2em;
 }
+
 #install #logo{
 	width: 100%;
         margin-bottom: 30px;
@@ -512,6 +515,27 @@ A:focus {text-decoration: none;	color: #FF0000;}
 	background: url("../imgs/bar.png") repeat-x scroll left top #e9e9e9;
 }
 
-#install #tblInstall {border: none; width: 100%;}
-#install TD {border-bottom: 1px solid #e9e9e9;}
-#install TD.result {text-align: center;}
+#install #tblInstall, #install .tblConfig {border: none; width: 100%;}
+#install #tblInstall TD {border-bottom: 1px solid #e9e9e9;}
+#install #tblInstall TD.result {width:20%; text-align: center;}
+
+#install INPUT.button, #install A {
+    width: 130px;
+    margin: 15px;
+    text-align: center;
+    background-color: #e9e9e9;
+    color: #045FB4;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#install A {display: inline-block; width: 190px; border: 1px solid #b9b9b9;}
+
+#install INPUT.button:hover, #install A:hover {background-color:#E8FF99;}
+
+#install #access{
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+}

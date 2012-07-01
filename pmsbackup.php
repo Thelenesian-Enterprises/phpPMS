@@ -40,51 +40,61 @@
     $bakFilePMS = $bakDirPMS.'/backup/'.$siteName.'.tgz';
    
     Common::printHeader(FALSE,TRUE);
+    
+    echo '<BODY>';
+
+    Common::printBodyHeader();
+    
+    Users::checkUserAccess("backup") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
+    
+    echo '<DIV ID="container" ALIGN="center">';
+    echo '<H2>'.$LANG['buttons'][12].'</H2>';
+    echo '<DIV CLASS="action midround">';
+    echo '<FORM ACTION="pmsbackup.php" METHOD="post" NAME="frmBackup">';
+    echo '<INPUT TYPE="hidden" NAME="doBackup" VALUE="1" />';
+    echo '</FORM>';
+    echo '<IMG SRC="imgs/backup.png" TITLE="'.$LANG['buttons'][19].'" CLASS="inputImg" OnClick="document.frmBackup.submit();" />';
+    
+    $objCommon->printBackLinks(TRUE);
+    
+    echo '</DIV>';
+    echo '<TABLE CLASS="data">';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['backup'][0].'</TD>';
+    echo '<TD>';
+    if ( $doBackup == 1 ){
+        $objConfig = new Config;
+
+        $arrOut = $objConfig->doDbBackup(dirname(__FILE__));
+        if ( $arrOut ){
+            foreach ($arrOut as $strOut){
+                echo ( $strOut != "" ) ? $strOut."<br />" : "";
+            }
+            echo $LANG['backup'][2];
+        } else {
+            echo $LANG['backup'][3];
+        }
+
+    } else {
+        if ( file_exists($bakFilePMS) ){
+            echo $LANG['backup'][1].": ".date("F d Y H:i:s.", filemtime($bakFilePMS));
+        } else {
+            echo $LANG['backup'][4];
+        }
+    }		
+    echo '</TD></TR>';
+    
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['backup'][5].'</TD>';
+    echo '<TD>';
+    
+    if ( file_exists($bakFilePMS) ){
+        echo '<A HREF="backup/'.$siteName.'_db.sql">Backup BBDD</A> - <A HREF="backup/'.$siteName.'.tgz">Backup '.$siteName.'</A>';
+    } else {
+         echo $LANG['backup'][6];
+    }
+    
+    echo '</TD></TR></TABLE>';
+    
+    echo '<DIV ID="resAccion"></DIV>';
+    
+    Common::PrintFooter();
 ?>
-    <BODY>
-        <?php 
-            Common::printBodyHeader();
-            Users::checkUserAccess("backup") || die ('<DIV CLASS="error">No tiene permisos para acceder a esta página.</DIV>');
-        ?>
-	<DIV ID="container" ALIGN="center">
-            <H2>Backup <? echo $CFG_PMS["siteshortname"]; ?></H2>
-            <DIV CLASS="action midround">
-                <FORM ACTION="pmsbackup.php" METHOD="post" NAME="frmBackup">
-                      <INPUT TYPE="hidden" NAME="doBackup" VALUE="1" />                    
-                </FORM>
-                <IMG SRC="imgs/backup.png" TITLE="Realizar backup" CLASS="inputImg" OnClick="document.frmBackup.submit();" />
-                <?php $objCommon->printBackLinks(TRUE); ?>
-            </DIV>              
-            <TABLE CLASS="data">
-                <TR>
-                    <TD CLASS="descCampo">Resultado</TD>
-                    <TD>
-                    <?php
-                    if ( $doBackup == 1 ){
-                        $objConfig = new Config;
-        
-                        $arrOut = $objConfig->doDbBackup(dirname(__FILE__));
-                        if ( $arrOut ){
-                            foreach ($arrOut as $strOut){
-                                echo ( $strOut != "" ) ? $strOut."<br />" : "";
-                            }
-                            echo "Proceso de backup finalizado";
-                        } else {
-                            echo "Error al realizar el backup";
-                        }
-                        
-                    } else {
-                        echo ( file_exists($bakFilePMS) ) ? "Último backup: ".date ("F d Y H:i:s.", filemtime($bakFilePMS)) : "No se encontraron backups" ;
-                    }		
-                    ?>
-                    </TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Descargar</TD>
-                    <TD>
-                    <?php echo (file_exists($bakFilePMS)) ? '<a href="backup/'.$siteName.'_db.sql">BBDD</a> - <a href="backup/'.$siteName.'.tgz">'.$siteName.'</a>' : "No hay backups para descargar" ; ?>
-                    </TD>
-                </TR>
-            </TABLE>
-            <DIV ID="resAccion"></DIV>
-<?php Common::PrintFooter(); ?>

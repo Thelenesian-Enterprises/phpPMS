@@ -100,22 +100,20 @@
         echo '<INPUT TYPE="hidden" NAME="search" VALUE="'.$strSearch.'" />';
         echo '<INPUT TYPE="hidden" NAME="page" VALUE="'.$intPage.'" />';
     }
-?>
-<TABLE ID="tblBuscar">
-    <THEAD>
-        <TR CLASS="headerBlue">
-            <TH WIDTH="15%"><A onClick="searchSort(5,<? echo $intPage; ?>);">Cliente</A></TH>
-            <TH WIDTH="15%"><A onClick="searchSort(1,<? echo $intPage; ?>);">Servicio / Recurso</A></TH>
-            <TH WIDTH="10%"><A onClick="searchSort(2,<? echo $intPage; ?>);">Categoría</A></TH>
-            <TH WIDTH="15%"><A onClick="searchSort(3,<? echo $intPage; ?>);">Login</A></TH>
-            <TH WIDTH="20%"><A onClick="searchSort(4,<? echo $intPage; ?>);">URL / IP</A></TH>
-            <TH WIDTH="20%"><IMG SRC="imgs/notes.png" TITLE="Notas" /></TH>
-            <TH WIDTH="5%"><IMG SRC="imgs/group.png" TITLE="Grupo" /></TH>
-            <TH WIDTH="5%"><IMG SRC="imgs/attach.png" TITLE="Archivos adjuntos" /></TH>
-            <TH WIDTH="20%">Acciones</TH>
-        </TR>
-    </THEAD>
-<?php
+
+    echo '<TABLE ID="tblBuscar"><THEAD>';
+    echo '<TR CLASS="headerBlue">';
+    echo '<TH WIDTH="15%"><A onClick="searchSort(5,'.$intPage.')">'.$LANG['accounts'][0].'</A></TH>';
+    echo '<TH WIDTH="15%"><A onClick="searchSort(1,'.$intPage.')">'.$LANG['accounts'][4].'</A></TH>';
+    echo '<TH WIDTH="10%"><A onClick="searchSort(2,'.$intPage.')">'.$LANG['accounts'][5].'</A></TH>';
+    echo '<TH WIDTH="15%"><A onClick="searchSort(3,'.$intPage.')">'.$LANG['accounts'][6].'</A></TH>';
+    echo '<TH WIDTH="20%"><A onClick="searchSort(4,'.$intPage.')">'.$LANG['accounts'][7].'</A></TH>';
+    echo '<TH WIDTH="20%"><IMG SRC="imgs/notes.png" TITLE="'.$LANG['accounts'][8].'" /></TH>';
+    echo '<TH WIDTH="5%"><IMG SRC="imgs/group.png" TITLE="'.$LANG['accounts'][9].'" /></TH>';
+    echo '<TH WIDTH="5%"><IMG SRC="imgs/attach.png" TITLE="'.$LANG['accounts'][10].'" /></TH>';
+    echo '<TH WIDTH="20%">'.$LANG['accounts'][11].'</TH>';
+    echo '</TR></THEAD>';
+
     $strQuerySelect = "SELECT DISTINCT acc.intAccountId, acc.vacCliente, g.vacCategoryName, acc.vacName, 
                     acc.vacLogin, acc.vacUrl, acc.txtNotice, acc.intUserFId, acc.intUGroupFId, ug.vacUGroupName
                     FROM accounts acc
@@ -127,7 +125,7 @@
                     LEFT JOIN acc_usergroups aug ON intAccountId=aug.intAccId ";
 
     if ( $strSearch != "" ) {
-        $strQueryWhere = " WHERE (vacName LIKE '%$strSearch%' OR vacLogin LIKE '%$strSearch%' OR vacUrl LIKE '%$strSearch%' OR txtNotice LIKE '%$strSearch%')";
+        $strQueryWhere = " WHERE (vacName LIKE '%$strSearch%' OR vacLogin LIKE '%$strSearch%' OR vacUrl LIKE '%$strSearch%' OR txtNotice LIKE '%$strSearch%' OR vacName LIKE '%$strSearch%')";
         
         // Comprobamos el grupo del usuario y si es admin, para acotar la búsqueda a sus grupos y perfil
         if ( $intUGroupId != 1 OR $blnUIsAdmin != 1) {
@@ -205,7 +203,7 @@
         
         if ( $CFG_PMS["wikienabled"] ){
             $wikiLink = $CFG_PMS["wikisearchurl"].$account["vacCliente"];
-            echo '<A HREF="'.$wikiLink.'" TARGET="blank" TITLE="Buscar en Wiki">'.$account["vacCliente"].'</A>';
+            echo '<A HREF="'.$wikiLink.'" TARGET="blank" TITLE="'.$LANG['buttons'][27].'">'.$account["vacCliente"].'</A>';
         } else{
             echo $account["vacCliente"];
         }
@@ -213,7 +211,7 @@
         echo '</TD><TD>';
         
         if ( $blnAccountLink == "TRUE" ) {
-            echo '<A onClick="document.frmView_'.$account["intAccountId"].'.submit();" TITLE="Ver cuenta">'.$strAccName.'</A>';
+            echo '<A onClick="document.frmView_'.$account["intAccountId"].'.submit();" TITLE="'.$LANG['buttons'][8].'">'.$strAccName.'</A>';
         } else {
             echo $strAccName;
         }
@@ -256,7 +254,7 @@
             echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$account["intAccountId"].'">';
             echo '<INPUT TYPE="hidden" NAME="decode" VALUE="0">';
             printSearchKeys();
-            echo '<INPUT TYPE="image" SRC="imgs/view.png" title="Ver cuenta" class="inputImg" />';
+            echo '<INPUT TYPE="image" SRC="imgs/view.png" title="'.$LANG['buttons'][8].'" class="inputImg" />';
             echo '</FORM></TD>';
         }
 
@@ -270,7 +268,7 @@
             echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$account["intAccountId"].'" />';
             echo '<INPUT TYPE="hidden" NAME="decode" VALUE="0">';
             printSearchKeys();
-            echo '<INPUT TYPE="image" SRC="imgs/edit.png" title="Editar cuenta" class="inputImg" />';
+            echo '<INPUT TYPE="image" SRC="imgs/edit.png" title="'.$LANG['buttons'][9].'" class="inputImg" />';
             echo '</FORM></TD>';
         }
 
@@ -279,7 +277,7 @@
             echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$account["intAccountId"].'">';
             echo '<INPUT TYPE="hidden" NAME="delete" VALUE="1">';
             printSearchKeys();
-            echo '<INPUT TYPE="image" SRC="imgs/delete.png" title="Eliminar" class="inputImg" />';
+            echo '<INPUT TYPE="image" SRC="imgs/delete.png" title="'.$LANG['buttons'][42].'" class="inputImg" />';
             echo '</FORM></TD>';
         }
 
@@ -289,7 +287,7 @@
                     if ( preg_match("/^".$strFilter.".*/i", $strAccName) ){
                         $wikiLink = $CFG_PMS["wikipageurl"].$strAccName;
                         //$nWikiServer =  strtr($strAccName, "-", ".");
-                        echo '<TD><A HREF="'.$wikiLink.'" TARGET="_blank" ><IMG SRC="imgs/wiki.png" TITLE="Enlace a Wiki" CLASS="inputImg" /></A></TD>';
+                        echo '<TD><A HREF="'.$wikiLink.'" TARGET="_blank" ><IMG SRC="imgs/wiki.png" TITLE="'.$LANG['buttons'][28].'" CLASS="inputImg" /></A></TD>';
                     }
                 }
             }
@@ -308,20 +306,20 @@
     echo '</TABLE>';
     echo '<TABLE CLASS="altTable" ID="pageNav">';
     echo '<TR><TD ALIGN="LEFT">';
-    echo ("Página ".$intPage." / ".$intPageMax." - filtro: ");
+    echo "Página ".$intPage." / ".$intPageMax." - ";
         
-    if ( $strSearch != "" OR $strCategory != "TODAS" OR $strCliente != "TODOS" ) {
-        echo '<B CLASS="altTxtRed">on</B>';
+    if ( $strSearch != "" OR $strCategory != $LANG['accounts'][3] OR $strCliente != $LANG['accounts'][1] ) {
+        echo $LANG['accounts'][13].': <B CLASS="altTxtRed">on</B>';
     } else {
-        echo '<B CLASS="altTxtGreen">off</B>';
+        echo $LANG['accounts'][13].': <B CLASS="altTxtGreen">off</B>';
     }
 
-    echo " - cuentas: ".$intAccountMax." / ".$objAccount->getAccountMax();
+    echo " - ".$LANG['accounts'][14].": ".$intAccountMax." / ".$objAccount->getAccountMax();
     echo '</TD><TD ALIGN="right">';
 
     if ( $intPage > 1 ) {
-        echo '<IMG SRC="imgs/aleft.png" onClick="searchSort(\''.$strSortKey.'\',1,1);" TITLE="Primera página" />';
-        echo '<IMG SRC="imgs/apleft.png" onClick="searchSort(\''.$strSortKey.'\','.($intPage - 1).',1);" TITLE="Página anterior" />';
+        echo '<IMG SRC="imgs/aleft.png" onClick="searchSort(\''.$strSortKey.'\',1,1);" TITLE="'.$LANG['accounts'][33].'" />';
+        echo '<IMG SRC="imgs/apleft.png" onClick="searchSort(\''.$strSortKey.'\','.($intPage - 1).',1);" TITLE="'.$LANG['accounts'][36].'" />';
     }
 
     for ( $intCounter = 1; $intCounter <= 10; $intCounter++) {
@@ -335,8 +333,8 @@
     }
 
     if ( $intPage < $intPageMax ) {
-        echo '<IMG SRC="imgs/apright.png" onClick="searchSort(\''.$strSortKey.'\','.($intPage + 1).',1);" TITLE="Siguiente página" />';
-        echo '<IMG SRC="imgs/aright.png" onClick="searchSort(\''.$strSortKey.'\','.$intPageMax.',1);" TITLE="Última página" />';		
+        echo '<IMG SRC="imgs/apright.png" onClick="searchSort(\''.$strSortKey.'\','.($intPage + 1).',1);" TITLE="'.$LANG['accounts'][35].'" />';
+        echo '<IMG SRC="imgs/aright.png" onClick="searchSort(\''.$strSortKey.'\','.$intPageMax.',1);" TITLE="'.$LANG['accounts'][34].'" />';		
     }
     
     echo '</TD></TR></TABLE>';

@@ -26,7 +26,7 @@
  */
 
 function check_session($isAjax = FALSE, $isLogin = FALSE){
-    global $CFG_PMS;
+    global $CFG_PMS, $LANG;
     
     session_start();
     
@@ -52,7 +52,7 @@ function check_session($isAjax = FALSE, $isLogin = FALSE){
         $session_life = time() - $_SESSION['timeout'];
 
         if( $session_life > $session_maxlife ){
-            Common::wrLogInfo("Timeout sesión", "Nombre:".$_SESSION['uname'].";Perfil:".$_SESSION['uprofile'].";Grupo:".$_SESSION['ugroup'].";IP:".$_SERVER['REMOTE_ADDR']);
+            Common::wrLogInfo($LANG['event'][18], $LANG['eventdesc'][11].":".$_SESSION['uname'].";".$LANG['eventdesc'][12].":".$_SESSION['uprofile'].";".$LANG['eventdesc'][13].":".$_SESSION['ugroup'].";".$LANG['eventdesc'][11].":".$_SERVER['REMOTE_ADDR']);
 
             session_destroy(); 
 

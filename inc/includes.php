@@ -25,11 +25,16 @@
  * 
  */
 
-if (!defined('PMS_ROOT')) {
-    die("Sorry. You can't access directly to this file");
+function initError($str){
+    $htmlOut = "<html><head><title>phpPMS :: ERROR</title></head><body>";
+    $htmlOut .= "<div align='center' style='width:60%;margin:auto;padding:15px;border:1px solid red;background-color:#fee8e6;color:red;line-height:2em;font-family:Verdana,Helvetica,Arial;'>Ooops...<br />".$str."</div>";
+    $htmlOut .= "</body></html>";
+    
+    header("Content-Type: text/html; charset=UTF-8");
+    die($htmlOut);
 }
 
-
+if ( ! defined('PMS_ROOT') ) initError("No es posible acceder directamente a este archivo<br />You can't access directly to this file");
 
 $fileName = dirname(__FILE__) . "/db.class.php";
 
@@ -44,17 +49,21 @@ function class_autoload($classname) {
 
 include_once (PMS_ROOT . "/inc/sesion.php");
 
-// PHP 5 >= 5.1.2
 spl_autoload_register("class_autoload");
 
 $objConfig = new Config;
 
-if ( ! $objConfig->getDBConfig()) {
-    header("Content-Type: text/html; charset=UTF-8");
-    die("<br />No se ha podido cargar la configuración");
-}
+if ( ! $objConfig->getDBConfig() ) initError("No se ha podido cargar la configuración<br />Configuration can not be loaded");
 
 define('PMS_VERSION', $objConfig->getConfigValue("version"));
+define('PMS_ROOTURL', $objConfig->getConfigValue("siteroot"));
+define('PMS_LANG', $objConfig->getConfigValue("sitelang"));
+
+$langFile = PMS_ROOT . "/locales/".PMS_LANG.".php";
+
+if ( ! file_exists($langFile) ) initError("Archivo de idioma no encontrado<br />Language file not found");
+
+include_once ($langFile);
 
 unset($objConfig);
 ?>

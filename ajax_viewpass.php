@@ -29,7 +29,7 @@
     include_once (PMS_ROOT."/inc/includes.php");
     
     if ( check_session(TRUE) == 1 ){
-        echo '<span class="altTxtRed">La sesión no se ha iniciado o ha caducado</span>';
+        echo '<span class="altTxtRed">'.$LANG['msg'][35].'</span>';
         return;
     }
 
@@ -42,7 +42,7 @@
 
     // Comprobamos si el usuario tiene acceso a esta cuenta
     if ( ! $objAccount->checkAccountAccess("viewpass") ){
-        echo '<span class="altTxtRed">El usuario no tiene acceso a esta cuenta.</span>';
+        echo '<span class="altTxtRed">'.$LANG['msg'][91].'</span>';
         return;
     }
 
@@ -67,7 +67,7 @@
                     $strPasswordOutput = $strDecrypted;
                 }
             } else {
-                $strPasswordOutput = '<SPAN CLASS="altTxtRed">Clave maestra incorrecta</SPAN>';
+                $strPasswordOutput = '<SPAN CLASS="altTxtRed">'.$LANG['msg'][3].'</SPAN>';
                 $blnDecryptCheck = FALSE;
             }
         } else {
@@ -87,7 +87,7 @@
 
     if ( $blnDecryptCheck == TRUE ) {
         $objAccount->incrementDecryptCounter($intAccId);
-        $objCommon->wrLogInfo("Ver clave", "ID=$intAccId;Cuenta:".$objAccount->strAccCliente."/".$objAccount->strAccName.";IP:".$_SERVER['REMOTE_ADDR']);
+        $objCommon->wrLogInfo($LANG['event'][22], "ID=$intAccId;".$LANG['eventdesc'][17].":".$objAccount->strAccCliente."/".$objAccount->strAccName.";IP:".$_SERVER['REMOTE_ADDR']);
     }
 
     if ( $fullTxt ){

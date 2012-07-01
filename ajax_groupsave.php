@@ -33,12 +33,12 @@
     // Comprobamos si la sesión ha caducado
     if ( check_session(TRUE) ) {
         $resXML["status"] = 3;
-        $resXML["description"] = "La sesión no se ha iniciado o ha caducado";
+        $resXML["description"] = $LANG['msg'][35];
         Common::printXML($resXML);
         return;
     }
 
-    Users::checkUserAccess("users") || die ('<DIV CLASS="error">No tiene permisos para acceder a esta página.</DIV>');
+    Users::checkUserAccess("users") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
     
     $objGroup = new Users;
     
@@ -49,7 +49,7 @@
     if ( $post_savetyp == 1 OR $post_savetyp == 2 ){ 
         if ( ! $post_grpname ) {
             $resXML["status"] = 1;
-            $resXML["description"] = "Es necesario un nombre de grupo";
+            $resXML["description"] = $LANG['msg'][49];
             Common::printXML($resXML);
             return;
         }             
@@ -60,7 +60,7 @@
         
         if ( ! $objGroup->checkGroupExist()){
             $resXML["status"] = 1;
-            $resXML["description"] = "Nombre de grupo duplicado";
+            $resXML["description"] = $LANG['msg'][50];
             Common::printXML($resXML);
             return;
         }
@@ -68,24 +68,24 @@
         if ( $post_savetyp == 1 ){
             if ( $objGroup->manageGroup("add") ) {
                 $resXML["status"] = 0;
-                $resXML["description"] = "Grupo creado correctamente";
+                $resXML["description"] = $LANG['msg'][51];
 
-                Common::wrLogInfo("Nuevo grupo", "Nombre: $post_grpname;");
-                Common::sendEmail("Nuevo grupo '$post_grpname' por '$strULogin'");
+                Common::wrLogInfo($LANG['event'][9],$post_grpname);
+                Common::sendEmail($LANG['event'][9]." '$post_grpname'");
             } else {
                 $resXML["status"] = 1;
-                $resXML["description"] = "Error al crear el grupo";
+                $resXML["description"] = $LANG['msg'][52];
             }
         } else if ( $post_savetyp == 2 ){
             if ( $objGroup->manageGroup("update") ) {
                 $resXML["status"] = 0;
-                $resXML["description"] = "Grupo actualizado correctamente";
+                $resXML["description"] = $LANG['msg'][53];
 
-                Common::wrLogInfo("Modificar grupo", "Nombre: $post_grpname;");
-                Common::sendEmail("Modificar grupo '$post_grpname' por '$strULogin'");
+                Common::wrLogInfo($LANG['event'][10],$post_grpname);
+                Common::sendEmail($LANG['event'][10]." '$post_grpname'");
             } else {
                 $resXML["status"] = 1;
-                $resXML["description"] = "Error al actualizar el grupo";
+                $resXML["description"] = $LANG['msg'][54];
             }
         }
 
@@ -97,21 +97,21 @@
                 
         if ( is_string($resGroupUse) ) {
             $resXML["status"] = 2;
-            $resXML["description"] = "No es posible eliminar:;;Grupo en uso por $resGroupUse";      
+            $resXML["description"] = $LANG['msg'][56]." $resGroupUse";      
         } else {
             if ( $objGroup->manageGroup("delete") ) {
                 $resXML["status"] = 0;
-                $resXML["description"] = "Grupo eliminado correctamente";
+                $resXML["description"] = $LANG['msg'][55];
 
-                Common::wrLogInfo("Eliminar grupo", "Nombre: '$post_grpname';");
-                Common::sendEmail("Eliminar grupo '$post_grpname' por '$strULogin'");
+                Common::wrLogInfo($LANG['event'][11],$post_grpname);
+                Common::sendEmail($LANG['event'][11]." '$post_grpname'");
             } else {
                 $resXML["status"] = 1;
-                $resXML["description"] = "Error al eliminar el grupo";
+                $resXML["description"] = $LANG['msg'][57];
             }
         }
     } else {
-        $resXML["description"] = "No es una acción válida";
+        $resXML["description"] = $LANG['msg'][24];
         $resXML["status"] = 1;
     }
        

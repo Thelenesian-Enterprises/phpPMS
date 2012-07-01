@@ -31,6 +31,10 @@ class Common {
     
     // Función para escribir en el log
     public static function wrLogInfo ($strAccion, $strDescripcion) {
+        global $CFG_PMS, $LANG;
+        
+        if ( $CFG_PMS["logenabled"] == 0 ) return FALSE;
+        
         $strLogin = ( $_SESSION["ulogin"] ) ? $_SESSION["ulogin"] : "-";
         $intUserId = ( $_SESSION['uid'] ) ? $_SESSION['uid'] : 0;
         $strAccion = utf8_encode($strAccion);
@@ -55,14 +59,14 @@ class Common {
     // Función para enviar un email
     // TODO: mail auth
     static function sendEmail($strMensaje,$strTo = ""){
-        global $CFG_PMS;
+        global $CFG_PMS, $LANG;
         
         if ( $CFG_PMS["mailenabled"] == 0 ) return FALSE;
         
         $strTo = isset ($strTo) ? $strTo : $CFG_PMS["mailfrom"];
         
         $strFrom = $CFG_PMS["mailfrom"];
-        $strAsunto = 'Aviso '.$CFG_PMS["siteshortname"];
+        $strAsunto = $LANG['common'][4].' '.$CFG_PMS["siteshortname"];
 
         // Para enviar un correo HTML mail, la cabecera Content-type debe fijarse
         //$strHead  = 'MIME-Version: 1.0' . "\r\n";
@@ -74,14 +78,14 @@ class Common {
         $strHead .= "Reply-To: $strTo \r\n";
         $strHead .= "Cc: $strFrom\r\n";
 
-		$strMensaje = $strMensaje." por '".$_SESSION["ulogin"]."'";
+        $strMensaje = $strMensaje." ".$LANG['common'][3]." '".$_SESSION["ulogin"]."'";
         // Enviar correo
         mail($strTo, $strAsunto, $strMensaje, $strHead);
     }
     
     // Función para imprimir la cabecera HTML
     static function printBodyHeader() {
-        global $CFG_PMS, $startTime;
+        global $CFG_PMS, $startTime, $LANG;
         
         $startTime = microtime();
         
@@ -90,31 +94,36 @@ class Common {
         $strUserGroup = ( $_SESSION["ugroupn"] ) ? $_SESSION["ugroupn"] : $_SESSION["ugroup"];
         
         $strUser = $strUserName." (".$strUserGroup.") $strAdmin";
-        $chpass = ( $_SESSION['uisldap'] == 0 ) ? '<IMG SRC="imgs/key.png" CLASS="iconMini" TITLE="Cambiar clave de usuario" Onclick="usrUpdPass('.$_SESSION["uid"].',\''.$_SESSION["ulogin"].'\')" />' : '';
+        $chpass = ( $_SESSION['uisldap'] == 0 ) ? '<IMG SRC="imgs/key.png" CLASS="iconMini" TITLE="'.$LANG['buttons'][0].'" Onclick="usrUpdPass('.$_SESSION["uid"].',\''.$_SESSION["ulogin"].'\')" />' : '';
         
-        echo '<noscript><DIV ID="nojs">Javascript ha de estar habilitado para el correcto funcionamiento</DIV></noscript>';
+        echo '<NOSCRIPT><DIV ID="nojs">'.$LANG['common'][2].'</DIV></NOSCRIPT>';
         echo '<DIV ID="header" CLASS="round"><DIV ID="logo"><IMG SRC="imgs/logo.png" />'.$CFG_PMS["sitename"].'</DIV>';
-        echo '<DIV ID="sesion">'.$strUser.$chpass.'<IMG SRC="imgs/exit1.png" TITLE="Salir" OnClick="doLogout();" /></DIV></DIV>';
+        echo '<DIV ID="sesion">'.$strUser.$chpass.'<IMG SRC="imgs/exit1.png" TITLE="'.$LANG['buttons'][1].'" OnClick="doLogout();" /></DIV></DIV>';
 
         // FIXME
         if ( $_SESSION["ugroup"] == 99 ){			
-            echo "<DIV CLASS='error'>USUARIO NO ACTIVADO</DIV>";
+            echo '<DIV CLASS="error">'.$LANG['msg'][92].'</DIV>';
         }
     }
 
     // Función para imprimir el pie HTML
     static function PrintFooter() {
-        global $CFG_PMS, $startTime;
+        global $LANG, $CFG_PMS, $startTime;
         
         echo '<DIV ID="footer">
                 <DIV ID="updates"></DIV>
-                    <SCRIPT>$("#updates").load(pms_root + "/ajax_checkupds");</SCRIPT>
                 <DIV ID="project">
                     <A HREF="http://sourceforge.net/projects/phppms/" TARGET="_blank">phpPMS '.PMS_VERSION.'</A> 
                     &nbsp;::&nbsp;
                     <A HREF="http://cygnux.org" TARGET="_blank">cygnux.org</A>
-                </DIV>
-            </DIV>';
+                </DIV>';
+            
+        
+        if ( $LANG["completed"] == 0 ){
+            echo '<DIV ID="status">'.$LANG['common'][7].'</DIV>';
+        }
+        
+        echo '</DIV>';
         
         if ($CFG_PMS["debug"]){
             $stopTime = microtime();
@@ -170,18 +179,20 @@ class Common {
             <SCRIPT TYPE="text/javascript" SRC="javascript/jquery.js"></SCRIPT>
             <SCRIPT TYPE="text/javascript" SRC="javascript/jquery.form.js"></SCRIPT>
             <SCRIPT TYPE="text/javascript" SRC="javascript/fancybox/jquery.fancybox-1.3.4.pack.js"></SCRIPT>
-            <SCRIPT TYPE="text/javascript" SRC="javascript/functions.js"></SCRIPT>';
+            <SCRIPT TYPE="text/javascript" SRC="javascript/functions.php?lang='.PMS_LANG.'&root='.PMS_ROOTURL.'"></SCRIPT>';
         echo ( $endHead ) ? "</HEAD>" : "";
     }
     
     // Función para imprimir los enlaces y el formulario de "volver"
     function printBackLinks($printBackForm = FALSE){
+        global $LANG;
+        
         foreach ($this->arrBackLinks as $name => $value){
             $txtLinks .= '<INPUT TYPE="hidden" NAME="'.$name.'" VALUE="'.$value.'" />';
         }
         
         if ( $printBackForm ){
-            echo '<IMG SRC="imgs/back.png" TITLE="Inicio" CLASS="inputImg" ID="btnBack" OnClick="document.frmBack.submit();" />';
+            echo '<IMG SRC="imgs/back.png" TITLE="'.$LANG['buttons'][3].'" CLASS="inputImg" ID="btnBack" OnClick="document.frmBack.submit();" />';
             echo '<FORM ACTION="index.php" METHOD="post" NAME="frmBack" >';
             echo $txtLinks;
             echo '</FORM>';

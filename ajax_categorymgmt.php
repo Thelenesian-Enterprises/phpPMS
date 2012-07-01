@@ -31,12 +31,12 @@
     // Comprobamos si la sesión ha caducado
     if ( check_session(TRUE) ) {
         $resXML["status"] = 1;
-        $resXML["description"] = "La sesión no se ha iniciado o ha caducado";
+        $resXML["description"] = $LANG['msg'][35];
         Common::printXML($resXML);
         return;
     }
 
-    Users::checkUserAccess("config") || die ('<DIV CLASS="error">No tiene permisos para acceder a esta página.</DIV>');
+    Users::checkUserAccess("config") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
     
     $intCategoryFunction = $_POST["categoryFunction"];
     $strCategoryName = $_POST["categoryName"];
@@ -49,41 +49,41 @@
         case 1:
             if ( $strCategoryName == "" ) {
                 $resXML["status"] = 1;
-                $resXML["description"] = "Es obligatorio indicar un nombre";
+                $resXML["description"] = $LANG['msg'][25];
             } else {
                 // Comprobamos si la categoría existe
                 if ( $objCategory->getCategoryIdByName($strCategoryName) == 0 ) {
                     if ( $objCategory->categoryAdd($strCategoryName) ){
                         $resXML["status"] = 0;
-                        $resXML["description"] = "Categoría añadida correctamente";
-                        Common::wrLogInfo("Categoría nueva", $strCategoryName);
+                        $resXML["description"] = $LANG['msg'][26];
+                        Common::wrLogInfo($LANG['event'][6], $strCategoryName);
                     } else {
                         $resXML["status"] = 1;
-                        $resXML["description"] = "Error al añadir la categoría";
+                        $resXML["description"] = $LANG['msg'][27];
                     }
                 } else {
                     $resXML["status"] = 1;
-                    $resXML["description"] = "Ya existe una categoría con ese nombre";                        
+                    $resXML["description"] = $LANG['msg'][28];
                 }
             }
             break;
         case 2:
             if ( $strCategoryNameNew == "" ) {
                 $resXML["status"] = 1;
-                $resXML["description"] = "Es obligatorio indicar el nombre de la categoría";
+                $resXML["description"] = $LANG['msg'][25];
             } else {
                 // Comprobamos si la categoría existe
                 if ( $objCategory->getCategoryIdByName("$strCategoryNameNew") != 0 ) {
                     $resXML["status"] = 1;
-                    $resXML["description"] = "Ya existe una categoría con ese nombre";                        
+                    $resXML["description"] = $LANG['msg'][28];
                 } else {
                     if ( $objCategory->editCategoryById($intCategoryId, $strCategoryNameNew) ){
                         $resXML["status"] = 0;
-                        $resXML["description"] = "Categoría modificada correctamente";
-                        Common::wrLogInfo("Categoría modificada", $intCategoryId." -> ".$strCategoryNameNew);
+                        $resXML["description"] = $LANG['msg'][29];
+                        Common::wrLogInfo($LANG['event'][7], $intCategoryId." -> ".$strCategoryNameNew);
                     } else {
                         $resXML["status"] = 1;
-                        $resXML["description"] = "Error al modificar la categoría";
+                        $resXML["description"] = $LANG['msg'][30];
                     }
                 }
             }
@@ -92,15 +92,15 @@
             // Comprobamos si la categoría está en uso por una cuenta
             if ( $objCategory->isCategoryInUse($intCategoryId) ) {
                 $resXML["status"] = 1;
-                $resXML["description"] = "Categoría en uso, no es posible eliminar";                        
+                $resXML["description"] = $LANG['msg'][31];
             } else {
                 if ( $objCategory->categoryDel($intCategoryId) ){
                     $resXML["status"] = 0;
-                    $resXML["description"] = "Categoría eliminada correctamente";
-                    Common::wrLogInfo("Categoría eliminada", $intCategoryId);
+                    $resXML["description"] = $LANG['msg'][32];
+                    Common::wrLogInfo($LANG['event'][8], $intCategoryId);
                 } else {
                     $resXML["status"] = 1;
-                    $resXML["description"] = "Error al eliminar la categoría";
+                    $resXML["description"] = $LANG['msg'][33];
                 }
             }
             break;

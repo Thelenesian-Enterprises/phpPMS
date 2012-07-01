@@ -75,6 +75,8 @@ class Users {
     
     // Función para mostrar la tabla de gestión de usuarios
     public function getUsersTable(){
+        global $LANG;
+        
         $strQuery = "SELECT intUserId, vacUName, intUGroupFid, vacULogin, vacUEmail, txtUNotes, intUProfile, 
                     blnIsAdmin, blnFromLdap, blnDisabled FROM users ORDER BY vacUName";
         $resQuery = $this->dbh->query($strQuery);
@@ -89,7 +91,7 @@ class Users {
         $usersgroups = $objAccount->getSecGroups();
         unset($objAccount);
         
-        $usersprofiles = array("Acceso total","Editar&Borrar","Editar","Ver&Clave","Ver");
+        $usersprofiles = array($LANG['users'][11],$LANG['users'][12],$LANG['users'][13],$LANG['users'][14],$LANG['users'][15]);
         
         echo '<FORM NAME="frm_tblusers" ID="frm_tblusers" OnSubmit="return false;" >';
         echo '<TABLE ID="tblUsers"><THEAD><TR CLASS="headerGrey">';
@@ -121,36 +123,36 @@ class Users {
             } else {
                 $chkldap = '';
                 $clsdisabled = '';
-                $lnkPass = '<TD><INPUT TYPE="image" SRC="imgs/key.png" TITLE="Cambiar clave" CLASS="inputImg" Onclick="return usrUpdPass('.$intUsrId.',\''.$userlogin.'\');" /></TD>';
+                $lnkPass = '<TD><INPUT TYPE="image" SRC="imgs/key.png" TITLE="'.$LANG['buttons'][32].'" CLASS="inputImg" Onclick="return usrUpdPass('.$intUsrId.',\''.$userlogin.'\');" /></TD>';
             }
 
-            $lnkEdit = '<TD><INPUT TYPE="image" SRC="imgs/edit.png" TITLE="Editar usuario" CLASS="inputImg" Onclick="return userMgmt(\'edit\','.$intUsrId.');" /></TD>';
-            $lnkDel = '<TD><INPUT TYPE="image" SRC="imgs/delete.png" TITLE="Eliminar usuario" CLASS="inputImg" Onclick="return userMgmt(\'del\','.$intUsrId.');" /></TD>';
-            $lnkSave = '<TD><INPUT TYPE="image" SRC="imgs/check.png" TITLE="Guardar usuario" CLASS="inputImg" Onclick="return userMgmt(\'save\','.$intUsrId.');" /></TD>';
+            $lnkEdit = '<TD><INPUT TYPE="image" SRC="imgs/edit.png" TITLE="'.$LANG['buttons'][29].'" CLASS="inputImg" Onclick="return userMgmt(\'edit\','.$intUsrId.');" /></TD>';
+            $lnkDel = '<TD><INPUT TYPE="image" SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][31].'" CLASS="inputImg" Onclick="return userMgmt(\'del\','.$intUsrId.');" /></TD>';
+            $lnkSave = '<TD><INPUT TYPE="image" SRC="imgs/check.png" TITLE="'.$LANG['buttons'][30].'" CLASS="inputImg" Onclick="return userMgmt(\'save\','.$intUsrId.');" /></TD>';
 
             $rowclass = ( $rowclass == "row_odd" ) ? "row_even": "row_odd";
 
             echo '<TR CLASS="usr_odd usrrow_'.$intUsrId.' '.$rowclass.'">';
-            echo '<TD CLASS="ilabel">Nombre</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usrname_'.$intUsrId.'" NAME="usrname_'.$intUsrId.'" TITLE="'.$username.'" VALUE="'.$username.'" CLASS="txtuser '.$clsdisabled.'" readonly /></LABEL></TD>';
-            echo '<TD CLASS="ilabel">Login</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usrlogin_'.$intUsrId.'" NAME="usrlogin_'.$intUsrId.'" TITLE="'.$userlogin.'" VALUE="'.$userlogin.'" CLASS="txtlogin '.$clsdisabled.'" readonly /></TD>';
-            echo '<TD CLASS="ilabel">Perfil</TD><TD CLASS="itext"><SELECT id="usrprofile_'.$intUsrId.'" NAME="usrprofile_'.$intUsrId.'" CLASS="'.$clsdisabled.'" disabled>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][1].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usrname_'.$intUsrId.'" NAME="usrname_'.$intUsrId.'" TITLE="'.$username.'" VALUE="'.$username.'" CLASS="txtuser '.$clsdisabled.'" readonly /></LABEL></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][3].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usrlogin_'.$intUsrId.'" NAME="usrlogin_'.$intUsrId.'" TITLE="'.$userlogin.'" VALUE="'.$userlogin.'" CLASS="txtlogin '.$clsdisabled.'" readonly /></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][5].'</TD><TD CLASS="itext"><SELECT id="usrprofile_'.$intUsrId.'" NAME="usrprofile_'.$intUsrId.'" CLASS="'.$clsdisabled.'" disabled>';
             foreach ($usersprofiles as $profileid => $profiledesc ){
                 ( $profileid == $userprofile ) ? $profileselected = "selected": $profileselected = "";
                 echo '<OPTION VALUE="'.$profileid.'" '.$profileselected.'>'.$profiledesc.'</OPTION>';
             }
             echo '</SELECT></TD>';
-            echo '<TD CLASS="ilabel">Admin</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkadmin_'.$intUsrId.'" NAME="chkadmin_'.$intUsrId.'" CLASS="icheck" '.$chkadmin.' disabled /></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][7].'</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkadmin_'.$intUsrId.'" NAME="chkadmin_'.$intUsrId.'" CLASS="icheck" '.$chkadmin.' disabled /></TD>';
             echo '<TD ROWSPAN="2"><TABLE ID="tblActions"><TR>'.$lnkEdit.$lnkSave.$lnkDel.$lnkPass.'</TR></TABLE></TD>';
             echo '</TR><TR CLASS="usr_even usrrow_'.$intUsrId.' '.$rowclass.'">';
-            echo '<TD CLASS="ilabel">Email</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usremail_'.$intUsrId.'" NAME="usremail_'.$intUsrId.'" TITLE="'.$useremail.'" VALUE="'.$useremail.'" CLASS="txtemail '.$clsdisabled.'" readonly/></LABEL></TD>';
-            echo '<TD CLASS="ilabel">Notas</TD><TD CLASS="itext"><INPUT TYPE="text" id="usrnotes_'.$intUsrId.'" NAME="usrnotes_'.$intUsrId.'" TITLE="'.$usernotes.'" VALUE="'.$usernotes.'" CLASS="txtnotes '.$clsdisabled.'" readonly /></TD>';
-            echo '<TD CLASS="ilabel">Grupo</TD><TD CLASS="itext"><SELECT ID="usrgroup_'.$intUsrId.'" NAME="usrgroup_'.$intUsrId.'" CLASS="'.$clsdisabled.'" disabled>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][2].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usremail_'.$intUsrId.'" NAME="usremail_'.$intUsrId.'" TITLE="'.$useremail.'" VALUE="'.$useremail.'" CLASS="txtemail '.$clsdisabled.'" readonly/></LABEL></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][4].'</TD><TD CLASS="itext"><INPUT TYPE="text" id="usrnotes_'.$intUsrId.'" NAME="usrnotes_'.$intUsrId.'" TITLE="'.$usernotes.'" VALUE="'.$usernotes.'" CLASS="txtnotes '.$clsdisabled.'" readonly /></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][6].'</TD><TD CLASS="itext"><SELECT ID="usrgroup_'.$intUsrId.'" NAME="usrgroup_'.$intUsrId.'" CLASS="'.$clsdisabled.'" disabled>';
             foreach ($usersgroups as $groupname => $groupid){
                 ( $groupid == $usergroup ) ? $grpselected = "selected": $grpselected = "";
                 echo '<OPTION VALUE="'.$groupid.'" '.$grpselected.'>'.$groupname.'</OPTION>';
             }
             echo '</SELECT></TD>';
-            echo '<TD CLASS="ilabel">Inactivo</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkdisabled_'.$intUsrId.'" NAME="chkdisabled_'.$intUsrId.'" CLASS="icheck" '.$chkdisabled.' disabled /></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][8].'</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkdisabled_'.$intUsrId.'" NAME="chkdisabled_'.$intUsrId.'" CLASS="icheck" '.$chkdisabled.' disabled /></TD>';
             echo '</TR>';
             
             echo ( $user["blnFromLdap"] ) ? '<input type="hidden" id="usrldap_'.$intUsrId.'" NAME="ldap_'.$intUsrId.'" value="1" />' : '<input type="hidden" id="usrldap_'.$intUsrId.'" NAME="ldap_'.$intUsrId.'" value="0" />';
@@ -164,19 +166,20 @@ class Users {
 
     // Función para mostrar la tabla de nuevo usuario
     public function getNewUserTable(){
-        
+        global $LANG;
+
         $objAccount = new Account;
         $usersgroups = $objAccount->getSecGroups();
         unset($objAccount);
         
-        $usersprofiles = array("Acceso total","Editar&Borrar","Editar","Ver&Clave","Ver");
+        $usersprofiles = array($LANG['users'][11],$LANG['users'][12],$LANG['users'][13],$LANG['users'][14],$LANG['users'][15]);
         
         echo '<FORM NAME="frm_tblnewuser" ID="frm_tblnewuser" OnSubmit="return false;" >';
         echo '<TABLE ID="tblNewUser" CLASS="data"><TBODY>';
         
-        echo '<TR><TD CLASS="descCampo">Nombre</TD><TD><INPUT TYPE="text" ID="usrname_0" NAME="usrname_0" TITLE="Nombre de usuario" CLASS="txtuser" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">Login</TD><TD><INPUT TYPE="text" ID="usrlogin_0" NAME="usrlogin_0" TITLE="Login de usuario" CLASS="txtloginr" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">Perfil</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][1].'</TD><TD><INPUT TYPE="text" ID="usrname_0" NAME="usrname_0" TITLE="'.$LANG['users'][16].'" CLASS="txtuser" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][3].'</TD><TD><INPUT TYPE="text" ID="usrlogin_0" NAME="usrlogin_0" TITLE="'.$LANG['users'][17].'" CLASS="txtloginr" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][5].'</TD>';
         echo '<TD><SELECT ID="usrprofile_0" NAME="usrprofile_0">';
         
         foreach ($usersprofiles as $profileid => $profiledesc ){
@@ -184,24 +187,26 @@ class Users {
         }
         
         echo '</SELECT></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">Grupo</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][6].'</TD>';
         echo '<TD><SELECT ID="usrgroup_0" NAME="usrgroup_0">';
         
         foreach ($usersgroups as $groupname => $groupid){
             echo '<OPTION VALUE="'.$groupid.'" '.$grpSELECTed.'>'.$groupname.'</OPTION>';
         }
         echo '</SELECT></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">Admin</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkadmin_0" NAME="chkadmin_0" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">Email</TD><TD><INPUT TYPE="text" ID="usremail_0" NAME="usremail_0" TITLE="Dirección de correo" CLASS="txtemail" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">Notas</TD><TD><INPUT TYPE="text" ID="usrnotes_0" NAME="usrnotes_0" TITLE="Notas" CLASS="txtnotes" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">Clave</TD><TD><INPUT TYPE="password" ID="usrpass_0" NAME="usrpass_0" TITLE="Clave" CLASS="txtpass" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">Clave (Repetir)</TD><TD><INPUT TYPE="password" ID="usrpassv_0" NAME="usrpassv_0" TITLE="Clave (Repetir)" CLASS="txtpassv" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][7].'</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkadmin_0" NAME="chkadmin_0" TITLE="'.$LANG['users'][18].'" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][2].'</TD><TD><INPUT TYPE="text" ID="usremail_0" NAME="usremail_0" TITLE="'.$LANG['users'][19].'" CLASS="txtemail" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][4].'</TD><TD><INPUT TYPE="text" ID="usrnotes_0" NAME="usrnotes_0" CLASS="txtnotes" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][9].'</TD><TD><INPUT TYPE="password" ID="usrpass_0" NAME="usrpass_0" CLASS="txtpass" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][10].'</TD><TD><INPUT TYPE="password" ID="usrpassv_0" NAME="usrpassv_0" CLASS="txtpassv" /></TD></TR>';
         echo '<INPUT TYPE="hidden" ID="usrid_0" NAME="usrid_0" VALUE="0" />';
         echo '</TBODY></TABLE></FORM>';
     }
 
     // Función para mostrar la tabla de gestión de grupos
     public function getGroupsTable(){
+        global $LANG;
+        
         $strQuery = "SELECT intUGroupId, vacUGroupName, vacUGroupDesc FROM usergroups ORDER BY vacUGroupName";
         $resQuery = $this->dbh->query($strQuery);
         
@@ -213,9 +218,9 @@ class Users {
                 
         echo '<FORM NAME="frm_tblgroups" ID="frm_tblgroups" OnSubmit="return false;" >';
         echo '<TABLE ID="tblGroups"><THEAD><TR CLASS="headerGrey">';
-        echo '<TH>Nombre</TH>';
-        echo '<TH>Descripción</TH>';
-        echo '<TH>Acciones</TH>';
+        echo '<TH>'.$LANG['groups'][0].'</TH>';
+        echo '<TH>'.$LANG['groups'][1].'</TH>';
+        echo '<TH>'.$LANG['groups'][2].'</TH>';
         echo '</TR></THEAD><TBODY>';
         
         //echo "<TBODY>";
@@ -225,9 +230,9 @@ class Users {
             $groupname = $group["vacUGroupName"];
             $groupdesc = $group["vacUGroupDesc"];
 
-            $lnkEdit = '<TD><INPUT TYPE="image" SRC="imgs/edit.png" TITLE="Editar grupo" CLASS="inputImg" Onclick="return groupMgmt(\'edit\','.$intGrpId.');" /></TD>';
-            $lnkDel = '<TD><INPUT TYPE="image" SRC="imgs/delete.png" TITLE="Eliminar grupo" CLASS="inputImg" Onclick="return groupMgmt(\'del\','.$intGrpId.');" /></TD>';
-            $lnkSave = '<TD><INPUT TYPE="image" SRC="imgs/check.png" TITLE="Guardar grupo" CLASS="inputImg" Onclick="return groupMgmt(\'save\','.$intGrpId.');" /></TD>';
+            $lnkEdit = '<TD><INPUT TYPE="image" SRC="imgs/edit.png" TITLE="'.$LANG['buttons'][34].'" CLASS="inputImg" Onclick="return groupMgmt(\'edit\','.$intGrpId.');" /></TD>';
+            $lnkDel = '<TD><INPUT TYPE="image" SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][36].'" CLASS="inputImg" Onclick="return groupMgmt(\'del\','.$intGrpId.');" /></TD>';
+            $lnkSave = '<TD><INPUT TYPE="image" SRC="imgs/check.png" TITLE="'.$LANG['buttons'][35].'" CLASS="inputImg" Onclick="return groupMgmt(\'save\','.$intGrpId.');" /></TD>';
 
             $rowclass = ( $rowclass == "row_odd" ) ? "row_even": "row_odd";
         
@@ -246,11 +251,13 @@ class Users {
 
     // Función para mostrar la tabla de nuevo usuario
     public function getNewGroupTable(){
+        global $LANG;
+        
         echo '<FORM NAME="frm_tblnewgroup" ID="frm_tblnewgroup" OnSubmit="return false;" >';
         echo '<TABLE ID="tblNewGroup" CLASS="data"><TBODY>';
         
-        echo '<TR><TD CLASS="descCampo">Nombre</TD><TD><INPUT TYPE="text" ID="grpname_0" NAME="grpname_0" TITLE="Nombre del grupo" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">Descripción</TD><TD><INPUT TYPE="text" ID="grpdesc_0" NAME="grpdesc_0" TITLE="Descripción" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['groups'][0].'</TD><TD><INPUT TYPE="text" ID="grpname_0" NAME="grpname_0" TITLE="'.$LANG['groups'][3].'" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['groups'][1].'</TD><TD><INPUT TYPE="text" ID="grpdesc_0" NAME="grpdesc_0" TITLE="'.$LANG['groups'][4].'" /></TD></TR>';
         echo '<INPUT TYPE="hidden" ID="grpid_0" NAME="grpid_0" VALUE="0" />';
         echo '</TBODY></TABLE></FORM>';
     }    

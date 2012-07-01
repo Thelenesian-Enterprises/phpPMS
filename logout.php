@@ -29,8 +29,8 @@
     include_once (PMS_ROOT . "/inc/includes.php");
     check_session(TRUE,TRUE);
     
-    Common::wrLogInfo("Fin sesión", "Nombre:".$_SESSION['uname'].";Perfil:".$_SESSION['uprofile'].";Grupo:".$_SESSION['ugroup'].";IP:".$_SERVER['REMOTE_ADDR']);
+    Common::wrLogInfo($LANG['event'][16], $LANG['eventdesc'][11].":".$_SESSION['uname'].";".$LANG['eventdesc'][12].":".$_SESSION['uprofile'].";".$LANG['eventdesc'][13].":".$_SESSION['ugroup'].";".$LANG['eventdesc'][14].":".$_SERVER['REMOTE_ADDR']);
     session_destroy();
     
-    echo '<div id="fancyView" class="backOrange"><span class="altTxtOrange">Sesión finalizada</span></div>';
+    echo '<div id="fancyView" class="backOrange"><span class="altTxtOrange">'.$LANG['msg'][74].'</span></div>';
 ?>

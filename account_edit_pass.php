@@ -45,47 +45,35 @@
     $objAccount->getAccount($intAccId);
         
     Common::printHeader(FALSE,TRUE);
+
+    echo '<BODY ONLOAD="document.editpass.password.focus()">';
+
+    $objCommon->printBodyHeader();
+    
+    $objAccount->checkAccountAccess("chpass") || die ('<DIV CLASS="error"'.$LANG['msg'][91].'</DIV');
+    
+    echo '<DIV ID="container" ALIGN="center">';
+    echo '<H2>'.$LANG['buttons'][10].'</H2>';
+    echo '<DIV CLASS="action midround">';
+    echo '<IMG SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" ID="btnGuardar" OnClick="saveAccount(\'frmEditPass\');">';
+    
+    $objCommon->printBackLinks(TRUE);
+    
+    echo '</DIV>';
+    
+    echo '<FORM ACTION="" METHOD="post" NAME="editpass" ID="frmEditPass" >';
+    echo '<TABLE CLASS="data">';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][17].'</TD><TD>'.$objAccount->strAccName.'</TD></TR>';
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][16].'</TD><TD>'.$objAccount->strAccCategoryName.'</TD></TR>';
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][19].'</TD><TD>'.$objAccount->strAccLogin.'</TD></TR>';
+    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][18].'</TD><TD><A HREF="'.$objAccount->strAccUrl.'" TARGET="_blank">'.$objAccount->strAccUrl.'</TD></TR>';
+    echo '<TR><TD width=25% CLASS="descCampo">'.$LANG['accounts'][20].'</TD><TD><INPUT TYPE="password" SIZE="100" NAME="password"></TD></TR>';
+    echo '<TR><TD width=25% CLASS="descCampo">'.$LANG['accounts'][22].'</TD><TD><INPUT TYPE="password" SIZE="100" NAME="password2"></TD></TR>';
+    echo '</TABLE>';
+    echo '<INPUT TYPE="hidden" NAME="savetyp" VALUE="4" />';
+    echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$objAccount->intAccId.'" />';
+    echo '</FORM>';
+    echo '<DIV ID="resAccion"></DIV>';
+    
+    Common::PrintFooter();
 ?>
-    <BODY ONLOAD="document.editpass.password.focus()">
-    <?php 
-        $objCommon->printBodyHeader();
-        if ( ! $objAccount->checkAccountAccess("chpass") ) die ("No tiene permisos para modificar esta cuenta.");      
-    ?>
-        <DIV ID="container" ALIGN="center">
-            <H2>Modificar Clave de Cuenta</H2>
-            <DIV CLASS="action midround">
-                <IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" ID="btnGuardar" OnClick="saveAccount('frmEditPass');">
-                <?php $objCommon->printBackLinks(TRUE); ?>
-            </DIV> 
-            <FORM ACTION="" METHOD="post" NAME="editpass" ID="frmEditPass" >
-            <TABLE CLASS="data">
-                <TR>
-                    <TD CLASS="descCampo">Nombre</TD>
-                    <TD><?php echo $objAccount->strAccName; ?></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Categoría</TD>
-                    <TD><?php echo $objAccount->strAccCategoryName; ?></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">Login</TD>
-                    <TD><?php echo $objAccount->strAccLogin; ?></TD>
-                </TR>
-                <TR>
-                    <TD WIDTH="25%" CLASS="descCampo">URL:</TD>
-                    <TD><?php echo '<A HREF="'.$objAccount->strAccUrl.'" TARGET="_blank">'.$objAccount->strAccUrl; ?></TD>
-                </TR>
-                <TR>
-                    <TD width=25% CLASS="descCampo">Clave</TD>
-                    <TD><INPUT TYPE="password" SIZE="100" NAME="password"></TD>
-                </TR>
-                <TR>
-                    <TD width="25%" CLASS="descCampo">Clave (repetir)</TD>
-                    <TD><INPUT TYPE="password" SIZE="100" NAME="password2"></TD>
-                </TR>
-            </TABLE>
-            <INPUT TYPE="hidden" NAME="savetyp" VALUE="4">
-            <INPUT TYPE="hidden" NAME="accountid" VALUE="<?php echo ($objAccount->intAccId) ?>">
-            </FORM>
-            <DIV ID="resAccion"></DIV>
-<?php Common::PrintFooter(); ?>

@@ -34,43 +34,41 @@
     $blnUIsAdmin = $_SESSION["uisadmin"];
     
     Common::printHeader(FALSE,TRUE);
+
+    echo '<BODY>';
+    
+    Common::printBodyHeader(); 
+    Users::checkUserAccess("logview") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
+    
+    echo '<DIV ID="container" ALIGN="center">';
+    echo '<H2>'.$LANG['buttons'][15].'</H2>';
+    echo '<DIV CLASS="action midround">';
+
+    $objCommon = new Common();
+    $objCommon->printBackLinks(TRUE); 
+
+    echo '</DIV>';
+    echo '<DIV ID="resEventLog">';
+    echo '<TABLE CLASS="data">';
+    echo '<THEAD><TR CLASS="headerGrey"><TH>'.$LANG['eventlogs'][0].'</TH><TH>'.$LANG['eventlogs'][1].'</TH><TH>'.$LANG['eventlogs'][2].'</TH><TH>'.$LANG['eventlogs'][3].'</TH></TR></THEAD>';
+    echo '<TBODY>';
+
+    $objConfig = new Config;
+    $dbh = $objConfig->connectDb();
+    $resQuery = $dbh->query("SELECT * FROM log");
+
+    while ( $row = $resQuery->fetch_assoc()){
+        $rowClass = ( $rowClass == "row_even" ) ? "row_odd" : "row_even";
+
+        echo "<TR CLASS='$rowClass'>
+            <TD>".$row["datLog"]."</TD><TD>".utf8_decode($row["vacAccion"])."</TD>
+            <TD>".strtoupper($row["vacLogin"])."</TD>
+            <TD>".str_replace(";","<br />",$row["txtDescripcion"])."<TD>
+            </TR>";
+    }
+    $resQuery->free();
+
+    echo '</TBODY></TABLE></DIV>';
+
+    Common::PrintFooter();
 ?>
-    <BODY ONLOAD="">
-        <?php 
-            Common::printBodyHeader(); 
-            Users::checkUserAccess("logview") || die ('<DIV CLASS="error">No tiene permisos para acceder a esta página.</DIV>');
-        ?>
-        <DIV ID="container" ALIGN="center">
-            <H2>Registro de Eventos</H2>
-            <DIV CLASS="action midround">
-                <?php 
-                    $objCommon = new Common();
-                    $objCommon->printBackLinks(TRUE); 
-                ?>
-            </DIV>            
-            <DIV ID="resEventLog">
-                <TABLE CLASS="data">
-                    <THEAD>
-                        <TR CLASS="headerGrey"><TH>Fecha/Hora</TH><TH>Evento</TH><TH>Usuario</TH><TH>Descripción</TH></TR>
-                    </THEAD>
-                    <TBODY>
-            <?php
-                $objConfig = new Config;
-                $dbh = $objConfig->connectDb();
-                $resQuery = $dbh->query("SELECT * FROM log");
-                
-                while ( $row = $resQuery->fetch_assoc()){
-                    $rowClass = ( $rowClass == "row_even" ) ? "row_odd" : "row_even";
-                    
-                    echo "<TR CLASS='$rowClass'>
-                        <TD>".$row["datLog"]."</TD><TD>".utf8_decode($row["vacAccion"])."</TD>
-                        <TD>".strtoupper($row["vacLogin"])."</TD>
-                        <TD>".str_replace(";","<br />",$row["txtDescripcion"])."<TD>
-                        </TR>";
-                }
-                $resQuery->free();
-            ?>
-                    </TBODY>
-                </TABLE>
-            </DIV>
-<?php Common::PrintFooter(); ?>

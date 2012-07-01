@@ -32,20 +32,19 @@
     $strError = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">No tiene permisos para realizar esta operación</span></div>';
     
     Users::checkUserAccess("chpass",$_GET["usrid"]) || die ($strError);
+    
+    echo '<DIV ID="fancycontainer" ALIGN="center">';
+    echo '<H2>'.$LANG['buttons'][32].'</H2>';
+    echo '<FORM METHOD="post" NAME="updUsrPass" ID="frmUpdUsrPass">';
+    echo '<TABLE CLASS="fancydata">';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['users'][0].'</TD><TD><INPUT TYPE="text" ID="usrpass" NAME="usrlogin" TITLE="Login" CLASS="txtpass" VALUE="'.$_GET["usrlogin"].'" readonly /></TD></TR>';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['users'][9].'</TD><TD><INPUT TYPE="password" ID="usrpass" NAME="usrpass" TITLE="Clave" CLASS="txtpass" /></TD></TR>';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['users'][10].'</TD><TD><INPUT TYPE="password" ID="usrpassv" NAME="usrpassv" TITLE="Clave (Repetir)" CLASS="txtpassv" /></TD></TR>';
+    echo '<INPUT TYPE="hidden" NAME="usrid" VALUE="'.$_GET["usrid"].'" />';
+    echo '</TABLE></FORM>';
+    
+    echo '<DIV ID="resFancyAccion"></DIV>';
+    echo '<DIV ID="actionbar" CLASS="action round">';
+    echo '<IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" OnClick="userMgmt(\'pass\','.$_GET["usrid"].')" />';
+    echo '</DIV></DIV>';
 ?>
-<DIV ID="fancycontainer" ALIGN="center">
-    <H2>Cambio de Clave</H2>
-
-    <FORM METHOD="post" NAME="updUsrPass" ID="frmUpdUsrPass">
-        <TABLE CLASS="fancydata">
-            <TR><TD CLASS="descCampo">Usuario</TD><TD><INPUT TYPE="text" ID="usrpass" NAME="usrlogin" TITLE="Login" CLASS="txtpass" VALUE="<? echo $_GET["usrlogin"]; ?>" readonly/></TD></TR>
-            <TR><TD CLASS="descCampo">Clave</TD><TD><INPUT TYPE="password" ID="usrpass" NAME="usrpass" TITLE="Clave" CLASS="txtpass" /></TD></TR>
-            <TR><TD CLASS="descCampo">Clave (Repetir)</TD><TD><INPUT TYPE="password" ID="usrpassv" NAME="usrpassv" TITLE="Clave (Repetir)" CLASS="txtpassv" /></TD></TR>
-            <INPUT TYPE="hidden" NAME="usrid" VALUE="<? echo $_GET["usrid"]; ?>" />
-        </TABLE>
-    </FORM>
-    <DIV ID="resFancyAccion"></DIV>
-    <DIV ID="actionbar" CLASS="action round">
-        <IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" OnClick="userMgmt('pass',<? echo $_GET["usrid"]; ?>)" />
-    </DIV>    
-</DIV>

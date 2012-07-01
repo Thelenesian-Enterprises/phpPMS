@@ -40,101 +40,85 @@
     }
 
     Common::printHeader(FALSE,TRUE);
+
+    echo '<BODY>';
+    
+    Common::printBodyHeader(); 
+    Users::checkUserAccess("config") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
+    
+    echo '<DIV ID="container" ALIGN="center">';
+    echo '<H2>'.$LANG['buttons'][11].'</H2>';
+    echo '<DIV CLASS="action midround">';
+    
+    $objCommon->printBackLinks(TRUE);
+    
+    echo '</DIV>';
+    echo '<DIV CLASS="section">'.$LANG['config'][0].'</DIV>';
+    echo '<DIV CLASS="action midround">';
+    echo '<IMG SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" OnClick="configMgmt(\'saveconfig\');">';
+    echo '</DIV>';
+    
+    $objConfig->getConfigTable();
+    
+    echo '<DIV CLASS="section">'.$LANG['config'][24].'</DIV>';
+    
+    echo '<TABLE CLASS="data tblConfig">';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][25].'</TD>';
+    echo '<TD WIDTH="75%">';
+    echo '<FORM OnSubmit="return configMgmt(\'addcat\');" METHOD="post" NAME="frmAddCategory" ID="frmAddCategory">';
+    echo '<INPUT TYPE="text" NAME="categoryName" SIZE="28" MAXLENGTH="255">';
+    echo '<INPUT TYPE="hidden" NAME="categoryFunction" VALUE="1">';
+    echo '<INPUT TYPE="image" SRC="imgs/add.png" TITLE="'.$LANG['config'][25].'" CLASS="inputImg" ID="btnAdd" />';
+    echo '</FORM></TD></TR>';
+    
+    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][26].'</TD>';
+    echo '<TD WIDTH="75%">';
+    echo '<FORM OnSubmit="return configMgmt(\'editcat\');" METHOD="post" NAME="frmEditCategory" ID="frmEditCategory">';
+    echo '<SELECT NAME="categoryId" SIZE="1">';
+    
+    foreach ( $objAccount->getCategorias() as $catName => $catId){
+        echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>";
+    }       
+    
+    echo '</SELECT><BR /><BR />';
+    echo '<INPUT TYPE="text" NAME="categoryNameNew" SIZE="15">';
+    echo '<INPUT TYPE="hidden" NAME="categoryFunction" VALUE="2">';
+    echo '<INPUT TYPE="image" SRC="imgs/save.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" ID="btnGuardar" />';
+    echo '</FORM></TD></TR>';
+    
+    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][27].'</TD>';
+    echo '<TD WIDTH="75%">';
+    echo '<FORM OnSubmit="return configMgmt(\'delcat\');" METHOD="post" NAME="frmDelCategory" ID="frmDelCategory">';
+    echo '<SELECT NAME="categoryId" SIZE="1">';
+    
+    foreach ( $objAccount->getCategorias() as $catName => $catId){
+        echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>";
+    }
+    
+    echo '</SELECT>';
+    echo '<INPUT TYPE="hidden" NAME="categoryFunction" VALUE="3">';
+    echo '<INPUT TYPE="image" SRC="imgs/delete.png" title="'.$LANG['config'][27].'" class="inputImg" />';
+    echo '</FORM></TD></TR>';
+    echo '</TABLE>';
+    
+    echo '<DIV CLASS="section">'.$LANG['config'][28].'</DIV>';
+    echo '<DIV CLASS="action midround">';
+    echo '<IMG SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" OnClick="configMgmt(\'savempwd\');">';
+    echo '</DIV>';
+    
+    echo '<TABLE CLASS="data tblConfig">';
+    echo '<FORM METHOD="post" NAME="frmCrypt" ID="frmCrypt">';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][29].'</TD><TD><INPUT TYPE="password" NAME="curMasterPwd" SIZE="20" MAXLENGTH="255"></TD></TR>';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][30].'</TD><TD><INPUT TYPE="password" NAME="newMasterPwd" SIZE="20" MAXLENGTH="255"></TD></TR>';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][31].'</TD><TD><INPUT TYPE="password" NAME="newMasterPwdR" SIZE="20" MAXLENGTH="255"></TD></TR>';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][32].'</TD><TD>';
+    echo '<INPUT TYPE="checkbox" CLASS="checkbox" NAME="confirmPassChange" value="1" />';
+    echo '<BR /><IMG SRC="imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" />'.$LANG['config'][33];
+    echo '<BR /><IMG SRC="imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" />'.$LANG['config'][34];
+    echo '</TD></TR>';
+    echo '<INPUT TYPE="hidden" NAME="action" VALUE="crypt" />';
+    echo '</FORM></TABLE>';
+    echo '<DIV ID="resAccion"></DIV>';
+    
+    Common::PrintFooter();
 ?>
-    <BODY>
-        <?php 
-            Common::printBodyHeader(); 
-            Users::checkUserAccess("config") || die ('<DIV CLASS="error">No tiene permisos para acceder a esta página.</DIV>');
-        ?>
-        <DIV ID="container" ALIGN="center">
-            <H2>Configuración</H2>
-            <DIV CLASS="action midround">
-                <?php $objCommon->printBackLinks(TRUE); ?>
-            </DIV>          
-            <DIV CLASS="section">Opciones de Generales</DIV>
-            <DIV CLASS="action midround">
-                <IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" OnClick="configMgmt('saveconfig');">
-            </DIV>        
-            <? $objConfig->getConfigTable() ?>
-            <DIV CLASS="section">Categorías</DIV>
-                <TABLE CLASS="data tblConfig">
-                    <TR>
-                        <TD CLASS="descCampo">Nueva categoría</TD>
-                        <TD WIDTH="75%">
-                            <FORM OnSubmit="return configMgmt('addcat');" METHOD="post" NAME="frmAddCategory" ID="frmAddCategory">
-                                <INPUT TYPE="text" NAME="categoryName" SIZE="28" MAXLENGTH="255">
-                                <INPUT TYPE="hidden" NAME="categoryFunction" VALUE="1">
-                                <INPUT TYPE="image" SRC="imgs/add.png" TITLE="Nueva" CLASS="inputImg" ID="btnAdd" />
-                            </FORM>
-                        </TD>
-                    </TR>
-                    <TR>
-                        <TD CLASS="descCampo">Modificar categoría</TD>
-                        <TD WIDTH="75%">
-                            <FORM OnSubmit="return configMgmt('editcat');" METHOD="post" NAME="frmEditCategory" ID="frmEditCategory">
-                                <SELECT NAME="categoryId" SIZE="1">
-        <?php
-                                    foreach ( $objAccount->getCategorias() as $catName => $catId){
-                                        echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>";
-                                    }       
-
-        ?>
-                                </SELECT>
-                                <BR /><BR />
-                                <INPUT TYPE="text" NAME="categoryNameNew" SIZE="15">
-                                <INPUT TYPE="hidden" NAME="categoryFunction" VALUE="2">
-                                <INPUT TYPE="image" SRC="imgs/save.png" TITLE="Guardar" CLASS="inputImg" ID="btnGuardar" />
-                            </FORM>
-                        </TD>
-                    </TR>
-                    <TR>
-                        <TD CLASS="descCampo">Borrar categoría</TD>
-                        <TD WIDTH="75%">
-                            <FORM OnSubmit="return configMgmt('delcat');" METHOD="post" NAME="frmDelCategory" ID="frmDelCategory">
-                                <SELECT NAME="categoryId" SIZE="1">
-        <?php
-                                    foreach ( $objAccount->getCategorias() as $catName => $catId){
-                                        echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>";
-                                    }       
-
-        ?>
-                                </SELECT>
-                                <INPUT TYPE="hidden" NAME="categoryFunction" VALUE="3">
-                                <INPUT TYPE="image" SRC="imgs/delete.png" title="Eliminar" class="inputImg" />
-                            </FORM>
-                        </TD>
-                    </TR>
-                </TABLE>            
-                <DIV CLASS="section">Opciones de Clave Maestra</DIV>
-                <DIV CLASS="action midround">
-                    <IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" OnClick="configMgmt('savempwd');">
-                </DIV>
-                <TABLE CLASS="data tblConfig">
-                    <FORM METHOD="post" NAME="frmCrypt" ID="frmCrypt">
-                    <TR>
-                        <TD CLASS="descCampo">Clave Maestra Actual</TD>
-                        <TD><INPUT TYPE="password" NAME="curMasterPwd" SIZE="20" MAXLENGTH="255"></TD>
-                    </TR>            
-                    <TR>
-                        <TD CLASS="descCampo">Clave Maestra</TD>
-                        <TD><INPUT TYPE="password" NAME="newMasterPwd" SIZE="20" MAXLENGTH="255"></TD>
-                    </TR>
-                    <TR>
-                        <TD CLASS="descCampo">Clave Maestra (Repetir)</TD>
-                        <TD><INPUT TYPE="password" NAME="newMasterPwdR" SIZE="20" MAXLENGTH="255"></TD>
-                    </TR>
-                    <TR>
-                        <TD CLASS="descCampo">Confirmar Cambio de Clave</TD>
-                        <TD>
-                            <INPUT TYPE="checkbox" CLASS="checkbox" NAME="confirmPassChange" value="1" />
-                            <BR />
-                            <IMG SRC="imgs/warning.png" ALT="Atención" CLASS="iconMini" />Se volverán a encriptar las claves de todas las cuentas.
-                            <BR />
-                            <IMG SRC="imgs/warning.png" ALT="Atención" CLASS="iconMini" />Los usuarios deberán de introducir la nueva clave maestra.
-                        </TD>
-                    </TR>
-                    <INPUT TYPE="hidden" NAME="action" VALUE="crypt" />
-                    </FORM>            
-                </TABLE>        
-                <DIV ID="resAccion"></DIV>
-<?php Common::PrintFooter(); ?>

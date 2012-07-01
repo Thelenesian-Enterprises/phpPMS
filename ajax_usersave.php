@@ -33,7 +33,7 @@
     // Comprobamos si la sesión ha caducado
     if ( check_session(TRUE) ) {
         $resXML["status"] = 3;
-        $resXML["description"] = "La sesión no se ha iniciado o ha caducado";
+        $resXML["description"] = $LANG['msg'][35];
         Common::printXML($resXML);
         return;
     }
@@ -42,9 +42,9 @@
     extract($_POST, EXTR_PREFIX_ALL, "post");
 
     if ( $post_savetyp == 3 ){
-        Users::checkUserAccess("chpass",$post_usrid) || die ('<DIV CLASS="error">No tiene permisos para acceder a esta página.</DIV>');        
+        Users::checkUserAccess("chpass",$post_usrid) || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
     } else {
-        Users::checkUserAccess("users") || die ('<DIV CLASS="error">No tiene permisos para acceder a esta página.</DIV>');
+        Users::checkUserAccess("users") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
     }
     
     $objUser = new Users;
@@ -53,19 +53,19 @@
     if ( $post_savetyp == 1 OR $post_savetyp == 2 ){
         if ( ! $post_usrname && ! $post_ldap ) {
             $resXML["status"] = 1;
-            $resXML["description"] = "Es necesario un nombre de usuario";
+            $resXML["description"] = $LANG['msg'][58];
         } elseif ( ! $post_usrlogin && ! $post_ldap ) {
             $resXML["status"] = 1;
-            $resXML["description"] = "Es necesario un login";
+            $resXML["description"] = $LANG['msg'][90];
         } elseif ( $post_usrprofile == "" ) {
             $resXML["status"] = 1;
-            $resXML["description"] = "Es necesario un perfil";
+            $resXML["description"] = $LANG['msg'][59];
         } elseif ( $post_usrgroup == "" ) {
             $resXML["status"] = 1;
-            $resXML["description"] = "Es necesario un grupo";
+            $resXML["description"] = $LANG['msg'][60];
         } elseif ( ! $post_usremail && ! $post_ldap ) {
             $resXML["status"] = 1;
-            $resXML["description"] = "Es necesario un email";
+            $resXML["description"] = $LANG['msg'][61];
         }
             
         if ( $resXML["status"] == 1 ) {
@@ -86,11 +86,11 @@
         switch ($objUser->checkUserExist()){
             case 1:
                 $resXML["status"] = 1;
-                $resXML["description"] = "Login de usuario duplicado";
+                $resXML["description"] = $LANG['msg'][62];
                 break;
             case 2:
                 $resXML["status"] = 1;
-                $resXML["description"] = "Email de usuario duplicado";
+                $resXML["description"] = $LANG['msg'][63];
                 break;
         }
         
@@ -102,10 +102,10 @@
         if ( $post_savetyp == 1 ){
             if ( $post_usrpass == "" && $post_usrpassv == "" ){
                 $resXML["status"] = 1;
-                $resXML["description"] = "La clave no puede estar en blanco";
+                $resXML["description"] = $LANG['msg'][64];
             } elseif ( $post_usrpass != $post_usrpassv ) {
                 $resXML["status"] = 1;
-                $resXML["description"] = "Las claves no coinciden";
+                $resXML["description"] = $LANG['msg'][65];
             }
 
             if ( $resXML["status"] == 1 ) {
@@ -117,24 +117,24 @@
             
             if ( $objUser->manageUser("add") ) {
                 $resXML["status"] = 0;
-                $resXML["description"] = "Usuario creado correctamente";
+                $resXML["description"] = $LANG['msg'][66];
 
-                Common::wrLogInfo("Nuevo usuario", "Nombre: $post_usrname;");
-                Common::sendEmail("Nuevo usuario '$post_usrname' por '$strULogin'");
+                Common::wrLogInfo($LANG['event'][12],$LANG['eventdesc'][16].": $post_usrname;");
+                Common::sendEmail($LANG['event'][12]." '$post_usrname'");
             } else {
                 $resXML["status"] = 1;
-                $resXML["description"] = "Error al crear el usuario";
+                $resXML["description"] = $LANG['msg'][67];
             }
         } elseif ( $post_savetyp == 2 ){
             if ( $objUser->manageUser("update") ) {
                 $resXML["status"] = 0;
-                $resXML["description"] = "Usuario actualizado correctamente";
+                $resXML["description"] = $LANG['msg'][68];
 
-                Common::wrLogInfo("Modificar usuario", "Nombre: $post_usrname;");
-                Common::sendEmail("Modificar usuario '$post_usrname' por '$strULogin'");
+                Common::wrLogInfo($LANG['event'][13],$LANG['eventdesc'][16].": $post_usrname;");
+                Common::sendEmail($LANG['event'][13]." '$post_usrname' ");
             } else {
                 $resXML["status"] = 1;
-                $resXML["description"] = "Error al actualizar el usuario";
+                $resXML["description"] = $LANG['msg'][69];
             }
         }
 
@@ -142,10 +142,10 @@
     } elseif ( $post_savetyp == 3 ){
         if ( $post_usrpass == "" && $post_usrpassv == "" ){
             $resXML["status"] = 1;
-            $resXML["description"] = "La clave no puede estar en blanco";
+            $resXML["description"] = $LANG['msg'][64];
         } elseif ( $post_usrpass != $post_usrpassv ) {
             $resXML["status"] = 1;
-            $resXML["description"] = "Las claves no coinciden";
+            $resXML["description"] = $LANG['msg'][65];
         }
         
         if ( $resXML["status"] == 1 ) {
@@ -158,13 +158,13 @@
 
         if ( $objUser->manageUser("updatepass") ) {
             $resXML["status"] = 0;
-            $resXML["description"] = "Clave actualizada correctamente";
+            $resXML["description"] = $LANG['msg'][70];
 
-            Common::wrLogInfo("Modificar clave usuario", "Nombre: $post_usrlogin;");
-            Common::sendEmail("Modificar clave usuario '$post_usrlogin' por '$strULogin'");
+            Common::wrLogInfo($LANG['event'][14],$LANG['eventdesc'][16].": $post_usrlogin;");
+            Common::sendEmail($LANG['event'][14]." '$post_usrlogin'");
         } else {
             $resXML["status"] = 1;
-            $resXML["description"] = "Error al modificar la clave";
+            $resXML["description"] = $LANG['msg'][71];
         }
     // Eliminar usuario
     } elseif ( $post_savetyp == 4 ){
@@ -172,16 +172,16 @@
                 
         if ( $objUser->manageUser("delete") ) {
             $resXML["status"] = 0;
-            $resXML["description"] = "Usuario eliminado correctamente";
+            $resXML["description"] = $LANG['msg'][72];
 
-            Common::wrLogInfo("Eliminar usuario", "Login: '$post_usrlogin';");
-            Common::sendEmail("Eliminar usuario '$post_usrlogin' por '$strULogin'");
+            Common::wrLogInfo($LANG['event'][15], "Login: '$post_usrlogin';");
+            Common::sendEmail($LANG['event'][15]." '$post_usrlogin'");
         } else {
             $resXML["status"] = 1;
-            $resXML["description"] = "Error al eliminar el usuario";
+            $resXML["description"] = $LANG['msg'][73];
         }        
     } else {
-        $resXML["description"] = "No es una acción válida";
+        $resXML["description"] = $LANG['msg'][24];
         $resXML["status"] = 1;
     }
        

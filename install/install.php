@@ -26,163 +26,138 @@
  */
 
 define('PMS_ROOT', '..');
+define('PMS_VERSION', '0.95b');
 
+include_once (PMS_ROOT."/inc/crypt.class.php");
 include_once (PMS_ROOT."/inc/config.class.php");
 include_once (PMS_ROOT."/inc/common.class.php");
+include_once (PMS_ROOT."/inc/install_functions.php");
 
-// Función para crear el archivo de configuración de la BBDD
-function createDbFile() {
-    global $CFG_DB;
-  
-    $filePath = dirname(__FILE__)."/".PMS_ROOT."/inc";
-    $fileName = $filePath."/db.class.php";
-    
-    if( file_exists($fileName) ) {
-        echo '<TR><TD>El archivo de conexión a la BBDD, ya existe</TD><TD CLASS="result"><span class="altTxtOrange">AVISO</span></TD></TR>';
-        return TRUE;
-    }
-    
-    if ( ! $CFG_DB["hostname"] OR ! $CFG_DB["username"] OR ! $CFG_DB["userpass"] OR ! $CFG_DB["dbname"] ){
-        echo '<TR><TD>Faltan parámetros para la conexión a la BBDD</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
-        return FALSE;
-    }
-
-    $DB_str = "<?php\n class DB extends Config {
-            \n var \$dbhost = '".$CFG_DB["hostname"]."';
-            \n var \$dbuser = '".$CFG_DB["username"]."';
-            \n var \$dbpassword = '".$CFG_DB["userpass"]."';
-            \n var \$dbname = '".$CFG_DB["dbname"]."';
-            \n } \n?>";
-
-    if ( ! is_writable($filePath) ){
-        echo '<TR><TD>Los permisos del directorio \''.$filePath.'\' son incorrectos</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
-        return FALSE;
-    }
-    
-    if ( $fp = fopen($fileName,'w') ) {
-        $fw = fwrite($fp,$DB_str);
-        fclose($fp);
-        
-        echo '<TR><TD>Creando archivo de conexión a la BBDD</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
-        return TRUE;
-    }  else {
-        echo '<TR><TD>No es posible crear el archivo de conexión a la BBDD</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
-        return FALSE;
-    }
-}
-
-function checkDB(){
-    include_once (PMS_ROOT."/inc/db.class.php");
-    
-    $objDB = new DB;
-    
-    @$mysqli = new mysqli($objDB->dbhost, $objDB->dbuser, $objDB->dbpassword, $objDB->dbname);
-    
-    if ( $mysqli->connect_errno ){
-        echo '<TR><TD>No es posible conectar con la BBDD: <br />'.$mysqli->connect_errno.' - '.$mysqli->connect_error.'</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
-        unset($mysqli);
-        unset($objDB);
-        return FALSE;
-    } else{
-        echo '<TR><TD>Conexión con la BBDD '.$objDB->dbuser.'@'.$objDB->dbhost.' -> '.$objDB->dbname.'</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
-        unset($mysqli);
-        unset($objDB);        
-        return TRUE;
-    }
-    
-}
-
-function checkFileConfig(){
-    if ( file_exists("config.ini")){
-        if ( Config::getFileConfig(dirname(__FILE__)) ) {
-            echo '<TR><TD>Archivo de configuración procesado</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
-        } else {
-            echo '<TR><TD>Error al procesar el archivo de configuración \'config.ini\'</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
-            return FALSE;
-        }
-    } elseif ( file_exists(dirname(__FILE__)."/".PMS_ROOT."/config.ini") ){
-        if ( Config::getFileConfig(dirname(__FILE__)."/".PMS_ROOT."/config.ini") ){
-            echo '<TR><TD>Archivo de configuración procesado</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
-        } else {
-            echo '<TR><TD>Error al procesar el archivo de configuración \'config.ini\'</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
-            return FALSE;
-        }
+if ( isset($_POST["step"]) ) $step = $_POST["step"];
+if ( isset($_POST["submit"]) ) $submit = $_POST["submit"];
+if ( isset($_POST["instLang"]) ){
+    if ( $_POST["instLang"] == 1 ){
+        $instLang = $_POST["submit"];
     } else {
-        echo '<TR><TD>El archivo de configuración \'config.ini\', no existe</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
-        return FALSE;
+        $instLang = $_POST["instLang"];
     }
     
-    return TRUE;
-}
-
-function checkVersion(){
-    preg_match("/(^\d\.\d)\..*/",PHP_VERSION, $version);
-
-    if ( $version[1] >= 5.1 ){
-        echo '<TR><TD>Versión PHP  \''.$version[0].'\'</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
-        return TRUE;
-    } else {
-        echo '<TR><TD>Versión PHP  \''.$version[0].'\', requerida >= 5.1</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
-        return FALSE;
-    }    
+    switch ($instLang){
+        case "Español":
+            include_once (PMS_ROOT."/locales/es_ES.php");
+            break;
+        case "English":
+            include_once (PMS_ROOT."/locales/en_US.php");
+            break;
+    }
+} else {
+    include_once (PMS_ROOT."/locales/es_ES.php");
 }
 
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <HTML xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
     <HEAD>
-        <TITLE>Instalación phpPMS</TITLE>
+        <TITLE>'.$LANG['install'][25].'</TITLE>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <LINK REL="icon" TYPE="image/png" HREF="'.PMS_ROOT.'/imgs/logo.png">
         <LINK REL="stylesheet" HREF="'.PMS_ROOT.'/css/styles.css" TYPE="text/css">
     </HEAD>
     <BODY>
         <DIV ID="install" ALIGN="center">
-        <DIV ID="logo" CLASS="round"><IMG SRC="../imgs/logo.png" />Instalación phpPMS</DIV>
-        <TABLE ID="tblInstall">';
+        <DIV ID="logo" CLASS="round"><IMG SRC="../imgs/logo.png" />'.$LANG['install'][25].' '.PMS_VERSION.'</DIV>';
 
-if ( checkVersion() AND checkFileConfig() AND createDbFile() ) {
+if ( ! $instLang ){
+    echo '<FORM METHOD="post" NAME="frmConfig" ID="frmConfig" ACTION="install.php" />';
+    echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][49].'" />';
+    echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][50].'" />';
+    echo '<INPUT TYPE="hidden" NAME="instLang" VALUE="1" /></FORM>';
+} elseif( ! $step ){
+    echo '<TABLE ID="tblInstall">';
+    if ( checkPhpVersion() && checkModules() ){
+        $filePath = dirname(__FILE__)."/".PMS_ROOT."/inc";
+        $fileName = $filePath."/db.class.php";
+        
+        if ( ! is_writable($filePath) ){
+            printMsg($LANG['install'][9]." ('$filePath')", 2);
+        }
     
-    if ( checkDB() ) { 
+        if (checkDBFile() ){
+            printMsg($LANG['install'][7], 2);
+        }
+        
+        printMsg($LANG['install'][20],2);
+        
+        echo '</TABLE>';
+        echo '<FORM METHOD="post" NAME="frmConfig" ID="frmConfig" ACTION="install.php" />';
+        echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][26].'" />';
+        echo '<INPUT TYPE="hidden" NAME="instLang" VALUE="'.$instLang.'" />';
+        echo '<INPUT TYPE="hidden" NAME="step" VALUE="2" /></FORM>';
+    }
+}
+
+if ( $step == 2 ) mkDbForm();       
+
+if ( $step == 3 ){
+    echo '<TABLE ID="tblInstall">';
     
-        $modsError = 0;
-        $modsAvail = get_loaded_extensions();
-        $modsNeed = array("mysql","ldap","mcrypt","curl","SimpleXML");
-
-        foreach($modsNeed as $module){
-            if ( in_array($module, $modsAvail) ){
-                echo '<TR><TD>Módulo \''.$module.'\'</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
-            } else {
-                echo '<TR><TD>Módulo \''.$module.'\'</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
-                $modsError++;
+    if ( $submit == $LANG["install"][27] ){
+        if ( checkDBFile() ){
+            if ( checkDB() ){
+                if ( updateDB() ){
+                    updateVersion();
+                    echo '</TABLE>';
+                    echo '<DIV ID="access"><A CLASS="round" HREF="'.PMS_ROOT.'/login.php">'.$LANG['install'][23].'</A></DIV>';
+                    $isOk = TRUE;
+                }
             }
-        }            
-
-        if ( $modsError > 0 ){
-            echo '<TR><TD>Módulos requeridos no disponibles. Abortado</TD><TD CLASS="result"><span class="altTxtRed">ERROR</span></TD></TR>';
-        } else {        
-            $objConfig = new Config;
-
-            if ( ! preg_match("/^\/phppms\//", $_SERVER["REQUEST_URI"],$matches) ){
-                echo '<TR><TD><span class="altTxtBlue">No está utilizando la URL por defecto "/phppms". Debe de modificar la variable "phppms_root" del archivo "javascript/funxtions.js"</span></TD><TD CLASS="result"><span class="altTxtOrange">AVISO</span></TD></TR>';
-
+        }   
+    } elseif ( $submit == $LANG["install"][26] ){
+        if ( createDbFile() ){
+            if ( createDB() ){
+                echo '</TABLE>';
+                echo '<FORM METHOD="post" NAME="frmConfig" ID="frmConfig" ACTION="install.php" />';
+                echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG["install"][26].'" />';
+                echo '<INPUT TYPE="hidden" NAME="instLang" VALUE="'.$instLang.'" />';
+                echo '<INPUT TYPE="hidden" NAME="step" CLASS="button round" VALUE="4" /></FORM>';
+                $isOk = TRUE;
             }
-
-            if ( file_exists("upgrade.sql") ){
-                echo '<TR><TD><span class="altTxtBlue">Si está actualizando, es necesario ejecutar antes: <br /> \'mysql -u root -p < install/upgrade.sql\' desde la consola </span></TD><TD CLASS="result"><span class="altTxtOrange">AVISO</span></TD></TR>';
-            }
-
-            if ( $objConfig->mkInitialConfig(dirname(__FILE__),$_GET["upgrade"]) ){
-                echo '<TR><TD>Configuración del entorno finalizada</TD><TD CLASS="result"><span class="altTxtGreen">OK</span></TD></TR>';
-            }
-
-            if ( file_exists("config.ini") || file_exists(PMS_ROOT."/config.ini") ){
-                echo '<TR><TD>Por seguridad, guarde y elimine el archivo config.ini</TD><TD CLASS="result"><span class="altTxtOrange">AVISO</span></TD></TR>';
-            }
-
-            echo '<TR><TD COLSPAN="2" STYLE="text-align: center;font-weight: bold;font-size: 12px;"><A HREF="'.PMS_ROOT.'/login.php">Pulse aquí para acceder</A></TD></TR>';
         }
     }
     
-    echo '</DIV></BODY></HTML>';
+    if ( ! $isOk ){
+        echo '</TABLE>';
+        printBack(2);
+    }
 }
+
+if ( $step == 4 ) mkConfigForm();
+
+if ( $step == 5 ){
+    echo '<TABLE ID="tblInstall">';
+
+    if ( checkDB() ) {
+        
+        if ( file_exists("config.ini") || file_exists(PMS_ROOT."/config.ini") ){
+            printMsg($LANG['install'][22], 2);
+        }
+
+//        if ( ! preg_match("/^\/phppms\//", $_SERVER["REQUEST_URI"],$matches) ){
+//            echo '<TR><TD><span class="altTxtBlue">'.$LANG['install'][19].'</TD><TD CLASS="result"><span class="altTxtOrange">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
+//        }
+        
+        $objConfig = new Config;
+        
+        if ( $objConfig->mkInitialConfig($_POST) ){
+            printMsg($LANG['install'][21]);
+            echo '</TABLE>';
+            echo '<DIV ID="access"><A CLASS="round" HREF="'.PMS_ROOT.'/login.php">'.$LANG['install'][23].'</A></DIV>';
+        } else {
+            printMsg($LANG['install'][39], 1);
+            echo '</TABLE>';
+            printBack(4);
+        }
+    }
+}
+
+echo '</DIV></BODY></HTML>';
 ?>

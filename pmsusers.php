@@ -39,26 +39,29 @@
 
 
     Common::printHeader(FALSE,TRUE);
-?>
-    <BODY OnLoad="loadUsrMgmt(1);">
-        <?php 
-            Common::printBodyHeader();
-            Users::checkUserAccess("users") || die ('<DIV CLASS="error">No tiene permisos para acceder a esta página.</DIV>');
-        ?>
-        <DIV ID="container" ALIGN="center">
-            <H2 ID="usrmgmt_head">Gestión de Usuarios</H2>
-            <DIV ID="actionbar" CLASS="action midround">
-                <IMG ID="btnAddUsr" SRC="imgs/add.png" CLASS="inputImg" TITLE="Nuevo Usuario" OnClick="loadUsrMgmt(2);" />
-                <IMG ID="btnAddGrp" SRC="imgs/add.png" CLASS="inputImg" TITLE="Nuevo Grupo" STYLE="display: none" OnClick="loadUsrMgmt(4);" />
-                <IMG ID="btnGroups" SRC="imgs/groups.png" CLASS="inputImg" TITLE="Gestión de Grupos" OnClick="loadUsrMgmt(3);" />
-                <IMG ID="btnUsers" SRC="imgs/users.png" CLASS="inputImg" TITLE="Gestión de Usuarios" STYLE="display: none" OnClick="loadUsrMgmt(1);" />
-                <IMG ID="btnUsrCancel" SRC="imgs/delete.png" CLASS="inputImg" TITLE="Cancelar" STYLE="display: none" OnClick="loadUsrMgmt(1);" />
-                <IMG ID="btnUsrSave" SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" STYLE="display: none" OnClick="userMgmt('add',0);" />
-                <IMG ID="btnGrpCancel" SRC="imgs/delete.png" CLASS="inputImg" TITLE="Cancelar" STYLE="display: none" OnClick="loadUsrMgmt(3);" />
-                <IMG ID="btnGrpSave" SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" STYLE="display: none" OnClick="groupMgmt('add',0);" />
+
+    echo '<BODY OnLoad="loadUsrMgmt(1);">';
+    
+    Common::printBodyHeader();
+    Users::checkUserAccess("users") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
+    
+    echo '<DIV ID="container" ALIGN="center">';
+    echo '<H2 ID="usrmgmt_head">'.$LANG['buttons'][13].'</H2>';
+    echo '<DIV ID="actionbar" CLASS="action midround">';
+    echo '<IMG ID="btnAddUsr" SRC="imgs/add.png" CLASS="inputImg" TITLE="'.$LANG['buttons'][39].'" OnClick="loadUsrMgmt(2);" />';
+    echo '<IMG ID="btnAddGrp" SRC="imgs/add.png" CLASS="inputImg" TITLE="'.$LANG['buttons'][37].'" STYLE="display: none" OnClick="loadUsrMgmt(4);" />';
+    echo '<IMG ID="btnGroups" SRC="imgs/groups.png" CLASS="inputImg" TITLE="'.$LANG['buttons'][14].'" OnClick="loadUsrMgmt(3);" />';
+    echo '<IMG ID="btnUsers" SRC="imgs/users.png" CLASS="inputImg" TITLE="'.$LANG['buttons'][13].'" STYLE="display: none" OnClick="loadUsrMgmt(1);" />';
+    echo '<IMG ID="btnUsrCancel" SRC="imgs/delete.png" CLASS="inputImg" TITLE="'.$LANG['buttons'][6].'" STYLE="display: none" OnClick="loadUsrMgmt(1);" />';
+    echo '<IMG ID="btnUsrSave" SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" STYLE="display: none" OnClick="userMgmt(\'add\',0);" />';
+    echo '<IMG ID="btnGrpCancel" SRC="imgs/delete.png" CLASS="inputImg" TITLE="'.$LANG['buttons'][6].'" STYLE="display: none" OnClick="loadUsrMgmt(3);" />';
+    echo '<IMG ID="btnGrpSave" SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" STYLE="display: none" OnClick="groupMgmt(\'add\',0);" />';
                 
-                <?php $objCommon->printBackLinks(TRUE); ?>
-            </DIV>
-            <DIV ID="usrMgmt"></DIV>
-            <DIV ID="resAccion"></DIV>
-<?php Common::PrintFooter(); ?>
+    $objCommon->printBackLinks(TRUE);
+    
+    echo '</DIV>';
+    echo '<DIV ID="usrMgmt"></DIV>';
+    echo '<DIV ID="resAccion"></DIV>';
+    
+    Common::PrintFooter();
+?>

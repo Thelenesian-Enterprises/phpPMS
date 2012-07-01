@@ -111,13 +111,15 @@ class Account {
 
     // Función para actualizar una cuenta
     public function updateAccount () {
+        global $LANG;
+        
         // Guardamos una copia de la cuenta en el histórico
         if ( ! $this->addHistorico($this->intAccId, $this->intAccUserEditId, false) ){
-            Common::wrLogInfo(__FUNCTION__,"Error al actualizar el historial");
+            Common::wrLogInfo(__FUNCTION__,$LANG['eventdesc'][3]);
             return FALSE;            
         }
         
-        $this->updateAccGroups() || Common::wrLogInfo(__FUNCTION__,"Error al actualizar los grupos secundarios");
+        $this->updateAccGroups() || Common::wrLogInfo(__FUNCTION__,$LANG['eventdesc'][4]);
                 
         $strQuery = "UPDATE accounts SET ";
         $strQuery .= "vacCliente = '".$this->dbh->real_escape_string($this->strAccCliente)."', ";
@@ -142,9 +144,11 @@ class Account {
 
     // Función para actualizar la clave de una cuenta
     public function updateAccountPass () {
+        global $LANG;
+        
         // Guardamos una copia de la cuenta en el histórico        
         if ( ! $this->addHistorico($this->intAccId, $this->intAccUserEditId, false) ){
-            Common::wrLogInfo(__FUNCTION__,"Error al actualizar el historial");
+            Common::wrLogInfo(__FUNCTION__,$LANG['eventdesc'][3]);
             return FALSE;            
         }
 
@@ -172,6 +176,8 @@ class Account {
 
     // Función para crear una cuenta
     public function createAccount () {
+        global $LANG;
+        
         $clsConfig = new Config;
 
         $strQuery = "INSERT INTO accounts ";
@@ -210,15 +216,17 @@ class Account {
         
         $this->intAccId = $this->dbh->insert_id;
         
-        $this->updateAccGroups() || Common::wrLogInfo(__FUNCTION__,"Error al actualizar los grupos secundarios");
+        $this->updateAccGroups() || Common::wrLogInfo(__FUNCTION__,$LANG['eventdesc'][4]);
         
         return $resQuery;
     }
 
     // Función para eliminar una cuenta
     public function deleteAccount ($intAccId, $intUId) {
+        global $LANG;
+        
         // Guardamos una copia de la cuenta en el histórico
-        $doHistorico = $this->addHistorico($intAccId, $intUId, true) or die ("ERROR: Error en la operación.");
+        $doHistorico = $this->addHistorico($intAccId, $intUId, true) or die ($LANG['msg'][76]);
 
         $strQuery = "DELETE FROM accounts WHERE intAccountId = ".(int)$intAccId;
         $resQuery = $this->dbh->query($strQuery);
@@ -489,6 +497,7 @@ class Account {
         $intUGroupFId = $_SESSION["ugroup"];
         $intUId = $_SESSION["uid"];
 
+        // FIXME
         $strQuery = "SELECT COUNT(DISTINCT intAccountId) FROM accounts acc
                     LEFT JOIN acc_usergroups aug ON acc.intAccountId=aug.intAccId 
                     WHERE acc.intUGroupFId = ".(int)$intUGroupFId." 
@@ -610,7 +619,9 @@ class Account {
     }
 
     function updateAllAccountsMPass($strCurMasterPass, $strNewMasterPwd){
-        Common::wrLogInfo("Actualizar Clave Maestra", "Inicio");
+        global $LANG;
+        
+        Common::wrLogInfo($LANG['event'][17],$LANG['eventdesc'][6]);
          
         $intUId = $_SESSION["uid"];
         $intErrCount = 0;
@@ -628,7 +639,7 @@ class Account {
         $blnCryptModule = $objCrypt->checkCryptModule();
         
         if ( ! $blnCryptModule ) {
-            Common::wrLogInfo("Actualizar Clave Maestra", "Error en el módulo de encriptación");
+            Common::wrLogInfo($LANG['event'][17],$LANG['eventdesc'][7]);
             return FALSE;
         }
         
@@ -642,7 +653,7 @@ class Account {
                 $this->intAccUserEditId = $intUId;                
                 if ( ! $this->updateAccountPass() ){
                     $intErrCount++;
-                    Common::wrLogInfo("Actualizar Clave Maestra", "Fallo al actualizar la clave de la cuenta '".$this->intAccId."'");
+                    Common::wrLogInfo($LANG['event'][17],$LANG['eventdesc'][8]."'".$this->intAccId."'");
                 }
                 $accOkIds .= $this->intAccId.",";
             } else {
@@ -653,9 +664,9 @@ class Account {
         
         $accOkIds = trim($accOkIds,",");
         
-        if ( $accOkIds ) Common::wrLogInfo("Actualizar Clave Maestra", "Cuentas actualizadas: ".$accOkIds);
+        if ( $accOkIds ) Common::wrLogInfo($LANG['event'][17],$LANG['eventdesc'][9].": ".$accOkIds);
         
-        Common::wrLogInfo("Actualizar Clave Maestra", "Fin");
+        Common::wrLogInfo($LANG['event'][17], "Fin");
         
         if ( $intErrCount > 0 ) return FALSE;
         

@@ -1,34 +1,7 @@
-// Copyright (c) 2012 Rubén Domínguez
-//  
-// This file is part of phpPMS.
-//
-// phpPMS is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// phpPMS is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-
-
-/**
- *
- * @author nuxsmin
- * @version 0.91b
- * @link http://www.cygnux.org/phppms
- * 
- */
-
 var gsorder = 0;
 var lastlen = 0;
 var usr_inedit = 0;
 var grp_inedit = 0;
-var pms_root = '/phppms';
 
 jQuery.extend(jQuery.fn.fancybox.defaults, {
     overlayShow : true,
@@ -36,10 +9,14 @@ jQuery.extend(jQuery.fn.fancybox.defaults, {
     hideOnOverlayClick : true
 });
 
+//$(document).ready(function(){
+//    
+//});
+
 // Función para limpiar un formulario
 function Clear(id,search){
     $("#"+id).resetForm();
-    
+   
     if ( search == 1 ){
         document.frmSearch.search.value = "";
         document.frmSearch.cliente.selectedIndex = 0;
@@ -51,11 +28,11 @@ function Clear(id,search){
 function Buscar(continous){
     //if ( clear == 1){ $('#frmSearch').each(function(){ this.reset();}); }
     //if ( clear == 1){ $("#frmSearch").resetForm(); }
-    
+
     var lenTxtSearch = document.frmSearch.search.value.length;
-    
+   
     if ( lenTxtSearch < 3 && continous == 1 && lenTxtSearch >  window.lastlen ) return;
-    
+   
     window.lastlen = lenTxtSearch;
 
     var datos = $("#frmSearch").serialize();
@@ -74,11 +51,12 @@ function Buscar(continous){
                 $('#resBuscar').html(response);
             }
         },
-        error:function(){$('#resBuscar').html('<p class="error"><strong>Oops!</strong> Ha ocurrido un error en la consulta.</p>');}
+        error:function(){$('#resBuscar').html('<p class="error"><strong>Oops...</strong>' + LANG[0] + '</p>');}
     });
     return false;
 }
 
+// Función para buscar con la ordenación por campos
 function searchSort(skey,page,nav){
     if ( typeof(skey) == "undefined" || typeof(page) == "undefined" ) return false
         
@@ -119,14 +97,7 @@ function searchSort(skey,page,nav){
                 $('#resBuscar').html(response);
             }
         },
-        error:function(){$('#resBuscar').html('<p class="error"><strong>Oops!</strong> Ha ocurrido un error en la consulta.</p>');}
-    });
-}
-
-function Reload(campos) {
-    $("#resBuscar").html('<img src="imgs/loading.gif" />');
-    $("#resBuscar").load("/phppms/ajax_search.php?" + campos, function(response, status, xhr) {
-        if ( response == 0) {doLogout();}
+        error:function(){$('#resBuscar').html('<p class="error"><strong>Oops...</strong>' + LANG[0] + '</p>');}
     });
 }
 
@@ -163,7 +134,7 @@ function getUrlVars(){
 // Función para autentificar usuarios
 function doLogin(){
     $("#loading").show();
-    $("#loading").html('<img src="imgs/loading.gif" /> Comprobando...');
+    $("#loading").html('<img src="imgs/loading.gif" /> ' + LANG[7] + '...');
 
     var form_data = {user: $("#user").val(), pass: $("#pass").val(), mpass: $("#mpass").val(), login: 'login', is_ajax: 1};
     
@@ -208,7 +179,7 @@ function doLogin(){
                 });
             }},
         error: function (jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">Ha ocurrido un error<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
             $("#loading").empty();
             $.fancybox(txt,
                 {'onClosed':function (){$("#btnLogin").prop('disabled',false);}
@@ -230,7 +201,7 @@ function checkLogout(){
     var session = getUrlVars()["session"];
 
     if ( session == 0 ){
-        var txt = '<div id="fancyView" class="backOrange"><span class="altTxtOrange">Sesión finalizada</span></div>';
+        var txt = '<div id="fancyView" class="backOrange"><span class="altTxtOrange">' + LANG[2] + '<span></div>';
         $.fancybox(txt,{'onClosed' : function() {location.search = '';}});				
     }
 }
@@ -264,7 +235,7 @@ function saveAccount(frm) {
             }
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">Ha ocurrido un error<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
             $.fancybox(txt);
         }
     });
@@ -277,7 +248,7 @@ function delAccount(id,action){
 
     $("#resAccion").html('<img src="imgs/loading.gif" />');
     
-    var res = confirm ('Borrar la cuenta?');
+    var res = confirm (LANG[8]);
     if (!res){
         $("#resAccion").empty();
         return false;
@@ -306,7 +277,7 @@ function delAccount(id,action){
             }
         },
         error:function(jqXHR, textStatus, errorThrown){ 
-            var txt = ('<div id="fancyView" class="fancyErr"><span class="altTxtRed">Oops!...Ha ocurrido un error en la consulta</span></div>');
+            var txt = ('<div id="fancyView" class="fancyErr"><span class="altTxtRed"Oops...' + LANG[0] + '</span></div>');
             $.fancybox(txt);
         }
     });
@@ -367,7 +338,7 @@ function configMgmt(action){
             }
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">Ha ocurrido un error<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
             $.fancybox(txt);
         }
     });
@@ -378,7 +349,7 @@ function configMgmt(action){
 // Función para descargar/ver archivos de una cuenta
 function downFile(fancy){
     if ( $("#files").val() == null ){
-        var txt = '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">Archivo no seleccionado</span></div>';
+        var txt = '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">' + LANG[3] + '</span></div>';
         $.fancybox(txt);
         return false;                
     }
@@ -407,7 +378,7 @@ function downFile(fancy){
 // Función para eliminar archivos de una cuenta
 function delFile(id){
     if ( $("#files").val() == null ){
-        var txt = '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">Archivo no seleccionado</span></div>';
+        var txt = '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">' + LANG[3] + '</span></div>';
         $.fancybox(txt);
         return false;                
     }
@@ -431,7 +402,7 @@ function upldFile(id){
     var optionsUpld = { 
         beforeSubmit:  function(){
             if ( $("#upload_form input[name=file]").val()  == '' ){
-                var txt = '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">Archivo no indicado</span></div>';
+                var txt = '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">' + LANG[4] + '</span></div>';
                 $.fancybox(txt);
                 return false;                
             }
@@ -444,12 +415,11 @@ function upldFile(id){
             $("#resAccion").empty();
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">Ha ocurrido un error<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
             $.fancybox(txt);
         }
     }; 
 
-    //$('#upload_form').ajaxForm(optionsUpld);
     $('#upload_form').ajaxSubmit(optionsUpld);
 }
 
@@ -459,22 +429,22 @@ function loadUsrMgmt(action){
     
     switch(action){
         case 1:
-            $('#usrmgmt_head').html('Gestión de Usuarios');
+            $('#usrmgmt_head').html(LANG[5]);
             $('#actionbar').find('img').hide();
             $('#btnAddUsr,#btnGroups,#btnBack').show();
             break;
         case 2:
-            $('#usrmgmt_head').html('Gestión de Usuarios');
+            $('#usrmgmt_head').html(LANG[5]);
             $('#actionbar').find('img').hide();
             $('#btnUsrSave,#btnUsrCancel,#btnBack').show();
             break;
         case 3:
-            $('#usrmgmt_head').html('Gestión de Grupos');
+            $('#usrmgmt_head').html(LANG[6]);
             $('#actionbar').find('img').hide();
             $('#btnAddGrp,#btnUsers,#btnBack').show();
             break;
         case 4:
-            $('#usrmgmt_head').html('Gestión de Grupos');
+            $('#usrmgmt_head').html(LANG[6]);
             $('#actionbar').find('img').hide();
             $('#btnGrpSave,#btnGrpCancel,#btnBack').show();
             break;            
@@ -495,7 +465,7 @@ function loadUsrMgmt(action){
             }
         },
         error:function(jqXHR, textStatus, errorThrown){ 
-            $('#resBuscar').html('<p class="error"><strong>Oops!</strong> Ha ocurrido un error en la consulta.</p>'); 
+            $('#resBuscar').html('<p class="error"><strong>Oops...</strong>' + LANG[0] + '</p>'); 
         }
     });    
 }
@@ -554,7 +524,7 @@ function userMgmt(action,id){
             
             var usrlogin = $("#usrlogin_"+ id).val();
             
-            var res = confirm ('Borrar el usuario \''+usrlogin+ '\'?');
+            var res = confirm (LANG[9]+ ' \''+usrlogin+ '\'?');
             if (!res){
                 $("#resAccion").empty();
                 return false;
@@ -602,7 +572,7 @@ function userMgmt(action,id){
             }
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">Ha ocurrido un error<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
             $.fancybox(txt);
         }
     });
@@ -705,7 +675,7 @@ function groupMgmt(action,id){
             }
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">Ha ocurrido un error<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
             $.fancybox(txt);
         }
     });
@@ -757,4 +727,20 @@ function usrUpdPass(id,usrlogin){
         'href': 'pmsusers_pass.php?usrid='+id+'&usrlogin='+usrlogin,
         'overlayOpacity' : 0.5
     });
+}
+
+// Función para verificar si existen actualizaciones
+function checkUpds(){
+    $.ajax({
+        type: 'GET',
+        dataType: 'html',
+        url: pms_root + '/ajax_checkupds.php',
+        timeout: 2000,
+        success: function(response){
+            $('#updates').html(response);
+        },
+        error:function(jqXHR, textStatus, errorThrown){
+            $('#updates').html('!');
+        }
+    });      
 }

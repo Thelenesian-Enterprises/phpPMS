@@ -36,6 +36,8 @@ class Files {
     
     // Función para subir el archivo
     public function fileUpload($intAccId){
+        global $LANG;
+        
         // Extensiones aceptadas.
         $extsOk = array("PDF","JPG","GIF","PNG","ODT","ODS","DOC","DOCX","XLS","XSL","VSD","TXT","CSV","LIC","PPK");
 
@@ -46,11 +48,11 @@ class Files {
             $fileExt = pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION);
 
             if ( ! in_array(strtoupper($fileExt), $extsOk) ){
-                echo "Extensión no permitida '$fileExt'";
+                echo $LANG['msg'][86]." '$fileExt'";
                 return;
             }
         } else{
-            echo "Archivo inválido:<br />".$_FILES['file']['name'];
+            echo $LANG['msg'][93].":<br />".$_FILES['file']['name'];
             return;
         }
 
@@ -61,7 +63,7 @@ class Files {
         $fileType = $_FILES['file']['type'];
 
         if( $fileSize > 1024000 ){
-            echo "El archivo es mayor de 1M";
+            echo $LANG['msg'][80];
             return FALSE;
         }
 
@@ -69,7 +71,7 @@ class Files {
         $fileHandle = fopen($tmpName, 'r');
         
         if ( ! $fileHandle ){
-            echo "Error interno al leer el archivo";
+            echo $LANG['msg'][81];
             return FALSE;
         }
         
@@ -91,14 +93,16 @@ class Files {
             Common::wrLogInfo(__FUNCTION__, $this->dbh->error.";SQL: ".$strQueryEsc);
         }
         
-        echo ( $resQuery) ? "Archivo guardado correctamente" : "No se pudo guardar el archivo";
+        echo ( $resQuery) ? $LANG['msg'][82] : $LANG['msg'][83];
     }
 
     // Función para descargar el archivo
     public function fileDownload($fileId,$view = FALSE){
+        global $LANG;
+        
         // Verificamos que el ID sea numérico
         if( ! is_numeric($fileId) ){
-            echo "No es un ID de archivo válido";
+            echo $LANG['msg'][84];
             return FALSE;
         }
 
@@ -115,7 +119,7 @@ class Files {
         $resQuery->free();
 
         if( ! $resResult ){
-            echo "El archivo no existe";
+            echo $LANG['msg'][85];
             return FALSE;
         }
         
@@ -142,16 +146,18 @@ class Files {
             } elseif ( strtoupper($fileExt) == "TXT" ){
                 echo '<div id="fancyView" class="backGrey"><pre>'.$fileData.'</pre></div>';
             } else{
-                echo '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">Tipo de archivo no soportado</span></div>';
+                echo '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">'.$LANG['msg'][86].'</span></div>';
             }
         }
         
     }
 
     public function fileDelete($fileId){
+        global $LANG;
+        
         // Verificamos que el ID sea numérico
         if(!is_numeric($fileId)){
-            echo "No es un ID de archivo válido";
+            echo $LANG['msg'][84];
             return FALSE;
         }
 
@@ -164,11 +170,13 @@ class Files {
             Common::wrLogInfo(__FUNCTION__, $this->dbh->error.";SQL: ".$strQueryEsc);
         }
         
-        echo ( $resQuery ) ? "Archivo eliminado correctamente" : "Error al eliminar el archivo";
+        echo ( $resQuery ) ? $LANG['msg'][87] : $LANG['msg'][88];
     }
 
     // Función para generar el listado de archivos guardados
     public function mkFileList($intAccId,$blnDelete){
+        global $LANG;
+        
         // Obtenemos los archivos de la BBDD para dicha cuenta
         $strQuery = "SELECT intId, vacName, intSize FROM files WHERE intAccountId = ".(int)$intAccId;
         $resQuery = $this->dbh->query($strQuery);
@@ -193,10 +201,10 @@ class Files {
         echo '<input name="action" type="hidden" id="action" value="download">';
         echo '</form>';
         echo '<DIV CLASS="actionFiles">';
-        echo '<IMG SRC="imgs/download.png" TITLE="Descargar archivo" ID="btnDownload" CLASS="inputImg" OnClick="downFile();" />';
-        echo '<IMG SRC="imgs/view.png" TITLE="Ver archivo" ID="btnView" CLASS="inputImg" OnClick="downFile(1);" />';
+        echo '<IMG SRC="imgs/download.png" TITLE="'.$LANG['buttons'][22].'" ID="btnDownload" CLASS="inputImg" OnClick="downFile();" />';
+        echo '<IMG SRC="imgs/view.png" TITLE="'.$LANG['buttons'][23].'" ID="btnView" CLASS="inputImg" OnClick="downFile(1);" />';
 
-        if ( $blnDelete != 0) echo '<IMG SRC="imgs/delete.png" TITLE="Eliminar archivo" ID="btnDelete" CLASS="inputImg" OnClick="delFile('.$intAccId.');" />';
+        if ( $blnDelete != 0) echo '<IMG SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][24].'" ID="btnDelete" CLASS="inputImg" OnClick="delFile('.$intAccId.');" />';
         echo '</DIV>';      
         
         $resQuery->free();
