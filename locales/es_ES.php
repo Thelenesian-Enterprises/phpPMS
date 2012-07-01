@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with phpPMS.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
@@ -368,7 +368,7 @@ $LANG['install'][15]="Creando nueva BBDD";
 $LANG['install'][16]="Versión PHP";
 $LANG['install'][17]="Comprobando módulos";
 $LANG['install'][18]="Módulos requeridos no disponibles. Abortado";
-$LANG['install'][19]="No está utilizando la URL por defecto \"/phppms\". Debe de modificar la variable \"phppms_root\" del archivo \"javascript/functions.js\"";
+$LANG['install'][19]="No está utilizando la URL por defecto \"/phppms\". Preste atencion durante la configuración";
 $LANG['install'][20]="Por favor, antes de continuar, realice una copia de seguridad de la BBDD";
 $LANG['install'][21]="Configuración del entorno finalizada";
 $LANG['install'][22]="El usuario conexión a la BBDD ya existe";

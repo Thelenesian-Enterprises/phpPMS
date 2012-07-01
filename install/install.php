@@ -14,19 +14,19 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with phpPMS.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
  *
  * @author nuxsmin
- * @version 0.91b
+ * @version 0.951b
  * @link http://www.cygnux.org/phppms
  * 
  */
 
 define('PMS_ROOT', '..');
-define('PMS_VERSION', '0.95b');
+define('PMS_VERSION', '0.951b');
 
 include_once (PMS_ROOT."/inc/crypt.class.php");
 include_once (PMS_ROOT."/inc/config.class.php");
@@ -76,6 +76,10 @@ if ( ! $instLang ){
     if ( checkPhpVersion() && checkModules() ){
         $filePath = dirname(__FILE__)."/".PMS_ROOT."/inc";
         $fileName = $filePath."/db.class.php";
+        
+        if ( ! preg_match("/^\/phppms\//", $_SERVER["REQUEST_URI"]) ){
+            printMsg($LANG['install'][19], 2);
+        }
         
         if ( ! is_writable($filePath) ){
             printMsg($LANG['install'][9]." ('$filePath')", 2);
@@ -140,10 +144,6 @@ if ( $step == 5 ){
         if ( file_exists("config.ini") || file_exists(PMS_ROOT."/config.ini") ){
             printMsg($LANG['install'][22], 2);
         }
-
-//        if ( ! preg_match("/^\/phppms\//", $_SERVER["REQUEST_URI"],$matches) ){
-//            echo '<TR><TD><span class="altTxtBlue">'.$LANG['install'][19].'</TD><TD CLASS="result"><span class="altTxtOrange">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
-//        }
         
         $objConfig = new Config;
         

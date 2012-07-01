@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with phpPMS.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
@@ -93,11 +93,11 @@
     if ( $fullTxt ){
         echo '<table>
             <tr>
-                <td><span class="altTxtBlue">Usuario</span></td>
+                <td><span class="altTxtBlue">'.$LANG['accounts'][6].'</span></td>
                 <td>'.$objAccount->strAccLogin.'</td>
             </tr>
             <tr>
-                <td><span class="altTxtBlue">Clave</span></td>
+                <td><span class="altTxtBlue">'.$LANG['accounts'][20].'</span></td>
                 <td>'.trim($strPasswordOutput).'</td>
             </tr>
             </table>';

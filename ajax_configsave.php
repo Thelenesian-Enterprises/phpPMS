@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with phpPMS.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
@@ -107,9 +107,9 @@
         $objConfig->arrConfigValue["siteshortname"] = $post_siteshortname;
         $objConfig->arrConfigValue["siteroot"] = $post_siteroot;
         $objConfig->arrConfigValue["sitelang"] = $post_sitelang;
-        $objConfig->arrConfigValue["session_timeout"] = ( $post_session_timeout ) ? (int)$post_session_timeout : "300";
-        $objConfig->arrConfigValue["logenabled"] = ( $post_logenabled ) ? $post_logenabled : "0";
-        $objConfig->arrConfigValue["debug"] = ( $post_debug ) ? $post_debug : "0";
+        $objConfig->arrConfigValue["session_timeout"] = ( $post_session_timeout ) ? (int)$post_session_timeout : 300;
+        $objConfig->arrConfigValue["logenabled"] = ( $post_logenabled ) ? 1 : 0;
+        $objConfig->arrConfigValue["debug"] = ( $post_debug ) ? 1 : 0;
                 
 //        if ($blnMd5Password == "FALSE" AND $blnMd5PasswordOld == "TRUE") {
 //            $clsAccount = new Account;

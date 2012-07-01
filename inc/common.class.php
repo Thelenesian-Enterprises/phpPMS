@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with phpPMS.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
@@ -125,7 +125,7 @@ class Common {
         
         echo '</DIV>';
         
-        if ($CFG_PMS["debug"]){
+        if ( $CFG_PMS["debug"] && $_SESSION["uisadmin"] == 1 ){
             $stopTime = microtime();
             
             echo '<DIV ID="debug"><PRE>';

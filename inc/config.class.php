@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with phpPMS.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
@@ -245,7 +245,10 @@ class Config {
             if ( ($configParam == "sitename" OR $configParam == "siteshortname" OR $configParam == "siteroot") AND ! $configValue ){
                 echo '<TR><TD>'.$LANG['install'][48].' (\''.$configParam.'\')</TD><TD CLASS="result"><span class="altTxtRed">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
                 return FALSE;
+            } elseif ( $configValue == "on" ) {
+                $configValue = 1;
             }
+            
             $this->arrConfigValue[$configParam] = $configValue;
         }
         

@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with phpPMS.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
@@ -132,21 +132,21 @@
             $strQueryWhere .= "AND (intUGroupFId = $intUGroupFId OR intUserFId = $intUId OR aug.intUGroupId = $intUGroupFId)";
         }
 
-        if ( $strCategory != "TODAS" ) $strQueryWhere .= " AND intCategoryFId = ".$strCategory;
-        if ( $strCliente != "TODOS" ) $strQueryWhere .= " AND vacCliente = '$strCliente'";
+        if ( $strCategory != $LANG['accounts'][3] ) $strQueryWhere .= " AND intCategoryFId = ".$strCategory;
+        if ( $strCliente != $LANG['accounts'][1] ) $strQueryWhere .= " AND vacCliente = '$strCliente'";
 
     } else {
         if ( $intUGroupFId != 1 AND $blnUIsAdmin == 0 ) {
             $strQueryWhere = " WHERE (intUGroupFId = $intUGroupFId OR intUserFId = $intUId OR aug.intUGroupId = $intUGroupFId) ";
 
-            if ( $strCategory != "TODAS" ) $strQueryWhere .= "AND intCategoryFid = ".$strCategory;
-            if ( $strCliente != "TODOS" ) $strQueryWhere .= "AND vacCliente LIKE '$strCliente'";
+            if ( $strCategory != $LANG['accounts'][3] ) $strQueryWhere .= "AND intCategoryFid = ".$strCategory;
+            if ( $strCliente != $LANG['accounts'][1] ) $strQueryWhere .= "AND vacCliente LIKE '$strCliente'";
         } else {
-            if ( $strCategory != "TODAS" ) $strQueryWhere .= "WHERE intCategoryFid = ".$strCategory;
+            if ( $strCategory != $LANG['accounts'][3] ) $strQueryWhere .= "WHERE intCategoryFid = ".$strCategory;
             
-            if ( $strCliente != "TODOS" AND $strCategory == "TODAS" ){
+            if ( $strCliente != $LANG['accounts'][1] AND $strCategory == $LANG['accounts'][3] ){
                 $strQueryWhere .= "WHERE vacCliente LIKE '$strCliente'";
-            } elseif ( $strCliente != "TODOS" ) {
+            } elseif ( $strCliente != $LANG['accounts'][1] ) {
                 $strQueryWhere .= " AND vacCliente LIKE '$strCliente'";
             }
         }
@@ -182,7 +182,7 @@
         Common::wrLogInfo("Search", $objAccount->dbh->error);
         return FALSE;
     }
-
+    
     $strTableClass = "odd";
     
     // Mostrar los resultados de la búsqueda
@@ -260,7 +260,7 @@
 
 
         if ( $objAccount->checkAccountAccess("viewpass",$intAccUserId, $intAccId, $intAccUserGroupId) ){
-            echo '<TD><IMG SRC="imgs/user-pass.png" TITLE="Ver clave" onClick="verClave('.$intAccId.', 1)" CLASS="inputImg" /></TD>';
+            echo '<TD><IMG SRC="imgs/user-pass.png" TITLE="'.$LANG['buttons'][4].'" onClick="verClave('.$intAccId.', 1)" CLASS="inputImg" /></TD>';
         } 
 
         if ( $objAccount->checkAccountAccess("edit",$intAccUserId, $intAccId, $intAccUserGroupId) ){
@@ -306,7 +306,7 @@
     echo '</TABLE>';
     echo '<TABLE CLASS="altTable" ID="pageNav">';
     echo '<TR><TD ALIGN="LEFT">';
-    echo "Página ".$intPage." / ".$intPageMax." - ";
+    echo $LANG['accounts'][12]." ".$intPage." / ".$intPageMax." - ";
         
     if ( $strSearch != "" OR $strCategory != $LANG['accounts'][3] OR $strCliente != $LANG['accounts'][1] ) {
         echo $LANG['accounts'][13].': <B CLASS="altTxtRed">on</B>';
