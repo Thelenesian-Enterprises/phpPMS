@@ -53,7 +53,7 @@ function createDbFile() {
     $dbpass = $_POST["dbpass"];
     $dbname = $_POST["dbname"];
     
-    $filePath = dirname(__FILE__)."/".PMS_ROOT."/inc";
+    $filePath = dirname(__FILE__);
     $fileName = $filePath."/db.class.php";
   
 //    if ( checkDBFile() ) {
@@ -87,7 +87,7 @@ function createDbFile() {
 
 // Función para comprobar si existe el archivo de conexión a la BBDD
 function checkDBFile(){
-    $filePath = dirname(__FILE__)."/".PMS_ROOT."/inc";
+    $filePath = dirname(__FILE__);
     $fileName = $filePath."/db.class.php";
     
     if ( file_exists($fileName) ) return TRUE;
@@ -129,11 +129,15 @@ function checkDB($useDB = FALSE){
 // Función para actualizar la BBDD
 function updateDB(){
     global $LANG;
+    
+    $objConfig = new Config;
+    $version = $objConfig->getConfigValue("version");
+    unset($objConfig);
 
-    $fileName = PMS_ROOT."/install/upgrade_".PMS_ROOT.".sql";
+    $fileName = PMS_ROOT."/install/upgrade_".$version.".sql";
     
     if ( ! file_exists($fileName) ){
-        printMsg($LANG['install'][36], 2);
+        printMsg($LANG['install'][36]." (v$version)", 2);
         return TRUE;
     }
 
@@ -152,7 +156,7 @@ function updateDB(){
             return FALSE;
         }
 
-        if ( ! $mysqli->query("USE `$dbName`") ){
+        if ( ! $mysqli->select_db($mysqli->real_escape_string($dbName)) ){
             printMsg($LANG['install'][41]." '$dbName'<BR />".$mysqli->error,1);
             return FALSE;
         }
@@ -193,46 +197,33 @@ function createDB(){
         unset($mysqli);
         return FALSE;
     } else {
-        // Si existe el archivo de conexión a la BBDD, lo utilizamos
-        if ( checkDBFile() ){
-            if ( checkDB(FALSE) ){
-                include_once (PMS_ROOT."/inc/db.class.php");
-                $objDB = new DB;
-
-                $dbHost = $objDB->dbhost;
-                $dbUser = $objDB->dbuser;
-                $dbPass = $objDB->dbpassword;
-                $dbName = $objDB->dbname;
-
-                unset($objDB);
-
-                //printMsg($LANG['install'][38], 2);
-            }
-        }
-        
+        if ( ! checkDBFile() ) return FALSE;
+                
         // Comprobamos si el usuario para phpPMS existe
-        $strQuery = "SELECT User FROM mysql.user WHERE User = '$dbUser' AND Host = '$dbHost'";
+        $strQuery = "SELECT User FROM mysql.user 
+                    WHERE User = '".$mysqli->real_escape_string($dbUser)."' AND Host = '".$mysqli->real_escape_string($dbHost)."'";
         $resQuery = $mysqli->query($strQuery);
         
-        if ( ! $resQuery ){
+        if ( $resQuery->num_rows == 0 ){
             $strQuery = "CREATE USER '$dbUser'@'$dbHost' IDENTIFIED BY '$dbPass'";
             $resQuery = $mysqli->query($strQuery);
 
             if ( $resQuery ){
-                printMsg($LANG['install'][14].' \''.$dbUser.'@'.$dbHost);
+                printMsg($LANG['install'][14].' '.$dbUser.'@'.$dbHost);
             } else {
-                printMsg($LANG['install'][14].' \''.$dbUser.'@'.$dbHost, 1);
+                printMsg($LANG['install'][14].' '.$dbUser.'@'.$dbHost, 1);
                 return FALSE;
             }
         } else {
             // Comprobamos que los permisos sean correctos
             printMsg($LANG['install'][22], 2);
             
-            $strQuery = "SELECT Select_priv,Insert_priv,Update_priv,Delete_priv,Lock_tables_priv FROM mysql.db WHERE User = '$dbUser' AND Host = '$dbHost'";
+            $strQuery = "SELECT Select_priv,Insert_priv,Update_priv,Delete_priv,Lock_tables_priv FROM mysql.db 
+                        WHERE User = '".$mysqli->real_escape_string($dbUser)."' AND Host = '".$mysqli->real_escape_string($dbHost)."'";
             $resQuery = $mysqli->query($strQuery);
             $i = 0;
             
-            if ( $resQuery ){
+            if ( $resQuery->num_rows > 0 ){
                 $resResult = $resQuery->fetch_assoc();
                 
                 foreach ( $resResult as $perm ){
@@ -248,7 +239,7 @@ function createDB(){
             }
         }
 
-        if ( $mysqli->select_db($dbName) ){
+        if ( $mysqli->select_db($mysqli->real_escape_string($dbName)) ){
             printMsg($LANG['install'][45], 1);
             return FALSE;                    
         }
@@ -260,7 +251,7 @@ function createDB(){
             return FALSE;
         }
         
-        $strQuery = "CREATE DATABASE `$dbName` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;";
+        $strQuery = "CREATE DATABASE `".$mysqli->real_escape_string($dbName)."` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;";
         $resQuery = $mysqli->query($strQuery);
         
         if ( ! $resQuery ){
@@ -288,7 +279,8 @@ function createDB(){
             }
         }
 
-        $strQuery = "GRANT SELECT,INSERT,UPDATE,DELETE,LOCK TABLES ON $dbName.* TO '$dbUser'@'$dbHost'";
+        $strQuery = "GRANT SELECT,INSERT,UPDATE,DELETE,LOCK TABLES ON ".$mysqli->real_escape_string($dbName).".* 
+                    TO '".$mysqli->real_escape_string($dbUser)."'@'".$mysqli->real_escape_string($dbHost)."'";
         $resQuery = $mysqli->query($strQuery);
         
         if ( ! $resQuery ){

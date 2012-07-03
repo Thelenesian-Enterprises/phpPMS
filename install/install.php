@@ -26,7 +26,7 @@
  */
 
 define('PMS_ROOT', '..');
-define('PMS_VERSION', '0.951b');
+define('PMS_VERSION', '0.952b');
 
 include_once (PMS_ROOT."/inc/crypt.class.php");
 include_once (PMS_ROOT."/inc/config.class.php");
@@ -109,6 +109,7 @@ if ( $step == 3 ){
             if ( checkDB() ){
                 if ( updateDB() ){
                     updateVersion();
+                    printMsg($LANG["install"][24]);
                     echo '</TABLE>';
                     echo '<DIV ID="access"><A CLASS="round" HREF="'.PMS_ROOT.'/login.php">'.$LANG['install'][23].'</A></DIV>';
                     $isOk = TRUE;
