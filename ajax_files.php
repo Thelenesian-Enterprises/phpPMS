@@ -29,6 +29,13 @@
 
     define('PMS_ROOT', '.');
     include_once (PMS_ROOT . "/inc/includes.php");
+    
+    $objConfig = new Config();
+    
+    if ( $objConfig->getConfigValue("filesenabled") == 0 ){
+        echo $LANG['msg'][96];
+        return FALSE;              
+    }
 
     if ( $_GET['id'] ){
         $accountId = $_GET['id'];

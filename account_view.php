@@ -31,6 +31,7 @@
 
     $objAccount = new Account;
     $objCommon = new Common;
+    $objConfig = new Config;
 
     $intAccountId = $_POST["accountid"];
     $intDecode = $_POST["decode"];
@@ -92,9 +93,13 @@
     echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][18].'</TD><TD><A HREF="'. $objAccount->strAccUrl.'" TARGET="_blank">'.$objAccount->strAccUrl.'</A></TD></TR>';
     echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][20].'</TD><TD ID="clave" CLASS="altTextRed">'.$LANG['accounts'][21].'</TD></TR>';
     echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][24].'</TD><TD><TEXTAREA NAME="notice" COLS="97" ROWS="5" READONLY="readonly">'.$objAccount->strAccNotes.'</TEXTAREA></TD></TR>';
-    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][23].'</TD>';
-    echo '<TD><DIV ID="downFiles"></DIV></TD>';
-    echo '<SCRIPT> $("#downFiles").load(pms_root + "/ajax_files.php?id='.$intAccountId.'&del=0");</SCRIPT></TR>';
+    
+    if ( $objConfig->getConfigValue("filesenabled") == 1 ){
+        echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][23].'</TD>';
+        echo '<TD><DIV ID="downFiles"></DIV></TD>';
+        echo '<SCRIPT> $("#downFiles").load(pms_root + "/ajax_files.php?id='.$intAccountId.'&del=0");</SCRIPT></TR>';
+    }
+    
     echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][25].'</TD><TD>'.$objAccount->intAccNView.'('.$objAccount->intAccNViewDecrypt.')</TD> </TR>';
     echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][26].'</TD><TD>'.$objAccount->strAccDatAdded.'</TD></TR>';
     echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][27].'</TD><TD>'.$objAccount->strAccDatChanged.'</TD></TR>';

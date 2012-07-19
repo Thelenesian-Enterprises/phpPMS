@@ -46,7 +46,14 @@ class Config {
         @$mysqli = new mysqli($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
         
         if ( $mysqli->connect_errno ){
-            die($LANG['msg'][75].": (".$mysqli->connect_errno . ") ".$mysqli->connect_error);
+            if ( is_array($LANG) ){
+                $this->throwError($LANG['msg'][75].": (".$mysqli->connect_errno . ") ".$mysqli->connect_error);
+                //die( $LANG['msg'][75].": (".$mysqli->connect_errno . ") ".$mysqli->connect_error );
+            } else {
+                $this->throwError("Unable to connect to DB: (".$mysqli->connect_errno . ") ".$mysqli->connect_error);
+                //die( "Unable to connect to DB: (".$mysqli->connect_errno . ") ".$mysqli->connect_error );
+
+            }
             return FALSE;
         }
         
@@ -70,8 +77,16 @@ class Config {
         return TRUE;
     }
 
+    private function throwError($str){
+        $htmlOut = "<html><head><title>phpPMS :: ERROR</title></head><body>";
+        $htmlOut .= "<div align='center' style='width:60%;margin:auto;padding:15px;border:1px solid red;background-color:#fee8e6;color:red;line-height:2em;font-family:Verdana,Helvetica,Arial;'>Ooops...<br />".$str."</div>";
+        $htmlOut .= "</body></html>";
 
-        // Método para obtener en valor de un parámetro
+        header("Content-Type: text/html; charset=UTF-8");
+        die($htmlOut);
+    }
+
+    // Método para obtener en valor de un parámetro
     public function getConfigValue ($strConfigParam) {
         if ( ! $this->checkDBCon() ) return FALSE;
         
@@ -247,6 +262,8 @@ class Config {
                 return FALSE;
             } elseif ( $configValue == "on" ) {
                 $configValue = 1;
+            } elseif ( $configParam == "submit" OR $configParam == "step" OR $configParam == "instLang" ){
+                continue;
             }
             
             $this->arrConfigValue[$configParam] = $configValue;
@@ -307,17 +324,22 @@ class Config {
         echo '<FORM METHOD="post" NAME="frmConfig" ID="frmConfig" />';      
 
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader">'.$LANG['config'][1].'</TD></TR>';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][2].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][2];
+        Common::printHelpButton("config", 0);
+        echo '</TD>';
         echo '<TD><INPUT TYPE="text" NAME="sitename" CLASS="txtLong" ID="sitename" VALUE="'.$this->arrConfigValue["sitename"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][3].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][3];
+        Common::printHelpButton("config", 1);
+        echo '</TD>';
         echo '<TD><INPUT TYPE="text" NAME="siteshortname" VALUE="'.$this->arrConfigValue["siteshortname"].'" /></TD>';
         echo '</TR>';
         
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36];
+        Common::printHelpButton("config", 2);
+        echo '</TD>';
         echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="'.$this->arrConfigValue["siteroot"].'" /></TD>';
-        echo '</TR>';
 
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][37].'</TD>';
         echo '<TD><SELECT NAME="sitelang" SIZE="1">';
@@ -343,16 +365,21 @@ class Config {
         echo '<TD><INPUT TYPE="checkbox" NAME="debug" CLASS="checkbox" '.$chkDebug.' /></TD>';
         echo '</TR>';
                
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][7].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][7];
+        Common::printHelpButton("config", 3);
+        echo '</TD>';
         echo '<TD><SELECT NAME="account_link" SIZE="1">';
         if ( $this->arrConfigValue["account_link"] == "TRUE" ){
             echo '<OPTION SELECTED>TRUE</OPTION><OPTION>FALSE</OPTION>';
         } else {
             echo '<OPTION>TRUE</OPTION><OPTION SELECTED>FALSE</OPTION>';
         }
-        echo '</SELECT></TD></TR>';
+        echo '</SELECT></TD>';
+        echo '</TR>';
         
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][8].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][8];
+        Common::printHelpButton("config", 4);
+        echo '</TD>';
         echo '<TD><SELECT NAME="account_count" SIZE="1">';
         
         $arrAccountCount = array(1,2,3,5,10,15,20,25,30,50,"all");
@@ -364,29 +391,86 @@ class Config {
                 echo "<OPTION>$num</OPTION>";
             }
         }
-        echo '</SELECT></TD></TR>';
+        echo '</SELECT></TD>';
+        echo '</TR>';
+
+        $chkFiles = ( $this->arrConfigValue["filesenabled"] ) ? 'checked="checked"' : '';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][39];
+        Common::printHelpButton("config", 5);
+        echo '</TD>';
+        echo '<TD><INPUT TYPE="checkbox" NAME="filesenabled" CLASS="checkbox" '.$chkFiles.' /></TD>';
+        echo '</TR>';
+        
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][38].'</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="add_ext" ID="add_ext" />';
+        echo '<IMG SRC="imgs/add.png" TITLE="'.$LANG['buttons'][43].'" CLASS="inputImg" ID="btnAddExt" OnClick="addSelOption(\'allowed_exts\',\'add_ext\')" />';        
+        echo '<BR /><SELECT ID="allowed_exts" NAME="allowed_exts[]" MULTIPLE="multiple" SIZE="3">';
+        
+        if ( $this->arrConfigValue["allowed_exts"] ){
+            $allowed_exts = explode(",", $this->arrConfigValue["allowed_exts"]);
+            sort($allowed_exts, SORT_STRING);
+            
+            foreach ( $allowed_exts as $extAllow ){
+                echo '<OPTION VALUE="'.$extAllow.'">'.$extAllow.'</OPTION>';
+            }
+        }
+        
+        echo '</SELECT>';
+        echo '<IMG SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][44].'" CLASS="inputImg" ID="btnDelExt" OnClick="delSelOption(\'allowed_exts\')" />';        
+        echo '</TD></TR>';
+
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][40];
+        Common::printHelpButton("config", 6);
+        echo '</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="allowed_size" VALUE="'.$this->arrConfigValue["allowed_size"].'" /></TD>';
+        echo '</TR>';
         
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][9].'</TD></TR>';
         $chkWiki = ( $this->arrConfigValue["wikienabled"] ) ? 'checked="checked"' : '';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][10].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][10];
+        Common::printHelpButton("config", 7);
+        echo '</TD>';
         echo '<TD><INPUT TYPE="checkbox" NAME="wikienabled" CLASS="checkbox" '.$chkWiki.' /></TD>';
         echo '</TR>';
         
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][11].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][11];
+        Common::printHelpButton("config", 8);
+        echo '</TD>';
         echo '<TD><INPUT TYPE="text" NAME="wikisearchurl" CLASS="txtLong" VALUE="'.$this->arrConfigValue["wikisearchurl"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][12].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][12];
+        Common::printHelpButton("config", 9);
+        echo '</TD>';
         echo '<TD><INPUT TYPE="text" NAME="wikipageurl" CLASS="txtLong" VALUE="'.$this->arrConfigValue["wikipageurl"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][13].'</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="wikifilter" VALUE="'.$this->arrConfigValue["wikifilter"].'" /></TD>';
-        echo '</TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][13];
+        Common::printHelpButton("config", 10);
+        echo '</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="add_wikifilter" ID="add_wikifilter" />';
+        echo '<IMG SRC="imgs/add.png" TITLE="'.$LANG['buttons'][45].'" CLASS="inputImg" ID="btnAddWikifilter" OnClick="addSelOption(\'wikifilter\',\'add_wikifilter\')" />';
+        echo '<BR /><SELECT ID="wikifilter" NAME="wikifilter[]" MULTIPLE="multiple" SIZE="3">';
+        
+        if ( $this->arrConfigValue["wikifilter"] ){
+            $wikifilter = explode("||", $this->arrConfigValue["wikifilter"]);
+            sort($wikifilter, SORT_STRING);
+            
+            foreach ( $wikifilter as $filter ){
+                echo '<OPTION VALUE="'.$filter.'">'.$filter.'</OPTION>';
+            }
+        }
+        
+        echo '</SELECT>';
+        echo '<IMG SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][46].'" CLASS="inputImg" ID="btnDelWikifilter" OnClick="delSelOption(\'wikifilter\')" />';        
+        echo '</TD></TR>';
 
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][14].'</TD></TR>';
+        
         $chkLdap = ( $this->arrConfigValue["ldapenabled"] ) ? 'checked="checked"' : '';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][15].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][15];
+        Common::printHelpButton("config", 11);
+        echo '</TD>';
         echo '<TD><INPUT TYPE="checkbox" NAME="ldapenabled" CLASS="checkbox" '.$chkLdap.' /></TD>';
         echo '</TR>';
         
@@ -394,17 +478,38 @@ class Config {
         echo '<TD><INPUT TYPE="text" NAME="ldapserver" VALUE="'.$this->arrConfigValue["ldapserver"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][17].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][17];
+        Common::printHelpButton("config", 12);
+        echo '</TD>';
         echo '<TD><INPUT TYPE="text" NAME="ldapbase" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapbase"].'" /></TD>';
         echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][18].'</TD>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][18];
+        Common::printHelpButton("config", 13);
+        echo '</TD>';
         echo '<TD><INPUT TYPE="text" NAME="ldapgroup" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapgroup"].'" /></TD>';
         echo '</TR>';
         
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][19].'</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="ldapuserattr" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapuserattr"].'" /></TD>';
-        echo '</TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][19];
+        Common::printHelpButton("config", 14);
+        echo '</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="add_ldapuserattr" ID="add_ldapuserattr" />';
+        echo '<IMG SRC="imgs/add.png" TITLE="'.$LANG['buttons'][47].'" CLASS="inputImg" ID="btnAddLdapuserattr" OnClick="addSelOption(\'ldapuserattr\',\'add_ldapuserattr\')" />';
+        echo '<BR /><SELECT ID="ldapuserattr" NAME="ldapuserattr[]" MULTIPLE="multiple" SIZE="3">';
+        
+        if ( $this->arrConfigValue["ldapuserattr"] ){
+            $ldapuserattr = explode("||", $this->arrConfigValue["ldapuserattr"]);
+            sort($ldapuserattr, SORT_STRING);
+            
+            foreach ( $ldapuserattr as $filter ){
+                echo '<OPTION VALUE="'.$filter.'">'.$filter.'</OPTION>';
+            }
+        }
+        
+        echo '</SELECT>';
+        echo '<IMG SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][48].'" CLASS="inputImg" ID="btnDelLdapuserattr" OnClick="delSelOption(\'ldapuserattr\')" />';        
+        echo '</TD></TR>';
+        
 
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][20].'</TD></TR>';
         $chkMail = ( $this->arrConfigValue["mailenabled"] ) ? 'checked="checked"' : '';

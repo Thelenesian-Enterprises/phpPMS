@@ -31,6 +31,7 @@
 
     $objAccount = new Account;
     $objCommon = new Common;
+    $objConfig = new Config;
 
     // Variables POST
     $intAccId = $_POST["accountid"];
@@ -128,16 +129,20 @@
     echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$objAccount->intAccId.'" />';
     echo '</FORM>';
     
-    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][23].'</TD>';
-    echo '<TD><DIV id="downFiles"></DIV>';
-    echo '<SCRIPT>$("#downFiles").load(pms_root + "/ajax_files.php?id='.$intAccId.'?>&del=1");</SCRIPT>';
-    echo '<DIV ID="upldFiles">';
-    echo '<DIV CLASS="actionFiles"><IMG ID="btnUpload" SRC="imgs/upload.png" TITLE="'.$LANG['accounts'][32].'" CLASS="inputImg" OnClick="upldFile('.$intAccId.')" /></DIV>';
-    echo '<FORM METHOD="POST" ENCTYPE="multipart/form-data" ACTION="ajax_files.php" NAME="upload_form" ID="upload_form">';
-    echo '<INPUT TYPE="file" NAME="file" CLASS="txtFile" />';
-    echo '<INPUT TYPE="hidden" NAME="accountId"  ID="account" VALUE="'.$intAccId.'" />';
-    echo '<INPUT TYPE="hidden" NAME="action" ID="action" VALUE="upload" />';
-    echo '</FORM></DIV></TD></TR></TABLE>';
+    if ( $objConfig->getConfigValue("filesenabled") == 1 ){
+        echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][23].'</TD>';
+        echo '<TD><DIV id="downFiles"></DIV>';
+        echo '<SCRIPT>$("#downFiles").load(pms_root + "/ajax_files.php?id='.$intAccId.'&del=1");</SCRIPT>';
+        echo '<DIV ID="upldFiles">';
+        echo '<DIV CLASS="actionFiles"><IMG ID="btnUpload" SRC="imgs/upload.png" TITLE="'.$LANG['accounts'][32].'" CLASS="inputImg" OnClick="upldFile('.$intAccId.')" /></DIV>';
+        echo '<FORM METHOD="POST" ENCTYPE="multipart/form-data" ACTION="ajax_files.php" NAME="upload_form" ID="upload_form">';
+        echo '<INPUT TYPE="file" NAME="file" CLASS="txtFile" />';
+        echo '<INPUT TYPE="hidden" NAME="accountId"  ID="account" VALUE="'.$intAccId.'" />';
+        echo '<INPUT TYPE="hidden" NAME="action" ID="action" VALUE="upload" />';
+        echo '</FORM>';
+    }
+    
+    echo '</DIV></TD></TR></TABLE>';
     
     echo '<DIV ID="resAccion"></DIV>';
     

@@ -6,11 +6,13 @@ var grp_inedit = 0;
 jQuery.extend(jQuery.fn.fancybox.defaults, {
     overlayShow : true,
     overlayOpacity : 0,
-    hideOnOverlayClick : true
+    hideOnOverlayClick : true,
+    margin: 10,
+    padding: 10
 });
 
 //$(document).ready(function(){
-//    
+//
 //});
 
 // Función para limpiar un formulario
@@ -154,32 +156,32 @@ function doLogin(){
             if( status == 0 ){
                 location.href='index.php';
             } else if ( status == 2 ){
-//                var txt = '<div id="fancyView" class="backOrange"><span class="altTxtOrange">' + description + '</span></div>';
+//                var txt = '<div id="fancyView" class="backOrange"><span class="msgWarn">' + description + '</span></div>';
 //                $.fancybox({
 //                    'content': txt,
 //                    'onClosed' : function() { location.href = 'index.php';}
 //                });
                 location.href = 'index.php';
             } else if ( status == 3 || status == 4 ){
-                var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + description + '</span></div>';
+                var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt,
                     {'onClosed':function (){$("#btnLogin").prop('disabled',false);}
                 });
                 $('#smpass').show();
             } else if ( status == 5 ){
-                var txt = '<div id="fancyView" class="backOrange"><span class="altTxtOrange">' + description + '</span></div>';
+                var txt = '<div id="fancyView" class="msgWarn">' + description + '</div>';
                  $.fancybox({
                     'content': txt,
                     'onClosed' : function() {location.href = 'index.php';}
                 }); 
             } else {
-                var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + description + '</span></div>';
+                var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt,
                     {'onClosed':function (){$("#btnLogin").prop('disabled',false);}
                 });
             }},
         error: function (jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="msgError">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></div>';
             $("#loading").empty();
             $.fancybox(txt,
                 {'onClosed':function (){$("#btnLogin").prop('disabled',false);}
@@ -201,7 +203,7 @@ function checkLogout(){
     var session = getUrlVars()["session"];
 
     if ( session == 0 ){
-        var txt = '<div id="fancyView" class="backOrange"><span class="altTxtOrange">' + LANG[2] + '<span></div>';
+        var txt = '<div id="fancyView" class="msgWarn">' + LANG[2] + '</div>';
         $.fancybox(txt,{'onClosed' : function() {location.search = '';}});				
     }
 }
@@ -223,19 +225,19 @@ function saveAccount(frm) {
             var description = $(xml).find("description").text();
 
             if ( status == 0 ){
-                var txt = '<div id="fancyView"><span class="altTxtBlue">' + description + '</span></div>';
+                var txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
                 $.fancybox(txt);
                 $("#resAccion").empty();
                 $('#btnGuardar').attr('disabled', true);
             } else {
-                var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + description + '</span></div>';
+                var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt);
                 $("#resAccion").empty();
                 $('#btnGuardar').removeAttr("disabled");						
             }
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="msgError">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></div>';
             $.fancybox(txt);
         }
     });
@@ -264,20 +266,20 @@ function delAccount(id,action){
             var description = $(xml).find("description").text();
 
             if ( status == 0 ){
-                var txt = '<div id="fancyView"><span class="altTxtBlue">' + description + '</span></div>';
+                var txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
                 $.fancybox({
                     'onClosed' : function() {location.href='index.php';},
                     'content' : txt
                 });
                 $("#resAccion").empty();
             } else {
-                var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + description + '</span></div>';
+                var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt);
                 $("#resAccion").empty();
             }
         },
         error:function(jqXHR, textStatus, errorThrown){ 
-            var txt = ('<div id="fancyView" class="fancyErr"><span class="altTxtRed"Oops...' + LANG[0] + '</span></div>');
+            var txt = ('<div id="fancyView" class="msgError">Oops...' + LANG[0] + '</div>');
             $.fancybox(txt);
         }
     });
@@ -299,6 +301,10 @@ function configMgmt(action){
             var url = pms_root + '/ajax_categorymgmt.php';
             break;
         case "saveconfig":
+            $("#allowed_exts option").prop('selected',true);
+            $("#wikifilter option").prop('selected',true);
+            $("#ldapuserattr option").prop('selected',true);
+            
             var datos = $("#frmConfig").serialize();
             var url = pms_root + '/ajax_configsave.php';
             break;
@@ -323,7 +329,7 @@ function configMgmt(action){
             var description = $(xml).find("description").text();
 
             if ( status == 0 ){
-                var txt = '<div id="fancyView"><span class="altTxtBlue">' + description + '</span></div>';
+                var txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
                 $("#resAccion").empty();
                 $('#btnGuardar').attr('disabled', true);
                 $.fancybox({
@@ -331,14 +337,14 @@ function configMgmt(action){
                     'content' : txt
                 });
             } else {
-                var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + description + '</span></div>';
+                var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt);
                 $("#resAccion").empty();
                 $('#btnGuardar').removeAttr("disabled");						
             }
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="msgError">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></div>';
             $.fancybox(txt);
         }
     });
@@ -349,7 +355,7 @@ function configMgmt(action){
 // Función para descargar/ver archivos de una cuenta
 function downFile(fancy){
     if ( $("#files").val() == null ){
-        var txt = '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">' + LANG[3] + '</span></div>';
+        var txt = '<div id="fancyView" class="msgError">' + LANG[3] + '</div>';
         $.fancybox(txt);
         return false;                
     }
@@ -378,9 +384,9 @@ function downFile(fancy){
 // Función para eliminar archivos de una cuenta
 function delFile(id){
     if ( $("#files").val() == null ){
-        var txt = '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">' + LANG[3] + '</span></div>';
+        var txt = '<div id="fancyView" class="msgError">' + LANG[3] + '</div>';
         $.fancybox(txt);
-        return false;                
+        return false;           
     }
 
     var datos = {fileId: $("#files").val(), action: 'delete'};
@@ -389,9 +395,9 @@ function delFile(id){
 
     $.post( pms_root + '/ajax_files.php', {fileId: $("#files").val(), action: 'delete'}, 
         function( data ) { 
-            var txt = '<div id="fancyView"><span class="altTxtBlue">' + data + '</span></div>';
+            var txt = '<div id="fancyView" class="msgOk">' + data + '</div>';
             $.fancybox(txt);
-            $("#downFiles").load("/phppms/ajax_files.php?id=" + id +"&del=1");
+            $("#downFiles").load( pms_root + "/ajax_files.php?id=" + id +"&del=1");
             $("#resAccion").empty();
         }
     );
@@ -402,20 +408,20 @@ function upldFile(id){
     var optionsUpld = { 
         beforeSubmit:  function(){
             if ( $("#upload_form input[name=file]").val()  == '' ){
-                var txt = '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">' + LANG[4] + '</span></div>';
+                var txt = '<div id="fancyView" class="msgError">' + LANG[4] + '</div>';
                 $.fancybox(txt);
                 return false;                
             }
             $("#resAccion").html('<img src="imgs/loading.gif" />'); 
         }, 
         success: function(responseText, statusText, xhr, $form){
-            var txt = '<div id="fancyView"><span class="altTxtBlue">' + responseText + '</span></div>';
+            var txt = '<div id="fancyView" class="msgOk">' + responseText + '</div>';
             $.fancybox(txt);
-            $("#downFiles").load("/phppms/ajax_files.php?id=" + id +"&del=1");
+            $("#downFiles").load( pms_root + "/ajax_files.php?id=" + id +"&del=1");
             $("#resAccion").empty();
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="msgError">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></div>';
             $.fancybox(txt);
         }
     }; 
@@ -551,20 +557,20 @@ function userMgmt(action,id){
             if ( status == 0 ){
                 window.usr_inedit = 0;
                 
-                var txt = '<div id="fancyView"><span class="altTxtBlue">'+description+'</span></div>';
+                var txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
                 $("#tblUsers").find(':text,:checkbox,select').removeClass("inedit");
                 $.fancybox({
                     'onClosed' : function() {loadUsrMgmt(1);},
                     'content' : txt
                 });
             } else if ( status == 1 && action == "pass"){
-                $("#resFancyAccion").html('<span class="altTxtRed">'+description+'</span>');
+                $("#resFancyAccion").html('<span class="altTxtError">' + description + '</span>');
                 $("#resFancyAccion").show();
                 $.fancybox.resize();                
             } else if ( status == 3 ){
                 doLogout();               
             } else {
-                var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">'+description+'</span></div>';
+                var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox({
                     'onClosed' : usrMgmtEnable(id),
                     'content' : txt
@@ -572,7 +578,7 @@ function userMgmt(action,id){
             }
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="msgError">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></div>';
             $.fancybox(txt);
         }
     });
@@ -651,19 +657,19 @@ function groupMgmt(action,id){
             if ( status == 0 ){
                 window.grp_inedit = 0;
                 
-                var txt = '<div id="fancyView"><span class="altTxtBlue">'+description+'</span></div>';
+                var txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
                 usrMgmtDisable('tblGroups');
                 $.fancybox({
                     'onClosed' : function() {loadUsrMgmt(3);},
                     'content' : txt
                 });
             } else if ( status == 2) {
-                var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">'+description+'</span></div>';
+                var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt);
             } else if ( status == 3 ){
                 doLogout();               
             } else {
-                var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">'+description+'</span></div>';
+                var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt);
                 $(".grprow_"+ id ).find(':text,:checkbox,select').addClass("inedit");
     
@@ -675,7 +681,7 @@ function groupMgmt(action,id){
             }
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></span></div>';
+            var txt = '<div id="fancyView" class="msgError">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></div>';
             $.fancybox(txt);
         }
     });
@@ -743,4 +749,61 @@ function checkUpds(){
             $('#updates').html('!');
         }
     });      
+}
+
+// Función para añadir opciones a un select desde input
+function addSelOption(dst_id,src_id){
+    var dup = 0;
+    var value_txt = $("#" + src_id).val().toLowerCase();
+    
+    if ( typeof(value_txt) == "undefined" || value_txt == "" ){
+        var txt = '<div id="fancyView" class="msgError">' + LANG[10] + '</div>';
+        $.fancybox(txt);  
+    } else {
+        $("#" + dst_id + " option").each(function(){
+            if ( $(this).val().toLowerCase() == value_txt ){
+                var txt = '<div id="fancyView" class="msgError">' + LANG[11] + '</div>';
+                $.fancybox(txt);                
+                dup = 1;
+            }
+        });
+
+        if ( dup == 0 ){
+            $("#" + dst_id).append(new Option(value_txt, value_txt, true, true));
+            var txt = '<div id="fancyView" class="msgOk">' + LANG[13] + '</div>';
+            $.fancybox(txt);
+        }
+        
+        $("#" + src_id).val('');
+        $("#" + dst_id + "option").prop('selected',true);
+    }
+}
+
+// Función para eliminar opciones de un select
+function delSelOption(id){
+    var value = $("#" + id +" option:selected").val();
+    
+    if ( typeof(value) == "undefined" ){
+        var txt = '<div id="fancyView" class="msgError">' + LANG[12] + '</div>';
+        $.fancybox(txt);  
+    } else {
+        $("#" + id +" option:selected").remove();
+        var txt = '<div id="fancyView" class="msgOk">' + LANG[14] + '</div>';
+        $.fancybox(txt);        
+    }
+}
+
+function getHelp(type, id){
+    $.ajax({
+        type: 'GET',
+        dataType: 'html',
+        url: pms_root + '/ajax_help.php?type=' + type + '&id=' + id,
+        success: function(response){
+            $.fancybox(response,{ showCloseButton: false, margin: 0, padding: 0 });
+        },
+        error:function(jqXHR, textStatus, errorThrown){
+            var txt = '<div id="fancyView" class="msgError">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></div>';
+            $.fancybox(txt);
+        }
+    });     
 }

@@ -29,9 +29,11 @@ class Common {
 
     public $arrBackLinks = array('skey' => '', 'sorder' => '', 'categoria' => '', 'cliente' => '', 'search' => '', 'page' => '');
     
-    // Función para escribir en el log
+    // Método para escribir en el log
     public static function wrLogInfo ($strAccion, $strDescripcion) {
         global $CFG_PMS, $LANG;
+        
+        session_start();
         
         if ( $CFG_PMS["logenabled"] == 0 ) return FALSE;
         
@@ -56,7 +58,7 @@ class Common {
         $resQuery->close();        
     }
 
-    // Función para enviar un email
+    // Método para enviar un email
     // TODO: mail auth
     static function sendEmail($strMensaje,$strTo = ""){
         global $CFG_PMS, $LANG;
@@ -83,7 +85,7 @@ class Common {
         mail($strTo, $strAsunto, $strMensaje, $strHead);
     }
     
-    // Función para imprimir la cabecera HTML
+    // Método para imprimir la cabecera HTML
     static function printBodyHeader() {
         global $CFG_PMS, $startTime, $LANG;
         
@@ -106,7 +108,7 @@ class Common {
         }
     }
 
-    // Función para imprimir el pie HTML
+    // Método para imprimir el pie HTML
     static function PrintFooter() {
         global $LANG, $CFG_PMS, $startTime;
         
@@ -158,7 +160,7 @@ class Common {
         echo ("</DIV>");
     }
 
-    // Función para imprimir los links de la cabecera HTML
+    // Método para imprimir los links de la cabecera HTML
     static function printHeader($isLogin=FALSE,$endHead=FALSE){
         global $CFG_PMS;
         
@@ -183,7 +185,7 @@ class Common {
         echo ( $endHead ) ? "</HEAD>" : "";
     }
     
-    // Función para imprimir los enlaces y el formulario de "volver"
+    // Método para imprimir los enlaces y el formulario de "volver"
     function printBackLinks($printBackForm = FALSE){
         global $LANG;
         
@@ -201,7 +203,7 @@ class Common {
         }
     }
 
-    // Función para devolver un documento XML
+    // Método para devolver un documento XML
     static function printXML($resXML){
         if ( !is_array($resXML) ) return FALSE;
         
@@ -212,6 +214,12 @@ class Common {
         $xml .= "<root>\n<status>".$resXML["status"]."</status>\n <description>".$resXML["description"]."</description>\n</root>";
         echo $xml;
         return;
+    }
+    
+    static function printHelpButton($type, $id){
+        global $LANG;
+        
+        echo '<IMG SRC="imgs/help.png" TITLE="'.$LANG['buttons'][49].'" CLASS="inputImgMini" OnClick="getHelp(\''.$type.'\', '.$id.')" />';
     }
 }
 ?>

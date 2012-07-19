@@ -30,6 +30,10 @@
     
     session_start();
     
+    if ( $_SESSION["uisadmin"] == 0 ){
+        return;
+    }
+    
     if ( ! $_SESSION["pms_upd"] ){
         $checkVersion = Config::checkUpdates();
     } else {

@@ -565,7 +565,7 @@ class Users {
 
     // Función para autentificación con LDAP
     public function authUserLDAP($strUser, $strPass) {
-        global $CFG_PMS;
+        global $CFG_PMS, $LANG;
 
         if ( $CFG_PMS["ldapenabled"] == 0 ) return FALSE;
         
@@ -590,19 +590,19 @@ class Users {
 
         // Comprobamos que la conexión se realiza
         if ( @ldap_bind($ldapConn, $userCN, $strPass) ) {
-            $filter = "(&(cn=$strUser)(objectCLASS=inetOrgPerson))";
+            $filter = "(&(cn=$strUser)(objectClass=inetOrgPerson))";
             $filterAttr = $CFG_PMS["ldapuserattr"];
-            $searchRes = ldap_search($ldapConn, $ldapDn, $filter, $filterAttr) or die("ERROR: no es posible realizar la búsqueda en LDAP");
+            $searchRes = ldap_search($ldapConn, $ldapDn, $filter, $filterAttr) or die($LANG['msg'][98]);
             $searchEntries = ldap_get_entries($ldapConn, $searchRes);
             ldap_unbind($ldapConn);
 
-            foreach ($searchEntries as $entry => $entryValue) {
-                if (is_array($entryValue)) {
-                    foreach ($entryValue as $entryAttr => $attrValue) {
-                        if (is_array($attrValue)) {
+            foreach ( $searchEntries as $entry => $entryValue ) {
+                if ( is_array($entryValue) ) {
+                    foreach ( $entryValue as $entryAttr => $attrValue ) {
+                        if ( is_array($attrValue) ) {
                             switch ($entryAttr) {
                                 case "groupmembership":
-                                    foreach ($attrValue as $group) {
+                                    foreach ( $attrValue as $group ) {
                                         // Comprobamos que el usuario está en el grupo indicado
                                         if ( $group == $CFG_PMS["ldapgroup"] ){
                                             $this->strLogin = $strUser;
@@ -623,7 +623,8 @@ class Users {
                     }
                 }
             }
-        } 
+        }
+        
         return $ldapAccess;
     }
 

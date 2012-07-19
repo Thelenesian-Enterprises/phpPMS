@@ -33,13 +33,13 @@ function printMsg($msg,$status = 0){
 
     switch ($status){
         case 0:
-            echo '<TR><TD>'.$msg.'</TD><TD CLASS="result"><span class="altTxtGreen">'.strtoupper($LANG['common'][6]).'</span></TD></TR>';
+            echo '<TR><TD>'.$msg.'</TD><TD CLASS="result"><span class="altTxtOk">'.strtoupper($LANG['common'][6]).'</span></TD></TR>';
             break;
         case 1:
-            echo '<TR><TD>'.$msg.'</TD><TD CLASS="result"><span class="altTxtRed">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
+            echo '<TR><TD>'.$msg.'</TD><TD CLASS="result"><span class="altTxtError">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
             break;
         case 2:
-            echo '<TR><TD>'.$msg.'</TD><TD CLASS="result"><span class="altTxtOrange">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
+            echo '<TR><TD>'.$msg.'</TD><TD CLASS="result"><span class="altTxtWarn">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
             break;
     }
 }
@@ -96,18 +96,25 @@ function checkDBFile(){
 }
 
 // Función para comprobar la conexión a la BBDD
-function checkDB($useDB = FALSE){
+function checkDB($useDB = FALSE, $useFile = TRUE){
     global $LANG;
     
-    include_once (PMS_ROOT."/inc/db.class.php");
-    $objDB = new DB;
+    if ( $useFile ){
+        include_once (PMS_ROOT."/inc/db.class.php");
+        $objDB = new DB;
 
-    $dbHost = $objDB->dbhost;
-    $dbUser = $objDB->dbuser;
-    $dbPass = $objDB->dbpassword;
-    $dbName = $objDB->dbname;
+        $dbHost = $objDB->dbhost;
+        $dbUser = $objDB->dbuser;
+        $dbPass = $objDB->dbpassword;
+        $dbName = $objDB->dbname;
 
-    unset($objDB);
+        unset($objDB);
+    } else {
+        $dbHost = $_POST["dbhost"];
+        $dbUser = $_POST["dbuser"];
+        $dbPass = $_POST["dbpass"];
+        $dbName = $_POST["dbname"];        
+    }
 
     if ( $useDB ){
         @$mysqli = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
@@ -116,7 +123,18 @@ function checkDB($useDB = FALSE){
     }
     
     if ( $mysqli->connect_errno ){
-        printMsg($LANG['install'][12].": <BR />".$mysqli->connect_errno." - ".$mysqli->connect_error, 1);
+        
+        switch ($mysqli->connect_errno){
+            case 1044:
+                printMsg($LANG['install'][53], 1);
+                break;
+            case 1045:
+                printMsg($LANG['install'][52], 1);
+                break;
+            default :
+                printMsg($LANG['install'][12].": <BR />".$mysqli->connect_errno." - ".$mysqli->connect_error, 1);
+        }
+        
         unset($mysqli);
         return FALSE;
     } else{
@@ -327,20 +345,20 @@ function checkModules(){
 
     foreach($modsNeed as $module){
         if ( in_array($module, $modsAvail) ){
-            echo '<span class="altTxtGreen"> \''.$module.'\'</span>';
+            echo '<span class="altTxtOk"> \''.$module.'\'</span>';
         } else {
-            echo '<span class="altTxtRed"> \''.$module.'\'</span>';
+            echo '<span class="altTxtError"> \''.$module.'\'</span>';
             $modsError++;
         }
     }
 
     if ( $modsError > 0 ){
-        echo '</TD><TD CLASS="result"><span class="altTxtRed">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
+        echo '</TD><TD CLASS="result"><span class="altTxtError">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
         
         printMsg($LANG['install'][18], 1);
         return FALSE;
     } else {
-        echo '</TD><TD CLASS="result"><span class="altTxtGreen">'.strtoupper($LANG['common'][6]).'</span></TD></TR>';
+        echo '</TD><TD CLASS="result"><span class="altTxtOk">'.strtoupper($LANG['common'][6]).'</span></TD></TR>';
         return TRUE;
     }
 }
@@ -440,6 +458,18 @@ function mkConfigForm(){
         echo "<OPTION>$num</OPTION>";
     }
     echo '</SELECT></TD></TR>';
+
+    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][39].'</TD>';
+    echo '<TD><INPUT TYPE="checkbox" NAME="filesenabled" CLASS="checkbox" checked /></TD>';
+    echo '</TR>';
+
+    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][38].'</TD>';
+    echo '<TD><INPUT TYPE="text" NAME="allowed_exts" VALUE="PDF,JPG,GIF,PNG,ODT,ODS,DOC,DOCX,XLS,XSL,VSD,TXT,CSV,BAK" /></TD>';
+    echo '</TR>';
+
+    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][40].'</TD>';
+    echo '<TD><INPUT TYPE="text" NAME="allowed_size" VALUE="1024" /></TD>';
+    echo '</TR>';    
 
     //echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][9].'</TD></TR>';
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][10].'</TD>';

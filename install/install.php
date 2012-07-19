@@ -26,7 +26,7 @@
  */
 
 define('PMS_ROOT', '..');
-define('PMS_VERSION', '0.952b');
+define('PMS_VERSION', '0.953b');
 
 include_once (PMS_ROOT."/inc/crypt.class.php");
 include_once (PMS_ROOT."/inc/config.class.php");
@@ -105,17 +105,23 @@ if ( $step == 3 ){
     echo '<TABLE ID="tblInstall">';
     
     if ( $submit == $LANG["install"][27] ){
-        if ( checkDBFile() ){
-            if ( checkDB() ){
-                if ( updateDB() ){
-                    updateVersion();
-                    printMsg($LANG["install"][24]);
-                    echo '</TABLE>';
-                    echo '<DIV ID="access"><A CLASS="round" HREF="'.PMS_ROOT.'/login.php">'.$LANG['install'][23].'</A></DIV>';
-                    $isOk = TRUE;
+        if ( ! checkDBFile() AND ( ! $_POST["dbhost"] OR ! $_POST["dbuser"] OR ! $_POST["dbpass"] OR ! $_POST["dbname"] ) ){
+            printMsg($LANG["install"][51],1);
+        } else {
+            if ( ! checkDBFile() ) {
+                if ( checkDB(TRUE, FALSE) ) {
+                    createDbFile();
                 }
             }
-        }   
+            
+            if ( checkDBFile() AND checkDB() AND updateDB() ){
+                updateVersion();
+                printMsg($LANG["install"][24]);
+                echo '</TABLE>';
+                echo '<DIV ID="access"><A CLASS="round" HREF="'.PMS_ROOT.'/login.php">'.$LANG['install'][23].'</A></DIV>';
+                $isOk = TRUE;
+            }
+        }
     } elseif ( $submit == $LANG["install"][26] ){
         if ( createDbFile() ){
             if ( createDB() ){

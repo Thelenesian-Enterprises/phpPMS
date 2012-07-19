@@ -2,7 +2,7 @@
 
 HTML, BODY{ text-align: center;}
 
-BODY{
+BODY {
 	background-color: #FFFFFF;
 	color: #000000;
 	font-size: 12px;
@@ -17,25 +17,24 @@ TABLE {
 	padding: 3px;
 }
 
-TABLE#tblBuscar { border: none;}
 
-#tblTools, #tblAccion{
+#tblTools, #tblAccion {
 	border: none;
 	border:1px solid #d9d9d9;
 	background-color: #f9f9f9;
 	vertical-align: middle;
 }
 
-TABLE TR.headerBlue { background-color:#E6F2FF;}
-TABLE TR.headerGrey { background-color:#e9e9e9;}
-TABLE TH{border-bottom:2px solid white;}
+TABLE TR.headerBlue { background-color: #E6F2FF;}
+TABLE TR.headerGrey { background-color: #e9e9e9;}
+TABLE TH { border-bottom: 2px solid white; }
 TABLE TR.odd {background-color:#f9f9f9;}
-TABLE TR.even>TD, TABLE TR.odd>TD{border-bottom:1px solid #d9d9d9 !important;}
-TABLE TR.even:hover{background-color:#E8FF99;}
-TABLE TR.odd:hover{background-color:#E8FF99;}
-TABLE TR{height:20px;}
-TABLE TD{padding:3px;}
-TABLE TD.txtCliente{font-weight:bold;text-align:center;}
+TABLE TR.even>TD, TABLE TR.odd>TD { border-bottom:1px solid #d9d9d9 !important; }
+TABLE TR.even:hover{ background-color:#E8FF99; }
+TABLE TR.odd:hover{ background-color:#E8FF99; }
+TABLE TR { height:20px; }
+TABLE TD { padding:3px; }
+TABLE TD.txtCliente { font-weight:bold;text-align:center; }
 TABLE TD.descCampo {
 	text-align:right;
 	padding-right:20px;
@@ -44,9 +43,9 @@ TABLE TD.descCampo {
 	border-bottom:1px solid #d9d9d9;
 }
 
-FORM {font-size: 11px; border: 0px solid #5dd; margin: 0;}
+FORM { font-size: 11px; border: 0px solid #5dd; margin: 0; }
 
-INPUT, SELECT, TEXTAREA{ 
+INPUT, SELECT, TEXTAREA { 
     background-color: #fffef0; 
     color:black;
     font-size: 11px; 
@@ -73,18 +72,30 @@ INPUT.txtLong{width:300px;}
 
 TEXTAREA {width: 350px;	resize: none;}
 
-SELECT {width: 200px;}
+SELECT {width: 206px; padding:2px;}
 SELECT.files {width: 250px;}
 
-IMG { margin:0; padding: 0; border: none;}
+IMG { margin:0; padding: 0; border: 0; cursor: pointer; }
+
+IMG.inputImgMini {
+	background-color: transparent !important;
+	width: 16px !important;
+	height: 16px !important;
+	margin: 0 5px 0 5px;
+	border: none;
+	vertical-align:middle;
+}
 
 .altTable {border: 0px;font-size: 10px;}
 .altTable .section{font-size: 14px; font-weight: bold;}
 
-.altTxtRed { color: #CC0000; font-weight: bold;}
-.altTxtGreen { color: #00CC00; font-weight: bold;}
-.altTxtBlue { color: #333399; font-weight: bold;}
-.altTxtOrange { color: orange; font-weight: bold;}
+.altTxtError { color: #CC0000; font-weight: bold;}
+.altTxtOk { color: green; font-weight: bold;}
+.altTxtWarn { color: orange; font-weight: bold;}
+
+.altTxtGreen { color: green; }
+.altTxtRed { color: darkred; }
+.altTxtBlue { color: #333399; font-weight: bold; }
 
 A{text-decoration: none; color: #339;}
 A:visited {text-decoration: none; color: #339;}
@@ -151,10 +162,22 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #container #tblTools{width: 100%; padding-left: 15px;padding-right: 15px;font-weight: bold;}
 
 #container #resBuscar{ width: 100%; margin-top: 10px; min-height: 500px;}
-
 #container #resBuscar IMG {vertical-align:middle;}
+#container #resBuscar #tblBuscar { border: none;}
 
-#container #pageNav {width: 100%;}
+#container #resBuscar #pageNav { 
+    width: 100%;
+    margin-top: 15px;
+    background-color: #F9F9F9;
+    color: #a9a9a9;
+    border:1px solid #d9d9d9;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#container #resBuscar #pageNav IMG { margin-left: 5px; }
+#container #resBuscar #pageNav A { margin-left: 5px; font-size: 12px; color: #999; }
+#container #resBuscar #pageNav .current {margin-left: 5px; color: darkorange; }
 
 #container .data{width: 100%; border: none; margin-top: 3.5em;}
 #container .data TD{text-align: left;}
@@ -169,12 +192,12 @@ A:focus {text-decoration: none;	color: #FF0000;}
     background-color:#f9f9f9;
     text-align: center;
     font-weight: bold;
+    border-top:10px solid white;
     border-bottom:3px solid #a9c1d7;
     letter-spacing: 0.5em;
     color: #696969;
 }
 #container .tblConfig INPUT.checkbox{width: 15px;text-align: left;padding:0;}
-
 
 #container #tblAccion {width: 100%;}
 
@@ -206,7 +229,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
         float:right;
 }
 
-#container .action IMG{background-color: transparent;margin-top: 0.5em;display: inline;bordero 0;}
+#container .action IMG{background-color: transparent;margin-top: 0.5em;display: inline;border: 0;}
 #container .row_even>TD{background-color: #f5f5f5;}
 #container .row_odd>TD{background-color: white;}
 
@@ -242,7 +265,8 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #container #tblActions INPUT{border: 0;}
 #container #usrMgmt {margin-top: 3.5em;}
 
-#container #resEventLog {width: 100%; height: 500px; overflow-y: auto;margin-bottom: 30px;}
+/*#container #resEventLog {width: 100%; height: 500px; margin-bottom: 30px;}*/
+#container #resEventLog TBODY {width: 100%; height: 500px; overflow: auto; }
 #container #resEventLog TD{border-bottom: 1px solid #d9d9d9;}
 
 #tblTools SELECT, #tblTools INPUT{margin-left: 15px;}
@@ -284,17 +308,20 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #resFancyAccion{display: none}
 
 #fancyView{
-	min-width: 200px;
+	min-width: 250px;
 	text-align: center;
 	padding: 15px;
 	line-height: 20px;
 	border: #d9d9d9 1px solid;
-        font-size: 14px;
-        background-color: #ecfde4;
+        font-size: 14px;    
 }
 
+#fancyView.msgError { background-color: #fee8e6; color: #CC0000; font-weight: bold; border: #fed2ce 1px solid;}
+#fancyView.msgOk { background-color: #ecfde4;; color: green; font-weight: bold; border: #dbfdcb 1px solid;}
+#fancyView.msgWarn { background-color: #FFF2D9; color: orange; font-weight: bold; border: #ffe5b3 1px solid;}
+
 #fancyView.backGrey{background-color: #f2f2f2 !important;}
-#fancyView.backOrange{background-color: #FFF2D9 !important;}
+/*#fancyView.backOrange{background-color: #FFF2D9 !important;}*/
 #fancyView PRE{text-align: left;}
 #fancyView TABLE{border: none; width: 100%;font-size: 14px;text-align: left;}
 #fancyView TD{border-bottom: #d9d9d9 1px solid;}
@@ -318,14 +345,13 @@ A:focus {text-decoration: none;	color: #FF0000;}
 }
 #fancycontainer .action IMG{background-color: transparent;margin-top: 0.5em;float:right;}
 
-#pageNav IMG{ margin-left: 5px; }
-#pageNav A{ margin-left: 5px; font-size: 12px;}
-#pageNav .current{margin-left: 5px; color: darkorange;}
+#fancycontainer.help {padding: 5px;background-color: #f5f5f5;}
+#fancycontainer.help H2 {padding-left:5px;font-size: 16px;}
+#fancycontainer.help P {font-size: 13px;}
 
 #debug {float:left;text-align: left;}
 
 .fancyNone{ background-color: transparent !important; }
-.fancyErr{ background-color: #fee8e6 !important; }
 .fancydata {border: none;text-align: left;}
 .fancydata .descCampo{width: 125px;}
 

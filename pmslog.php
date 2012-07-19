@@ -48,27 +48,13 @@
     $objCommon->printBackLinks(TRUE); 
 
     echo '</DIV>';
+    
     echo '<DIV ID="resEventLog">';
     echo '<TABLE CLASS="data">';
     echo '<THEAD><TR CLASS="headerGrey"><TH>'.$LANG['eventlogs'][0].'</TH><TH>'.$LANG['eventlogs'][1].'</TH><TH>'.$LANG['eventlogs'][2].'</TH><TH>'.$LANG['eventlogs'][3].'</TH></TR></THEAD>';
-    echo '<TBODY>';
-
-    $objConfig = new Config;
-    $dbh = $objConfig->connectDb();
-    $resQuery = $dbh->query("SELECT * FROM log");
-
-    while ( $row = $resQuery->fetch_assoc()){
-        $rowClass = ( $rowClass == "row_even" ) ? "row_odd" : "row_even";
-
-        echo "<TR CLASS='$rowClass'>
-            <TD>".$row["datLog"]."</TD><TD>".utf8_decode($row["vacAccion"])."</TD>
-            <TD>".strtoupper($row["vacLogin"])."</TD>
-            <TD>".str_replace(";","<br />",$row["txtDescripcion"])."<TD>
-            </TR>";
-    }
-    $resQuery->free();
-
-    echo '</TBODY></TABLE></DIV>';
-
+    echo '<TBODY ID="resSearch"></TBODY></TABLE></DIV>';
+        
+    echo '<SCRIPT> $("#resSearch").load(pms_root + "/ajax_eventlog.php");</SCRIPT>';
+    
     Common::PrintFooter();
 ?>

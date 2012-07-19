@@ -64,7 +64,7 @@
     
     echo '<TABLE CLASS="data tblConfig">';
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][25].'</TD>';
-    echo '<TD WIDTH="75%">';
+    echo '<TD WIDTH="75%">';       
     echo '<FORM OnSubmit="return configMgmt(\'addcat\');" METHOD="post" NAME="frmAddCategory" ID="frmAddCategory">';
     echo '<INPUT TYPE="text" NAME="categoryName" SIZE="28" MAXLENGTH="255">';
     echo '<INPUT TYPE="hidden" NAME="categoryFunction" VALUE="1">';

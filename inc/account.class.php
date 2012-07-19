@@ -496,13 +496,17 @@ class Account {
     public function getAccountMax () {
         $intUGroupFId = $_SESSION["ugroup"];
         $intUId = $_SESSION["uid"];
+        $blnUIsAdmin = $_SESSION['uisadmin'];
 
-        // FIXME
-        $strQuery = "SELECT COUNT(DISTINCT intAccountId) FROM accounts acc
-                    LEFT JOIN acc_usergroups aug ON acc.intAccountId=aug.intAccId 
-                    WHERE acc.intUGroupFId = ".(int)$intUGroupFId." 
-                    OR acc.intUserFId = ".(int)$intUId."
-                    OR aug.intUGroupId = ".(int)$intUGroupFId;
+        if ( ! $blnUIsAdmin ){
+            $strQuery = "SELECT COUNT(DISTINCT intAccountId) FROM accounts acc
+                        LEFT JOIN acc_usergroups aug ON acc.intAccountId=aug.intAccId 
+                        WHERE acc.intUGroupFId = ".(int)$intUGroupFId." 
+                        OR acc.intUserFId = ".(int)$intUId."
+                        OR aug.intUGroupId = ".(int)$intUGroupFId;
+        } else {
+            $strQuery = "SELECT COUNT(intAccountId) FROM accounts";
+        }
         
         $resQuery = $this->dbh->query($strQuery);
         

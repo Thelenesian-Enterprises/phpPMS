@@ -32,10 +32,10 @@
 
     $objConfig = new Config;
     $objAccount = new Account;
-    $objFiles = new Files;
 
     $blnAccountLink = $objConfig->getConfigValue("account_link");
     $intAccountCount = $objConfig->getConfigValue("account_count");
+    $filesEnabled = $objConfig->getConfigValue("filesenabled");
     
     unset($objConfig);
 
@@ -52,6 +52,10 @@
     $intProfileId = $_SESSION["uprofile"];
     $intUId = $_SESSION["uid"];
     $blnUIsAdmin = $_SESSION["uisadmin"];
+    
+    if ( $filesEnabled == 1 ){
+        $objFiles = new Files;
+    }
 
     // Variables por defecto del formulario
     if ( $strCliente == "" ) $strCliente = "TODOS";
@@ -110,7 +114,9 @@
     echo '<TH WIDTH="20%"><A onClick="searchSort(4,'.$intPage.')">'.$LANG['accounts'][7].'</A></TH>';
     echo '<TH WIDTH="20%"><IMG SRC="imgs/notes.png" TITLE="'.$LANG['accounts'][8].'" /></TH>';
     echo '<TH WIDTH="5%"><IMG SRC="imgs/group.png" TITLE="'.$LANG['accounts'][9].'" /></TH>';
-    echo '<TH WIDTH="5%"><IMG SRC="imgs/attach.png" TITLE="'.$LANG['accounts'][10].'" /></TH>';
+    if ( $filesEnabled == 1 ){
+        echo '<TH WIDTH="5%"><IMG SRC="imgs/attach.png" TITLE="'.$LANG['accounts'][10].'" /></TH>';
+    }
     echo '<TH WIDTH="20%">'.$LANG['accounts'][11].'</TH>';
     echo '</TR></THEAD>';
 
@@ -239,13 +245,14 @@
         echo '</TD>';
         
         echo'<TD ALIGN="center">'.$account["vacUGroupName"].'</TD>';
+
+        if ( $filesEnabled == 1 ){
+            echo '<TD ALIGN="center">';
+            $intNumFiles = $objFiles->countFiles($account["intAccountId"]); 
+            echo ($intNumFiles) ? $intNumFiles : '&nbsp;'; 
+            echo '</TD>';
+        }
         
-        echo '<TD ALIGN="center">';
-
-        $intNumFiles = $objFiles->countFiles($account["intAccountId"]); 
-        echo ($intNumFiles) ? $intNumFiles : '&nbsp;'; 
-
-        echo '</TD>';
         echo '<TD ALIGN="center"><TABLE CLASS="altTable"><TR>';
         
         // Comprobación de accesos para mostrar enlaces de acciones de cuenta
@@ -304,7 +311,8 @@
     $resQuery->free();
     
     echo '</TABLE>';
-    echo '<TABLE CLASS="altTable" ID="pageNav">';
+    
+    echo '<TABLE CLASS="altTable round" ID="pageNav">';
     echo '<TR><TD ALIGN="LEFT">';
     echo $LANG['accounts'][12]." ".$intPage." / ".$intPageMax." - ";
         

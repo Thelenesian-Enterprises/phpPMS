@@ -38,6 +38,10 @@ if ( ! defined('PMS_ROOT') ) initError("No es posible acceder directamente a est
 
 $fileName = dirname(__FILE__) . "/db.class.php";
 
+if ( ! file_exists($fileName) ){
+    initError("No se ha podido cargar la configuración<BR />Configuration can not be loaded<BR />Ejecute la instalación / Please, run installation process<BR /><A HREF=\"install/install.php\">Instalar / Install</A>");
+}
+
 function class_autoload($classname) {
     $class = strtolower($classname);
     $classfile = dirname(__FILE__) . "/$class.class.php";

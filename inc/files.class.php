@@ -34,20 +34,40 @@ class Files {
         $this->dbh = $objConfig->connectDb();
     }
     
+    public function getMaxUpload(){
+        $max_upload = (int)(ini_get('upload_max_filesize'));
+        $max_post = (int)(ini_get('post_max_size'));
+        $memory_limit = (int)(ini_get('memory_limit'));
+        $upload_mb = min($max_upload, $max_post, $memory_limit);
+        
+        Common::wrLogInfo(__FUNCTION__,"Max. PHP upload: ".$upload_mb."MB");        
+    }
+
+
     // Función para subir el archivo
     public function fileUpload($intAccId){
         global $LANG;
         
-        // Extensiones aceptadas.
-        $extsOk = array("PDF","JPG","GIF","PNG","ODT","ODS","DOC","DOCX","XLS","XSL","VSD","TXT","CSV","LIC","PPK");
-
+        $objConfig = new Config();
+                
+        $allowedExts = $objConfig->getConfigValue("allowed_exts");
+        $allowedSize = $objConfig->getConfigValue("allowed_size");
+        
+        if ( $allowedExts ){
+            // Extensiones aceptadas
+            $extsOk = explode(",",$objConfig->getConfigValue("allowed_exts"));
+        } else {
+            echo $LANG['msg'][95];
+            return FALSE;            
+        }
+         
         $validated = 0;
 
-        if( $_FILES && $_FILES['file']['name'] ){   
+        if ( $_FILES && $_FILES['file']['name'] ){   
             // Comprobamos la extensión del archivo
             $fileExt = pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION);
 
-            if ( ! in_array(strtoupper($fileExt), $extsOk) ){
+            if ( ! in_array(strtolower($fileExt), $extsOk) ){
                 echo $LANG['msg'][86]." '$fileExt'";
                 return;
             }
@@ -62,16 +82,25 @@ class Files {
         $fileSize = $_FILES['file']['size'];
         $fileType = $_FILES['file']['type'];
 
-        if( $fileSize > 1024000 ){
-            echo $LANG['msg'][80];
+        if ( ! file_exists($tmpName) ){
+            // Registramos el máximo tamaño permitido por PHP
+            $this->getMaxUpload();
+            
+            echo $LANG['msg'][81];
+            return FALSE;            
+        }
+        
+        if( $fileSize > ($allowedSize * 1000) ){
+            echo $LANG['msg'][80]." ".round(($allowedSize / 1000),1)."MB";
             return FALSE;
         }
-
+        
         // Leemos el archivo a una variable
         $fileHandle = fopen($tmpName, 'r');
         
         if ( ! $fileHandle ){
             echo $LANG['msg'][81];
+            Common::wrLogInfo(__FUNCTION__,$LANG['msg'][81]);        
             return FALSE;
         }
         

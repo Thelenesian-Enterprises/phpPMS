@@ -1,4 +1,4 @@
-<?
+<?php
 // Copyright (c) 2012 Rubén Domínguez
 //  
 // This file is part of phpPMS.
@@ -26,11 +26,24 @@
  */
 
     define('PMS_ROOT', '.');
-    include_once (PMS_ROOT . "/inc/includes.php");
-    check_session(TRUE,TRUE);
+    include_once (PMS_ROOT."/inc/includes.php");
     
-    Common::wrLogInfo($LANG['event'][16], $LANG['eventdesc'][11].":".$_SESSION['uname'].";".$LANG['eventdesc'][12].":".$_SESSION['uprofile'].";".$LANG['eventdesc'][13].":".$_SESSION['ugroup'].";".$LANG['eventdesc'][14].":".$_SERVER['REMOTE_ADDR']);
-    session_destroy();
+    if ( check_session(TRUE) ) return "0";
+
+    $objConfig = new Config;
+    $dbh = $objConfig->connectDb();
+    $resQuery = $dbh->query("SELECT * FROM log");
+
+    while ( $row = $resQuery->fetch_assoc()){
+        $rowClass = ( $rowClass == "row_even" ) ? "row_odd" : "row_even";
+
+        echo "<TR CLASS='$rowClass'>";
+        echo "<TD>".$row["datLog"]."</TD>";
+        echo "<TD>".utf8_decode($row["vacAccion"])."</TD>";
+        echo "<TD>".strtoupper($row["vacLogin"])."</TD>";
+        echo "<TD>".str_replace(";","<br />",$row["txtDescripcion"])."</TD>";
+        echo "</TR>";
+    }
     
-    echo '<div id="fancyView" class="msgWarn">'.$LANG['msg'][74].'</div>';
+    $resQuery->free();
 ?>

@@ -59,7 +59,7 @@
             return;                
         }
 
-        if ( $post_wikienabled AND ( ! $post_wikisearchurl OR ! $post_wikipageurl OR ! $post_wikifilter )){
+        if ( $post_wikienabled AND ( ! $post_wikisearchurl OR ! $post_wikipageurl OR ! is_array($post_wikifilter) )){
             $resXML["status"] = 1;
             $resXML["description"] = $LANG['msg'][37];
             Common::printXML($resXML);
@@ -68,12 +68,13 @@
             $objConfig->arrConfigValue["wikienabled"] = 1;
             $objConfig->arrConfigValue["wikisearchurl"] = $post_wikisearchurl;
             $objConfig->arrConfigValue["wikipageurl"] = $post_wikipageurl;
-            $objConfig->arrConfigValue["wikifilter"] = $post_wikifilter;            
+            $objConfig->arrConfigValue["wikifilter"] = implode("||", $post_wikifilter);
+            
         } else{
             $objConfig->arrConfigValue["wikienabled"] = 0;
         }
         
-        if ( $post_ldapenabled AND ( ! $post_ldapserver OR ! $post_ldapbase OR ! $post_ldapgroup OR ! $post_ldapuserattr)){
+        if ( $post_ldapenabled AND ( ! $post_ldapserver OR ! $post_ldapbase OR ! $post_ldapgroup OR ! is_array($post_ldapuserattr) )){
             $resXML["status"] = 1;
             $resXML["description"] = $LANG['msg'][38];
             Common::printXML($resXML);
@@ -83,7 +84,8 @@
             $objConfig->arrConfigValue["ldapserver"] = $post_ldapserver;
             $objConfig->arrConfigValue["ldapbase"] = $post_ldapbase;
             $objConfig->arrConfigValue["ldapgroup"] = $post_ldapgroup;
-            $objConfig->arrConfigValue["ldapuserattr"] = $post_ldapuserattr;            
+            $objConfig->arrConfigValue["ldapuserattr"] = implode("||", $post_ldapuserattr);
+
         } else {
             $objConfig->arrConfigValue["ldapenabled"] = 0;
         }
@@ -101,15 +103,32 @@
             $objConfig->arrConfigValue["mailenabled"] = 0;
         }
         
+        if ( $post_allowed_size > 16384 ){
+            $resXML["status"] = 1;
+            $resXML["description"] = $LANG['msg'][97];
+            Common::printXML($resXML);
+            return;
+        } else {
+            $objConfig->arrConfigValue["allowed_size"] = ( $post_allowed_size ) ? (int)$post_allowed_size : 1024;
+        }
+        
+        if ( is_array($post_allowed_exts) ){
+            $objConfig->arrConfigValue["allowed_exts"] = implode(",", $post_allowed_exts);
+        } else {
+            $objConfig->arrConfigValue["allowed_exts"] = "";
+        }
+        
         $objConfig->arrConfigValue["account_link"] = $post_account_link;
         $objConfig->arrConfigValue["account_count"] = $post_account_count;        
         $objConfig->arrConfigValue["sitename"] = $post_sitename;
         $objConfig->arrConfigValue["siteshortname"] = $post_siteshortname;
         $objConfig->arrConfigValue["siteroot"] = $post_siteroot;
         $objConfig->arrConfigValue["sitelang"] = $post_sitelang;
+        
         $objConfig->arrConfigValue["session_timeout"] = ( $post_session_timeout ) ? (int)$post_session_timeout : 300;
         $objConfig->arrConfigValue["logenabled"] = ( $post_logenabled ) ? 1 : 0;
         $objConfig->arrConfigValue["debug"] = ( $post_debug ) ? 1 : 0;
+        $objConfig->arrConfigValue["filesenabled"] = ( $post_filesenabled ) ? 1 : 0;
                 
 //        if ($blnMd5Password == "FALSE" AND $blnMd5PasswordOld == "TRUE") {
 //            $clsAccount = new Account;
