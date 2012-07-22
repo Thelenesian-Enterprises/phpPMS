@@ -148,13 +148,13 @@ function checkDB($useDB = FALSE, $useFile = TRUE){
 function updateDB(){
     global $LANG;
     
-    $objConfig = new Config;
-    $version = $objConfig->getConfigValue("version");
-    unset($objConfig);
+//    $objConfig = new Config;
+//    $version = $objConfig->getConfigValue("version");
+//    unset($objConfig);
     
 //    $intVersion = rtrim($version,"b");
     $path = PMS_ROOT."/install";
-    $fileName = $path."/upgrade_".$version.".sql";
+    $fileName = $path."/upgrade.sql";
 
 //    $dir = dir($path);
 //    while ( false !== ($file = $dir->read()) ) {
@@ -167,7 +167,7 @@ function updateDB(){
 //    print_r($arrFiles);
 
     if ( ! file_exists($fileName) ){
-        printMsg($LANG['install'][36]." (v$version)", 2);
+        printMsg($LANG['install'][36], 2);
         return TRUE;
     }
 
