@@ -175,7 +175,7 @@ class Common {
                 
         echo '</TITLE>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            <LINK REL="icon" TYPE="image/png" HREF="/phppms/imgs/logo.png">
+            <LINK REL="icon" TYPE="image/png" HREF="'.PMS_ROOTURL.'/imgs/logo.png">
             <LINK REL="stylesheet" HREF="css/styles.css" TYPE="text/css">
             <LINK rel="stylesheet" HREF="javascript/fancybox/jquery.fancybox-1.3.4.css" TYPE="text/css" MEDIA="screen" />
             <SCRIPT TYPE="text/javascript" SRC="javascript/jquery.js"></SCRIPT>

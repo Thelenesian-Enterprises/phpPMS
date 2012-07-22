@@ -151,9 +151,21 @@ function updateDB(){
     $objConfig = new Config;
     $version = $objConfig->getConfigValue("version");
     unset($objConfig);
-
-    $fileName = PMS_ROOT."/install/upgrade_".$version.".sql";
     
+//    $intVersion = rtrim($version,"b");
+    $path = PMS_ROOT."/install";
+    $fileName = $path."/upgrade_".$version.".sql";
+
+//    $dir = dir($path);
+//    while ( false !== ($file = $dir->read()) ) {
+//        if ( preg_match("/^upgrade_/", $file) ){
+//            $arrFiles[] = $file;
+//        }
+//    }
+//    $dir->close();
+//    
+//    print_r($arrFiles);
+
     if ( ! file_exists($fileName) ){
         printMsg($LANG['install'][36]." (v$version)", 2);
         return TRUE;
@@ -179,18 +191,33 @@ function updateDB(){
             return FALSE;
         }
         
+        $nError = 0;
+        
         while ( ! feof($handle) ) {
             $buffer = stream_get_line($handle, 1000000, ";\n");
             if ( $buffer ){
-                if ( ! $mysqli->query($buffer) ){
-                    printMsg($LANG['install'][42]."<BR />".$mysqli->error, 1);
-                    return FALSE;
+                
+                $mysqli->query($buffer);
+                
+                if ( $mysqli->errno > 0 ){
+                    if ( $mysqli->errno == 1050 OR $mysqli->errno == 1060 OR $mysqli->errno == 1061 OR $mysqli->errno == 1062 ){
+                        continue;
+                    } else {
+                        $nError++;
+                        printMsg($LANG['install'][42]."<BR />(".$mysqli->errno.") ".$mysqli->error, 2);
+//                      return FALSE;
+                    }
                 }
             }
         }
         
-        printMsg($LANG['install'][43]);
-        return TRUE;        
+        if ( $nError > 0 ){
+            printMsg($LANG['install'][54],1);
+            return FALSE;
+        } else{
+            printMsg($LANG['install'][43]);
+            return TRUE;
+        }
     } else {
         printMsg($LANG['install'][44], 1);
         return FALSE;
@@ -421,7 +448,7 @@ function mkConfigForm(){
     echo '</TR>';
 
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="/phppms" /></TD>';
+    echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="/phpPMS" /></TD>';
     echo '</TR>';
 
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][37].'</TD>';

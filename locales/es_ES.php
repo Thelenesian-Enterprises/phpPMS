@@ -312,6 +312,7 @@ $LANG['msg'][95]="No hay extensiones permitidas";
 $LANG['msg'][96]="Gestión de archivos deshabilitada";
 $LANG['msg'][97]="El tamaño máximo de archivo es de 16MB";
 $LANG['msg'][98]="ERROR: No es posible realizar la búsqueda en LDAP";
+$LANG['msg'][99]="La versión de la aplicación es diferente a la instalada. Es necesario <A HREF=\"install/install.php\">actualizar</A>";
 
 $LANG['event'][0]="Inicio sesión (LDAP)";
 $LANG['event'][1]="Inicio sesión (MySQL)";
@@ -417,6 +418,7 @@ $LANG['install'][50]="English";
 $LANG['install'][51]="No existen datos de conexión a la BBDD<BR />Introduzca los datos para guardarlos";
 $LANG['install'][52]="El usuario/clave de conexión a la BBDD es incorrecto";
 $LANG['install'][53]="La BBDD no existe o el usuario no tiene permisos";
+$LANG['install'][54]="Han habido errores durante la actualización de la BBDD";
 
 
 $LANG['js'][0]="Ha ocurrido un error en la consulta";

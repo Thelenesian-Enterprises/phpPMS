@@ -25,8 +25,6 @@
  * 
  */
 
-// TODO: complete translation
-
 $LANG=array();
 
 $LANG["completed"]=1;
@@ -315,6 +313,7 @@ $LANG['msg'][95]="There are not allowed extensions";
 $LANG['msg'][96]="File management is disabled";
 $LANG['msg'][97]="Maximum file size is 16MB";
 $LANG['msg'][98]="ERROR: Unable to do LDAP search";
+$LANG['msg'][99]="Application version differs from installed. You need to <A HREF=\"install/install.php\">update</A>";
 
 $LANG['event'][0]="Session start (LDAP)";
 $LANG['event'][1]="Session start (MySQL)";
@@ -420,6 +419,7 @@ $LANG['install'][50]="English";
 $LANG['install'][51]="Missing DB data connection<BR />Please, enter connection data to save it";
 $LANG['install'][52]="Invalid user/password for DB connection";
 $LANG['install'][53]="Invalid DB o user does not have permissions";
+$LANG['install'][54]="There were errors while updating DB";
 
 
 $LANG['js'][0]="Query error";

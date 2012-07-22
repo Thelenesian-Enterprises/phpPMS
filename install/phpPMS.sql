@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 24-05-2012 a las 14:53:43
--- Versión del servidor: 5.1.61
--- Versión de PHP: 5.3.3-7+squeeze8
+-- Tiempo de generación: 20-07-2012 a las 22:23:09
+-- Versión del servidor: 5.1.63
+-- Versión de PHP: 5.3.3-7+squeeze9
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -15,40 +15,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
--- Base de datos: `phppms`
---
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `accounts`
---
-
-CREATE TABLE IF NOT EXISTS `accounts` (
-  `intAccountId` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `intUGroupFId` tinyint(3) unsigned NOT NULL,
-  `intUserFId` tinyint(3) unsigned NOT NULL,
-  `intUEditFId` tinyint(3) unsigned NOT NULL,
-  `vacCliente` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `vacName` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `intCategoryFid` tinyint(3) unsigned NOT NULL,
-  `vacLogin` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `vacUrl` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `vacPassword` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
-  `vacMd5Password` varchar(32) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
-  `vacInitialValue` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
-  `txtNotice` text COLLATE utf8_spanish_ci,
-  `intCountView` int(10) unsigned NOT NULL DEFAULT '0',
-  `intCountDecrypt` int(10) unsigned NOT NULL DEFAULT '0',
-  `datAdded` datetime NOT NULL,
-  `datChanged` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`intAccountId`),
-  KEY `vacCliente` (`vacCliente`),
-  FULLTEXT KEY `vacName` (`vacName`),
-  FULLTEXT KEY `vacLogin` (`vacLogin`),
-  FULLTEXT KEY `vacUrl` (`vacUrl`,`txtNotice`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -94,6 +60,37 @@ CREATE TABLE IF NOT EXISTS `acc_usergroups` (
   `intUGroupId` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `intAccId` (`intAccId`,`intUGroupId`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `accounts`
+--
+
+CREATE TABLE IF NOT EXISTS `accounts` (
+  `intAccountId` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `intUGroupFId` tinyint(3) unsigned NOT NULL,
+  `intUserFId` tinyint(3) unsigned NOT NULL,
+  `intUEditFId` tinyint(3) unsigned NOT NULL,
+  `vacCliente` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `vacName` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `intCategoryFid` tinyint(3) unsigned NOT NULL,
+  `vacLogin` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `vacUrl` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `vacPassword` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `vacMd5Password` varchar(32) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `vacInitialValue` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `txtNotice` text COLLATE utf8_spanish_ci,
+  `intCountView` int(10) unsigned NOT NULL DEFAULT '0',
+  `intCountDecrypt` int(10) unsigned NOT NULL DEFAULT '0',
+  `datAdded` datetime NOT NULL,
+  `datChanged` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`intAccountId`),
+  KEY `vacCliente` (`vacCliente`),
+  FULLTEXT KEY `vacName` (`vacName`),
+  FULLTEXT KEY `vacLogin` (`vacLogin`),
+  FULLTEXT KEY `vacUrl` (`vacUrl`,`txtNotice`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------

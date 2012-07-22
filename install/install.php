@@ -20,7 +20,7 @@
 /**
  *
  * @author nuxsmin
- * @version 0.951b
+ * @version 0.91b
  * @link http://www.cygnux.org/phppms
  * 
  */
@@ -77,7 +77,7 @@ if ( ! $instLang ){
         $filePath = dirname(__FILE__)."/".PMS_ROOT."/inc";
         $fileName = $filePath."/db.class.php";
         
-        if ( ! preg_match("/^\/phppms\//", $_SERVER["REQUEST_URI"]) ){
+        if ( ! preg_match("/^\/phpPMS\//", $_SERVER["REQUEST_URI"]) ){
             printMsg($LANG['install'][19], 2);
         }
         
