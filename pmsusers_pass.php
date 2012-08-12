@@ -27,7 +27,7 @@
 
     define('PMS_ROOT', '.');
     include_once (PMS_ROOT."/inc/includes.php");
-    check_session(TRUE);
+    if ( check_session(TRUE) ) return "0";
     
     $strError = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">No tiene permisos para realizar esta operación</span></div>';
     
@@ -37,14 +37,19 @@
     echo '<H2>'.$LANG['buttons'][32].'</H2>';
     echo '<FORM METHOD="post" NAME="updUsrPass" ID="frmUpdUsrPass">';
     echo '<TABLE CLASS="fancydata">';
-    echo '<TR><TD CLASS="descCampo">'.$LANG['users'][0].'</TD><TD><INPUT TYPE="text" ID="usrpass" NAME="usrlogin" TITLE="Login" CLASS="txtpass" VALUE="'.$_GET["usrlogin"].'" readonly /></TD></TR>';
-    echo '<TR><TD CLASS="descCampo">'.$LANG['users'][9].'</TD><TD><INPUT TYPE="password" ID="usrpass" NAME="usrpass" TITLE="Clave" CLASS="txtpass" /></TD></TR>';
-    echo '<TR><TD CLASS="descCampo">'.$LANG['users'][10].'</TD><TD><INPUT TYPE="password" ID="usrpassv" NAME="usrpassv" TITLE="Clave (Repetir)" CLASS="txtpassv" /></TD></TR>';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['users'][0].'</TD><TD><INPUT TYPE="text" ID="usrlogin" NAME="usrlogin" TITLE="'.$LANG['users'][0].'" CLASS="txtpass" VALUE="'.$_GET["usrlogin"].'" readonly /></TD></TR>';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['users'][9].'</TD><TD><INPUT TYPE="password" ID="usrpass" NAME="usrpass" TITLE="'.$LANG['users'][9].'" CLASS="txtpass" OnFocus="$(\'#passLevel\').show(); $(\'#resFancyAccion\').hide();" OnKeyUp="checkPassLevel(this.value)" />';
+    echo '<IMG SRC="imgs/genpass.png" TITLE="'.$LANG['buttons'][50].'" CLASS="inputImg" OnClick="$(\'#resFancyAccion\').hide(); password(11,true);" />';
+    echo '</TD></TR>';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['users'][10].'</TD><TD><INPUT TYPE="password" ID="usrpassv" NAME="usrpassv" TITLE="'.$LANG['users'][10].'" CLASS="txtpassv" /></TD></TR>';
     echo '<INPUT TYPE="hidden" NAME="usrid" VALUE="'.$_GET["usrid"].'" />';
     echo '</TABLE></FORM>';
     
-    echo '<DIV ID="resFancyAccion"></DIV>';
+    echo '<DIV ID="resCheck">';
+    echo '<SPAN ID="resFancyAccion"></SPAN>';
+    echo '<SPAN ID="passLevel" TITLE="'.$LANG['buttons'][51].'" ></SPAN>';
+    echo '</DIV>';
     echo '<DIV ID="actionbar" CLASS="action round">';
-    echo '<IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" OnClick="userMgmt(\'pass\','.$_GET["usrid"].')" />';
+    echo '<IMG SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" OnClick="userMgmt(\'pass\','.$_GET["usrid"].')" />';
     echo '</DIV></DIV>';
 ?>

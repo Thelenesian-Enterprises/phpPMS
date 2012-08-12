@@ -51,7 +51,7 @@
     
     Common::printBodyHeader();
     
-    $objAccount->checkAccountAccess("edit") || die ('<DIV CLASS="error"'.$LANG['msg'][91].'</DIV');
+    $objAccount->checkAccountAccess("edit") || die ('<DIV CLASS="error">'.$LANG['msg'][91].'</DIV');
 
     echo '<DIV ID="container" ALIGN="center">';
     echo '<H2>'.$LANG['buttons'][9].'</H2>';

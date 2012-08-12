@@ -43,7 +43,7 @@
     echo '<BODY OnLoad="loadUsrMgmt(1);">';
     
     Common::printBodyHeader();
-    Users::checkUserAccess("users") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
+    Users::checkUserAccess("users") || die ('<DIV CLASS="error">'.$LANG['msg'][34].'</DIV');
     
     echo '<DIV ID="container" ALIGN="center">';
     echo '<H2 ID="usrmgmt_head">'.$LANG['buttons'][13].'</H2>';

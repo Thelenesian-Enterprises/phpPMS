@@ -31,6 +31,7 @@
     
     $objAccount = new Account;
     $objCommon = new Common;
+    $objUser = new Users;
 
     foreach ($_POST as $varPost => $varPostValue){
         if (array_key_exists($varPost, $objCommon->arrBackLinks)) {
@@ -43,6 +44,8 @@
     echo '<BODY ONLOAD="document.addaccount.sel_cliente.focus()">';
 
     Common::printBodyHeader();
+    
+    $objUser->checkUserUpdateMPass() || die ('<DIV CLASS="error">'.$LANG['msg'][100].'</DIV');
 
     echo '<DIV ID="container" ALIGN="center">';
     echo '<H2>'.$LANG['buttons'][7].'</H2>';
@@ -89,10 +92,14 @@
     echo '<TD WIDTH=75%><INPUT NAME="login" TYPE="text" SIZE="30" MAXLENGTH="255"></TD></TR>';
 
     echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][20].'</TD>';
-    echo '<TD WIDTH=75%><INPUT NAME="password" TYPE="password" SIZE="30" MAXLENGTH="255"></TD></TR>';
+    echo '<TD WIDTH=75%><INPUT NAME="password" TYPE="password" SIZE="30" MAXLENGTH="255" OnKeyUp="checkPassLevel(this.value)">';
+    echo '<IMG SRC="imgs/genpass.png" TITLE="'.$LANG['buttons'][50].'" CLASS="inputImg" OnClick="password(11,true,true);" />';
+    echo '</TD></TR>';
 
     echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][22].'</TD>';
-    echo '<TD WIDTH=75%><INPUT NAME="password2" TYPE="password" SIZE="30" MAXLENGTH="255"></TD></TR>';
+    echo '<TD WIDTH=75%><INPUT NAME="password2" TYPE="password" SIZE="30" MAXLENGTH="255">';
+    echo '<SPAN ID="passLevel" TITLE="'.$LANG['buttons'][51].'" ></SPAN>';
+    echo '</TD></TR>';
 
     echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][24].'</TD>';
     echo '<TD WIDTH=75%><TEXTAREA NAME="notice" TYPE="text" COLS="30" ROWS="5" MAXLENGTH="255"></TEXTAREA></TD></TR>';

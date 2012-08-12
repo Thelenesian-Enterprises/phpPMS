@@ -50,7 +50,11 @@ class Config {
                 $this->throwError($LANG['msg'][75].": (".$mysqli->connect_errno . ") ".$mysqli->connect_error);
                 //die( $LANG['msg'][75].": (".$mysqli->connect_errno . ") ".$mysqli->connect_error );
             } else {
-                $this->throwError("Unable to connect to DB: (".$mysqli->connect_errno . ") ".$mysqli->connect_error);
+                $txtError = "No es posible conectar con la BD: (".$mysqli->connect_errno . ") ".$mysqli->connect_error;
+                $txtError .= "<BR />Unable to connect to DB: (".$mysqli->connect_errno . ") ".$mysqli->connect_error;
+                $txtError .= "<BR /><A HREF='install/install.php'> Reinstale la aplicación</A>";
+                $txtError .= "<BR /><A HREF='install/install.php'>Reinstall the application</A>";
+                $this->throwError($txtError);
                 //die( "Unable to connect to DB: (".$mysqli->connect_errno . ") ".$mysqli->connect_error );
 
             }
@@ -269,6 +273,22 @@ class Config {
             $this->arrConfigValue[$configParam] = $configValue;
         }
         
+        // Valores por defecto
+        $this->arrConfigValue["debug"] = 0;
+        $this->arrConfigValue["allowed_exts"] = "PDF,JPG,GIF,PNG,ODT,ODS,DOC,DOCX,XLS,XSL,VSD,TXT,CSV,BAK";
+        $this->arrConfigValue["allowed_size"] = 1024;
+        $this->arrConfigValue["wikienabled"] = 0;
+        $this->arrConfigValue["wikisearchurl"] = "";
+        $this->arrConfigValue["wikipageurl"] = "";
+        $this->arrConfigValue["wikifilter"] = "";
+        $this->arrConfigValue["ldapenabled"] = 0;
+        $this->arrConfigValue["ldapserver"] = "";
+        $this->arrConfigValue["ldapbase"] = "";
+        $this->arrConfigValue["ldapgroup"] = "";
+        $this->arrConfigValue["ldapuserattr"] = "";
+        $this->arrConfigValue["mailenabled"] = 0;
+        $this->arrConfigValue["mailserver"] = "";
+        $this->arrConfigValue["mailfrom"] = "";
         $this->arrConfigValue["install"] = 1;
         $this->arrConfigValue["version"] = PMS_VERSION;
         
@@ -339,7 +359,8 @@ class Config {
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36];
         Common::printHelpButton("config", 2);
         echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="'.$this->arrConfigValue["siteroot"].'" /></TD>';
+        echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="'.$this->arrConfigValue["siteroot"].'" />';
+        echo '<IMG SRC="imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" TITLE="'.$LANG['config'][41].'" /></TD>';
 
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][37].'</TD>';
         echo '<TD><SELECT NAME="sitelang" SIZE="1">';

@@ -79,6 +79,8 @@ $LANG['buttons'][46]="Eliminar filtro";
 $LANG['buttons'][47]="Añadir atributo";
 $LANG['buttons'][48]="Eliminar atributo";
 $LANG['buttons'][49]="Ayuda";
+$LANG['buttons'][50]="Generar clave aleatoria";
+$LANG['buttons'][51]="Nivel de fortaleza de la clave";
 
 $LANG['common'][0]="Actualizado";
 $LANG['common'][1]="Descargar nueva versión";
@@ -172,6 +174,9 @@ $LANG['config'][37]="Idioma";
 $LANG['config'][38]="Extensiones de archivos permitidas";
 $LANG['config'][39]="Gestión de archivos";
 $LANG['config'][40]="Tamaño máximo de archivo";
+$LANG['config'][41]="Si establece esta opción incorrectamente, es posible que no pueda acceder a la aplicación";
+$LANG['config'][42]="Guarde la nueva clave en un lugar seguro.";
+$LANG['config'][43]="Último cambio";
 
 $LANG['backup'][0]="Resultado";
 $LANG['backup'][1]="Último backup";
@@ -313,6 +318,7 @@ $LANG['msg'][96]="Gestión de archivos deshabilitada";
 $LANG['msg'][97]="El tamaño máximo de archivo es de 16MB";
 $LANG['msg'][98]="ERROR: No es posible realizar la búsqueda en LDAP";
 $LANG['msg'][99]="La versión de la aplicación es diferente a la instalada. Es necesario <A HREF=\"install/install.php\">actualizar</A>";
+$LANG['msg'][100]="Clave maestra actualizada<BR />Reinicie la sesión para cambiarla";
 
 $LANG['event'][0]="Inicio sesión (LDAP)";
 $LANG['event'][1]="Inicio sesión (MySQL)";
@@ -383,7 +389,7 @@ $LANG['install'][15]="Creando nueva BBDD";
 $LANG['install'][16]="Versión PHP";
 $LANG['install'][17]="Comprobando módulos";
 $LANG['install'][18]="Módulos requeridos no disponibles. Abortado";
-$LANG['install'][19]="No está utilizando la URL por defecto \"/phppms\". Preste atencion durante la configuración";
+$LANG['install'][19]="No está utilizando la URL por defecto '/phppms'. Preste atención durante la configuración";
 $LANG['install'][20]="Por favor, antes de continuar, realice una copia de seguridad de la BBDD";
 $LANG['install'][21]="Configuración del entorno finalizada";
 $LANG['install'][22]="El usuario conexión a la BBDD ya existe";
@@ -419,7 +425,7 @@ $LANG['install'][51]="No existen datos de conexión a la BBDD<BR />Introduzca lo
 $LANG['install'][52]="El usuario/clave de conexión a la BBDD es incorrecto";
 $LANG['install'][53]="La BBDD no existe o el usuario no tiene permisos";
 $LANG['install'][54]="Han habido errores durante la actualización de la BBDD";
-
+$LANG['install'][55]="No está utilizando la URL por defecto '/phppms'. Configure este parámetro correctamente";
 
 $LANG['js'][0]="Ha ocurrido un error en la consulta";
 $LANG['js'][1]="Ha ocurrido un error";
@@ -436,21 +442,27 @@ $LANG['js'][11]="Valor duplicado";
 $LANG['js'][12]="Opción no seleccionada";
 $LANG['js'][13]="Opción añadida<BR \>Guarde la configuración para que sea efectiva";
 $LANG['js'][14]="Opción eliminada<BR \>Guarde la configuración para que sea efectiva";
+$LANG['js'][15]="Clave generada:";
+$LANG['js'][16]="Nivel alto";
+$LANG['js'][17]="Nivel medio";
+$LANG['js'][18]="Nivel bajo";
+$LANG['js'][19]="Nivel muy alto";
+$LANG['js'][20]="Debería utilizar al menos 8 caracteres";
 
 $LANG["help"]["config"][0]="<H2>Nombre del sitio</H2><P>Establece un nombre largo del sitio para situarlo en la cabecera de todas las páginas.</P>";
 $LANG["help"]["config"][1]="<H2>Nombre corto del sitio</H2><P>Establece un nombre corto para títulos donde no es posible utilizar el nombre largo.</P><P>También es utilizado para el envío de correos.</P>";
-$LANG["help"]["config"][2]="<H2>URL raíz del sitio</H2><P>Establece la URL que sirve como base del sitio.</P><P>No modificar en caso de duda.</P>";
+$LANG["help"]["config"][2]="<H2>URL raíz del sitio</H2><P>Establece la URL que sirve como base del sitio.<BR />Esta URL aparece a continuación del servidor en la barra de direcciones.</P><P>No modificar en caso de duda.</P><P>Ejemplo: /phppms</P>";
 $LANG["help"]["config"][3]="<H2>Nombre de cuenta como enlace</H2><P>Habilita el nombre de la cuenta de la búsqueda, como enlace a los detalles de la cuenta.</P>";
 $LANG["help"]["config"][4]="<H2>Resultados por página</H2><P>Número de resultados por página a mostrar, al realizar una búsqueda.</P>";
 $LANG["help"]["config"][5]="<H2>Gestión de archivos</H2><P>Habilita la subida/descarga de archivos para las cuentas.</P>";
 $LANG["help"]["config"][6]="<H2>Tamaño máximo de archivo</H2><P>Establece el tamaño máximo para subir archivos.</P><P>El máximo absuluto es de 16MB.</P>";
 $LANG["help"]["config"][7]="<H2>Habilitar enlaces Wiki</H2><P>Habilita la opción de añadir un enlace a Wiki externa para los resultados de la búsqueda.</P>";
-$LANG["help"]["config"][8]="<H2>URL de búsqueda Wiki</H2><P>URL que utiliza la wiki para realizar una búsqueda de una página en esta.</P><P>Como parámetro se utiliza el nombre del cliente.</P>";
-$LANG["help"]["config"][9]="<H2>URL de página en Wiki</H2><P>URL que utiliza la wiki para acceder a los detalles de una página de ésta.</P><P>El nombre de la cuenta se utiliza como parámetro de la variable de búsqueda de la Wiki.</P>";
-$LANG["help"]["config"][10]="<H2>Prefijo para nombre de cuenta</H2><P>Prefijo para determinar qué cuentas tienen un enlace a una página de la Wiki.</P>";
-$LANG["help"]["config"][11]="<H2>Habilitar LDAP</H2><P>Habilita de autentificación mediante servidor LDAP.</P>";
-$LANG["help"]["config"][12]="<H2>Base de búsqueda</H2><P>Base en la que realizar la búsqueda de usuarios de LDAP.</P>";
-$LANG["help"]["config"][13]="<H2>Grupo</H2><P>Grupo de LDAP al que debe de pertenecer el usuario para permitir el acceso.</P>";
-$LANG["help"]["config"][14]="<H2>Atributos de usuario</H2><P>Atributos de usuario que se utilizarán para buscar e importar los datos del usuario de LDAP.</P>";
+$LANG["help"]["config"][8]="<H2>URL de búsqueda Wiki</H2><P>URL que utiliza la wiki para realizar una búsqueda de una página en esta.</P><P>Como parámetro se utiliza el nombre del cliente.</P><P>Ejemplo: http://wiki.cygnux.org/search.php?phrase=</P>";
+$LANG["help"]["config"][9]="<H2>URL de página en Wiki</H2><P>URL que utiliza la wiki para acceder a los detalles de una página de ésta.</P><P>El nombre de la cuenta se utiliza como parámetro de la variable de búsqueda de la Wiki.</P><P>Ejemplo: https://wiki.cygnux.org/show.php?name=</P>";
+$LANG["help"]["config"][10]="<H2>Prefijo para nombre de cuenta</H2><P>Prefijo para determinar qué cuentas tienen un enlace a una página de la Wiki.</P><P>Ejemplos: serv- srv- vm-</P>";
+$LANG["help"]["config"][11]="<H2>Habilitar LDAP</H2><P>Habilita de autentificación mediante servidor LDAP.</P><P>Este método utilizará MySQL en caso de fallo.</P>";
+$LANG["help"]["config"][12]="<H2>Base de búsqueda</H2><P>Base en la que realizar la búsqueda de usuarios de LDAP.</P><P>Ejemplo: dc=cygnux,o=org</P>";
+$LANG["help"]["config"][13]="<H2>Grupo</H2><P>Grupo de LDAP al que debe de pertenecer el usuario para permitir el acceso.</P><P>Ejemplo: cn=GRP_PMSUSERS,ou=USERS</P>";
+$LANG["help"]["config"][14]="<H2>Atributos de usuario</H2><P>Atributos de usuario que se utilizarán para buscar e importar los datos del usuario de LDAP.</P><P>Ejemplos: fullName, groupMembership, mail</P>";
 //$LANG["help"]["config"][]="<H2></H2><P></P>";
 ?>

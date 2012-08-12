@@ -54,7 +54,7 @@ class Users {
         $this->dbh = $objConfig->connectDb();
     }
 
-    // Función para obtener los datos del usuario en MySQL
+    // Método para obtener los datos del usuario en MySQL
     public function getUserInfo($strLogin) {
         $strQuery = "SELECT intUserId, vacUName, intUGroupFid, vacULogin, vacUEmail, txtUNotes, 
                     intUCount, intUProfile, vacUGroupName, blnIsAdmin, blnFromLdap, blnDisabled 
@@ -73,7 +73,7 @@ class Users {
 		return TRUE;
     }
     
-    // Función para mostrar la tabla de gestión de usuarios
+    // Método para mostrar la tabla de gestión de usuarios
     public function getUsersTable(){
         global $LANG;
         
@@ -164,7 +164,7 @@ class Users {
         $resQuery->free();
     }
 
-    // Función para mostrar la tabla de nuevo usuario
+    // Método para mostrar la tabla de nuevo usuario
     public function getNewUserTable(){
         global $LANG;
 
@@ -203,7 +203,7 @@ class Users {
         echo '</TBODY></TABLE></FORM>';
     }
 
-    // Función para mostrar la tabla de gestión de grupos
+    // Método para mostrar la tabla de gestión de grupos
     public function getGroupsTable(){
         global $LANG;
         
@@ -249,7 +249,7 @@ class Users {
         $resQuery->free();
     }
 
-    // Función para mostrar la tabla de nuevo usuario
+    // Método para mostrar la tabla de nuevo usuario
     public function getNewGroupTable(){
         global $LANG;
         
@@ -262,7 +262,7 @@ class Users {
         echo '</TBODY></TABLE></FORM>';
     }    
     
-    // Función para comprobar si un usuario/email existen en la BD
+    // Método para comprobar si un usuario/email existen en la BD
     public function checkUserExist() {
         $strLogin = strtoupper($this->strLogin);
         $strEmail = strtoupper($this->strEmail);
@@ -293,7 +293,7 @@ class Users {
         $resQuery->free();
     }
 
-    // Función para comprobar si un grupo existe en la BBDD
+    // Método para comprobar si un grupo existe en la BBDD
     public function checkGroupExist() {
         $strGroupName = strtoupper($this->strUGroupName);
         
@@ -321,7 +321,7 @@ class Users {
         return TRUE;
     }
 
-    // Función para comprobar si un grupo está en uso
+    // Método para comprobar si un grupo está en uso
     public function checkGroupInUse() {
         $strQuery = "SELECT count(intUserId) FROM users WHERE intUGroupFid = ".(int)$this->intUGroupId;
         $resQuery = $this->dbh->query($strQuery);
@@ -368,7 +368,7 @@ class Users {
         return TRUE;
     }   
     
-    // Función para comprobar la clave del usuario en MySQL
+    // Método para comprobar la clave del usuario en MySQL
     public function checkUserPass($strLogin, $strPassword) {
         $strQuery = "SELECT vacULogin, vacUPassword, blnDisabled FROM users 
                     WHERE vacULogin = '".$this->dbh->real_escape_string($strLogin)."' LIMIT 1";
@@ -393,7 +393,7 @@ class Users {
         return FALSE;
     }
 
-    // Función para comprobar si existe el usuario de LDAP en MySQL
+    // Método para comprobar si existe el usuario de LDAP en MySQL
     public function checkUserLDAP($strLogin) {
         $strLogin = $this->dbh->real_escape_string($strLogin);
 		
@@ -412,7 +412,7 @@ class Users {
         return TRUE;
     }
 
-    // Función para insertar usuarios de LDAP en MySQL
+    // Método para insertar usuarios de LDAP en MySQL
     public function newUserLDAP() {
         $strQuery = "INSERT INTO users (vacUName, intUGroupFid, vacULogin, vacUPassword, vacUEmail, txtUNotes, 
                     intUProfile, blnFromLdap) 
@@ -436,7 +436,7 @@ class Users {
         return $resQuery;
     }
 
-    // Función para actualizar los usuarios en MySQL
+    // Método para actualizar los usuarios en MySQL
     public function manageUser($strAction) {
         
         switch ($strAction){
@@ -449,7 +449,7 @@ class Users {
                             '".$this->dbh->real_escape_string($this->strNotes)."',
                             ".(int)$this->intGroupId.",
                             ".(int)$this->intProfile.",
-                            ".(int)$this->blnAdmin.",MD5('".$this->strPwd."'),0)";
+                            ".(int)$this->blnAdmin.",MD5('".$this->dbh->real_escape_string($this->strPwd)."'),0)";
                 break;
             case "update":
                 $strQuery = "UPDATE users SET vacUName = '".$this->dbh->real_escape_string($this->strName)."',
@@ -463,11 +463,11 @@ class Users {
                             datULastUpdate = NOW() WHERE intUserId = ".(int)$this->intUserId;
                 break;
             case "updatepass":
-                $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->strPwd."') 
+                $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->dbh->real_escape_string($this->strPwd)."') 
                             WHERE intUserId = ".(int)$this->intUserId;
                 break;
             case "updateldap":
-                $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->strPwd . "') 
+                $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->dbh->real_escape_string($this->strPwd). "') 
                             WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
                 break;
             case "delete":
@@ -487,7 +487,7 @@ class Users {
         return $resQuery;
     }
 
-    // Función para la gestión de grupos de usuarios
+    // Método para la gestión de grupos de usuarios
     public function manageGroup($strAction) {
                 
         switch ($strAction){
@@ -519,7 +519,7 @@ class Users {
         return $resQuery;
     }
     
-    // Función para actualizar la clave de usuarios de LDAP en MySQL
+    // Método para actualizar la clave de usuarios de LDAP en MySQL
     public function updateUserLDAP() {
         $strQuery = "UPDATE users SET vacUPassword = MD5('".$this->strPwd."'), 
                     datULastUpdate = NOW() WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
@@ -536,7 +536,7 @@ class Users {
         return $resQuery;
     }
 
-    // Función para establecer variables de sesión
+    // Método para establecer variables de sesión
     public function setUserSession() {
         $_SESSION['ulogin'] = $this->arrUserInfo['vacULogin'];
         $_SESSION['uprofile'] = $this->arrUserInfo['intUProfile'];
@@ -551,7 +551,7 @@ class Users {
         $this->serUserLastLogin();
     }
 
-    // Función para establecer el último inicio de sesión del usuario
+    // Método para establecer el último inicio de sesión del usuario
     private function serUserLastLogin() {
         $strQuery = "UPDATE users SET datULastLogin = NOW() WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
         $resQuery = $this->dbh->query($strQuery);
@@ -563,7 +563,7 @@ class Users {
         }
     }
 
-    // Función para autentificación con LDAP
+    // Método para autentificación con LDAP
     public function authUserLDAP($strUser, $strPass) {
         global $CFG_PMS, $LANG;
 
@@ -628,7 +628,7 @@ class Users {
         return $ldapAccess;
     }
 
-    // Función para comprobar si el usuario utiliza clave maestra atual
+    // Método para comprobar si el usuario tiene guardada la clave maestra actual (login)
     public function checkUserMPass($strUserRealPass) {
         $userMPass = $this->getUserMPass($strUserRealPass, TRUE);
         
@@ -652,8 +652,43 @@ class Users {
 
         return $checkUserMPass;
     }
+    
+    // Método para comprobar si el usuario tiene actualizada la clave maestra actual
+    public function checkUserUpdateMPass() {
+        $intUserId = $_SESSION["uid"];
+        
+        $strQuery = "SELECT vacValue FROM config WHERE vacParameter = 'lastupdatempass' ";
+        $resQuery = $this->dbh->query($strQuery);
+        
+        if ( ! $resQuery ) {
+            $strQueryEsc = $this->dbh->real_escape_string($strQuery);
+            Common::wrLogInfo(__FUNCTION__, $this->dbh->error.";SQL: ".$strQueryEsc);
+            return FALSE;
+        }
+        
+        $resResult = $resQuery->fetch_array(MYSQLI_NUM);
+        $appLastUpdateMPass = $resResult[0];
 
-    // Función para actualizar la clave maestra para un usuario
+        $strQuery = "SELECT datUserLastUpdateMPass FROM users WHERE intUserId = $intUserId ";
+        $resQuery = $this->dbh->query($strQuery);
+        
+        if ( ! $resQuery ) {
+            $strQueryEsc = $this->dbh->real_escape_string($strQuery);
+            Common::wrLogInfo(__FUNCTION__, $this->dbh->error.";SQL: ".$strQueryEsc);
+            return FALSE;
+        }
+        
+        $resResult = $resQuery->fetch_array(MYSQLI_NUM);
+        $userLastUpdateMPass = $resResult[0];
+        
+        if ( $appLastUpdateMPass > $userLastUpdateMPass ){
+            return FALSE;
+        }
+        
+        return TRUE;
+    }    
+
+    // Método para actualizar la clave maestra para un usuario
     public function updateUserMPass($masterPwd, $strUserRealPass) {
         $strQuery = "SELECT vacValue FROM config WHERE vacParameter = 'masterPwd' ";
         $resQuery = $this->dbh->query($strQuery);
@@ -676,7 +711,7 @@ class Users {
         } else { return FALSE; }
 
         $strQuery = "UPDATE users SET vacUserMPwd = '$strUserMPwd[0]', vacUserMIv = '$strUserMPwd[1]', 
-                    datUserLastUpdateMPass = NOW()  WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
+                    datUserLastUpdateMPass = UNIX_TIMESTAMP() WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -688,7 +723,7 @@ class Users {
         return TRUE;
     }
 
-    // Función para desencriptar la clave maestra para la sesión
+    // Método para desencriptar la clave maestra para la sesión
     public function getUserMPass($strUserRealPass, $showPass = FALSE) {
         $strQuery = "SELECT vacUserMPwd, vacUserMIv  FROM users 
                     WHERE intUserId = ".(int)$this->arrUserInfo['intUserId'];
@@ -722,7 +757,7 @@ class Users {
         return FALSE;
     }
     
-    // Función para comprobar los permisos de acceso del usuario
+    // Método para comprobar los permisos de acceso del usuario
     public static function checkUserAccess($strAction,$intUid = 0){
         $userProfileId = $_SESSION["uprofile"];
         $blnUIsAdmin = $_SESSION["uisadmin"];

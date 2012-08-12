@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `intUProfile` tinyint(4) NOT NULL,
   `datULastLogin` datetime NOT NULL,
   `datULastUpdate` datetime NOT NULL,
-  `datUserLastUpdateMPass` datetime DEFAULT NULL,
+  `datUserLastUpdateMPass` int(11) unsigned NOT NULL DEFAULT '0',
   `blnIsAdmin` tinyint(1) NOT NULL DEFAULT '0',
   `blnFromLdap` tinyint(1) NOT NULL DEFAULT '0',
   `blnDisabled` tinyint(1) NOT NULL,

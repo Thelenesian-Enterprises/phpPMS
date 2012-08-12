@@ -440,15 +440,21 @@ function mkConfigForm(){
 
     //echo '<TR><TD COLSPAN="2" CLASS="rowHeader">'.$LANG['config'][1].'</TD></TR>';
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][2].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="sitename" CLASS="txtLong" ID="sitename" VALUE="" /></TD>';
+    echo '<TD><INPUT TYPE="text" NAME="sitename" CLASS="txtLong" ID="sitename" VALUE="Passwords Management System" /></TD>';
     echo '</TR>';
 
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][3].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="siteshortname" VALUE="" /></TD>';
+    echo '<TD><INPUT TYPE="text" NAME="siteshortname" VALUE="PMS" /></TD>';
     echo '</TR>';
 
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="/phpPMS" /></TD>';
+    echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="/phppms" />';
+
+    if ( ! preg_match("/^\/phppms\//", $_SERVER["REQUEST_URI"]) ){
+        echo '<IMG SRC="'.PMS_ROOT.'/imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" TITLE="'.$LANG['install'][55].'" />';
+    }
+        
+    echo '</TD>';
     echo '</TR>';
 
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][37].'</TD>';
@@ -467,10 +473,6 @@ function mkConfigForm(){
     echo '<TD><INPUT TYPE="checkbox" NAME="logenabled" CLASS="checkbox" checked="checked" /></TD>';
     echo '</TR>';        
 
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][6].'</TD>';
-    echo '<TD><INPUT TYPE="checkbox" NAME="debug" CLASS="checkbox" /></TD>';
-    echo '</TR>';
-
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][7].'</TD>';
     echo '<TD><SELECT NAME="account_link" SIZE="1">';
     echo '<OPTION>TRUE</OPTION><OPTION>FALSE</OPTION>';
@@ -482,72 +484,17 @@ function mkConfigForm(){
     $arrAccountCount = array(1,2,3,5,10,15,20,25,30,50,"all");
 
     foreach ($arrAccountCount as $num ){
-        echo "<OPTION>$num</OPTION>";
+        if ( $num == 10 ){
+            echo "<OPTION SELECTED>$num</OPTION>";
+        } else {
+            echo "<OPTION>$num</OPTION>";
+        }
     }
     echo '</SELECT></TD></TR>';
 
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][39].'</TD>';
     echo '<TD><INPUT TYPE="checkbox" NAME="filesenabled" CLASS="checkbox" checked /></TD>';
     echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][38].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="allowed_exts" VALUE="PDF,JPG,GIF,PNG,ODT,ODS,DOC,DOCX,XLS,XSL,VSD,TXT,CSV,BAK" /></TD>';
-    echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][40].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="allowed_size" VALUE="1024" /></TD>';
-    echo '</TR>';    
-
-    //echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][9].'</TD></TR>';
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][10].'</TD>';
-    echo '<TD><INPUT TYPE="checkbox" NAME="wikienabled" CLASS="checkbox" /></TD>';
-    echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][11].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="wikisearchurl" CLASS="txtLong" VALUE="" /></TD>';
-    echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][12].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="wikipageurl" CLASS="txtLong" VALUE="" /></TD>';
-    echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][13].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="wikifilter" VALUE="" /></TD>';
-    echo '</TR>';
-
-    //echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][14].'</TD></TR>';
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][15].'</TD>';
-    echo '<TD><INPUT TYPE="checkbox" NAME="ldapenabled" CLASS="checkbox" /></TD>';
-    echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][16].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="ldapserver" VALUE="" /></TD>';
-    echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][17].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="ldapbase" CLASS="txtLong" VALUE="" /></TD>';
-    echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][18].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="ldapgroup" CLASS="txtLong" VALUE="" /></TD>';
-    echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][19].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="ldapuserattr" CLASS="txtLong" VALUE="" /></TD>';
-    echo '</TR>';
-
-    //echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][20].'</TD></TR>';
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][21].'</TD>';
-    echo '<TD><INPUT TYPE="checkbox" NAME="mailenabled" CLASS="checkbox" /></TD>';
-    echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][22].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="mailserver" VALUE="" /></TD>';
-    echo '</TR>';
-
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][23].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="mailfrom" VALUE="" /></TD>';
-    echo '</TR>'; 
 
     echo '</TABLE>';
     echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][28].'" />';

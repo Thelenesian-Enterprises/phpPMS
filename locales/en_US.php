@@ -79,6 +79,8 @@ $LANG['buttons'][46]="Delete filter";
 $LANG['buttons'][47]="Add attribute";
 $LANG['buttons'][48]="Delete attribute";
 $LANG['buttons'][49]="Help";
+$LANG['buttons'][50]="Generate random password";
+$LANG['buttons'][51]="Password strength level";
 
 $LANG['common'][0]="Updated";
 $LANG['common'][1]="Download new version";
@@ -173,6 +175,9 @@ $LANG['config'][37]="Language";
 $LANG['config'][38]="Allowed file extensions";
 $LANG['config'][39]="Files management";
 $LANG['config'][40]="Maximum file size";
+$LANG['config'][41]="If you set up wrongly this option, it's possible that you can't access to the application";
+$LANG['config'][42]="You should save the new password in a safe place.";
+$LANG['config'][43]="Last change";
 
 $LANG['backup'][0]="Result";
 $LANG['backup'][1]="Last backup";
@@ -314,6 +319,8 @@ $LANG['msg'][96]="File management is disabled";
 $LANG['msg'][97]="Maximum file size is 16MB";
 $LANG['msg'][98]="ERROR: Unable to do LDAP search";
 $LANG['msg'][99]="Application version differs from installed. You need to <A HREF=\"install/install.php\">update</A>";
+$LANG['msg'][100]="Master password updated<BR />You need to restart session to update it";
+
 
 $LANG['event'][0]="Session start (LDAP)";
 $LANG['event'][1]="Session start (MySQL)";
@@ -420,7 +427,7 @@ $LANG['install'][51]="Missing DB data connection<BR />Please, enter connection d
 $LANG['install'][52]="Invalid user/password for DB connection";
 $LANG['install'][53]="Invalid DB o user does not have permissions";
 $LANG['install'][54]="There were errors while updating DB";
-
+$LANG['install'][55]="You are not using default URL '/phppms'. Please, you should setup properly this option";
 
 $LANG['js'][0]="Query error";
 $LANG['js'][1]="There was an error";
@@ -437,20 +444,26 @@ $LANG['js'][11]="Duplicated value";
 $LANG['js'][12]="Option not selected";
 $LANG['js'][13]="Option added<BR \>You should save configuration in order to take effect";
 $LANG['js'][14]="Option deleted<BR \>You should save configuration in order to take effect";
+$LANG['js'][15]="Generated password:";
+$LANG['js'][16]="High level";
+$LANG['js'][17]="Average level";
+$LANG['js'][18]="Low level";
+$LANG['js'][19]="Higher level";
+$LANG['js'][20]="You should use at least 8 characters";
 
 $LANG["help"]["config"][0]="<H2>Site name</H2><P>Sets up long site name to put it on pages header.</P>";
 $LANG["help"]["config"][1]="<H2>Site short name</H2><P>Sets up short site name for titles where it's not possible to use the long one.</P><P>It's used for email sending also.</P>";
-$LANG["help"]["config"][2]="<H2>URL site root</H2><P>Sets up the URL that is site base.</P><P>Do not modify on doubt.</P>";
+$LANG["help"]["config"][2]="<H2>URL site root</H2><P>Sets up site base URL.<BR />This URL appears on the right side of server name in the location bar.</P><P>Do not modify on doubt.</P><P>Example: /phppms</P>";
 $LANG["help"]["config"][3]="<H2>Account name as link</H2><P>Enables account name as a link to account details in search page.</P>";
 $LANG["help"]["config"][4]="<H2>Results per page</H2><P>Number of results that are shown per page when doing a search.</P>";
 $LANG["help"]["config"][5]="<H2>Files management</H2><P>Enables upload/download accounts files.</P>";
 $LANG["help"]["config"][6]="<H2>Maximum file size</H2><P>Sets up the max upload file size.</P><P>The absolute maximum is 16MB.</P>";
 $LANG["help"]["config"][7]="<H2>Enable wiki links</H2><P>Enables the option to add an external Wiki link for accounts search results.</P>";
-$LANG["help"]["config"][8]="<H2>Wiki search URL</H2><P>URL that wiki uses to do a page search on it.</P><P>It uses customer name as parameter.</P>";
-$LANG["help"]["config"][9]="<H2>Wiki page URL</H2><P>URL that wiki uses to access to page details on it.</P><P>The account name is used as wiki search variable parameter.</P>";
-$LANG["help"]["config"][10]="<H2>Account name preffix</H2><P>Preffix to select what accounts have a wiki page link.</P>";
-$LANG["help"]["config"][11]="<H2>Enable LDAP</H2><P>Enables LDAP authentication.</P>";
-$LANG["help"]["config"][12]="<H2>Search base</H2><P>LDAP base to do users searches.</P>";
-$LANG["help"]["config"][13]="<H2>Hroup</H2><P>LDAP group that users must be members of to allow access.</P>";
-$LANG["help"]["config"][14]="<H2>User attributes</H2><P>User attributes that will be used to search and import LDAP users data.</P>";
+$LANG["help"]["config"][8]="<H2>Wiki search URL</H2><P>URL that wiki uses to do a page search on it.</P><P>It uses customer name as parameter.</P><P>Example: http://wiki.cygnux.org/search.php?phrase=</P>";
+$LANG["help"]["config"][9]="<H2>Wiki page URL</H2><P>URL that wiki uses to access to page details on it.</P><P>The account name is used as wiki search variable parameter.</P><P>Example: https://wiki.cygnux.org/show.php?name=</P>";
+$LANG["help"]["config"][10]="<H2>Account name preffix</H2><P>Preffix to select what accounts have a wiki page link.</P><P>Examples: serv- srv- vm-</P>";
+$LANG["help"]["config"][11]="<H2>Enable LDAP</H2><P>Enables LDAP authentication.</P><P>This method will failsafe to MySQL on failure</P>";
+$LANG["help"]["config"][12]="<H2>Search base</H2><P>LDAP base to do users searches.</P><P>Example: dc=cygnux,o=org</P>";
+$LANG["help"]["config"][13]="<H2>Group</H2><P>LDAP group that users must be members of to allow access.</P><P>Example: cn=GRP_PMSUSERS,ou=USERS</P>";
+$LANG["help"]["config"][14]="<H2>User attributes</H2><P>User attributes that will be used to search and import LDAP users data.</P><P>Examples: fullName, groupMembership, mail</P>";
 ?>

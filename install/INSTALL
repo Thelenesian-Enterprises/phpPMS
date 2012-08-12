@@ -41,6 +41,7 @@
     Instalación de paquetes en Debian GNU/Linux:
 
     # apt-get install apache2 php5-mcrypt php5-mysql php5-ldap php5-curl mysql-server
+    # /etc/init.d/apache2 restart
     
 2.1. ** Configuración de directorios y permisos **
 

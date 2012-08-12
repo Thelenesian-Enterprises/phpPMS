@@ -174,6 +174,7 @@
                     
                     $hashMPass = $objCrypt->mkHashPassword($strNewMasterPass);
                     $objConfig->arrConfigValue["masterPwd"] = $hashMPass;
+                    $objConfig->arrConfigValue["lastupdatempass"] = time();
                     
                     if ( $objConfig->writeConfig() ){
                         $resXML["status"] = 0;

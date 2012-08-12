@@ -31,6 +31,7 @@
 
     $objAccount = new Account;
     $objCommon = new Common;
+    $objUser = new Users;    
 
     $intAccId = $_POST["accountid"];
     $intDecode = $_POST["decode"];
@@ -51,6 +52,7 @@
     $objCommon->printBodyHeader();
     
     $objAccount->checkAccountAccess("chpass") || die ('<DIV CLASS="error"'.$LANG['msg'][91].'</DIV');
+    $objUser->checkUserUpdateMPass() || die ('<DIV CLASS="error">'.$LANG['msg'][100].'</DIV');
     
     echo '<DIV ID="container" ALIGN="center">';
     echo '<H2>'.$LANG['buttons'][10].'</H2>';
@@ -67,8 +69,12 @@
     echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][16].'</TD><TD>'.$objAccount->strAccCategoryName.'</TD></TR>';
     echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][19].'</TD><TD>'.$objAccount->strAccLogin.'</TD></TR>';
     echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][18].'</TD><TD><A HREF="'.$objAccount->strAccUrl.'" TARGET="_blank">'.$objAccount->strAccUrl.'</TD></TR>';
-    echo '<TR><TD width=25% CLASS="descCampo">'.$LANG['accounts'][20].'</TD><TD><INPUT TYPE="password" SIZE="100" NAME="password"></TD></TR>';
-    echo '<TR><TD width=25% CLASS="descCampo">'.$LANG['accounts'][22].'</TD><TD><INPUT TYPE="password" SIZE="100" NAME="password2"></TD></TR>';
+    echo '<TR><TD width=25% CLASS="descCampo">'.$LANG['accounts'][20].'</TD><TD><INPUT TYPE="password" SIZE="100" NAME="password" onKeyUp="checkPassLevel(this.value)">';
+    echo '<IMG SRC="imgs/genpass.png" TITLE="'.$LANG['buttons'][50].'" CLASS="inputImg" OnClick="password(11,true,true);" />';
+    echo '</TD></TR>';
+    echo '<TR><TD width=25% CLASS="descCampo">'.$LANG['accounts'][22].'</TD><TD><INPUT TYPE="password" SIZE="100" NAME="password2">';
+    echo '<SPAN ID="passLevel" TITLE="'.$LANG['buttons'][51].'" ></SPAN>';
+    echo '</TD></TR>';
     echo '</TABLE>';
     echo '<INPUT TYPE="hidden" NAME="savetyp" VALUE="4" />';
     echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$objAccount->intAccId.'" />';

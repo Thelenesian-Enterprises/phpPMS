@@ -26,7 +26,7 @@
  */
 
 define('PMS_ROOT', '..');
-define('PMS_VERSION', '0.954b');
+define('PMS_VERSION', '0.96b');
 
 include_once (PMS_ROOT."/inc/crypt.class.php");
 include_once (PMS_ROOT."/inc/config.class.php");
@@ -77,7 +77,7 @@ if ( ! $instLang ){
         $filePath = dirname(__FILE__)."/".PMS_ROOT."/inc";
         $fileName = $filePath."/db.class.php";
         
-        if ( ! preg_match("/^\/phpPMS\//", $_SERVER["REQUEST_URI"]) ){
+        if ( ! preg_match("/^\/phppms\//", $_SERVER["REQUEST_URI"]) ){
             printMsg($LANG['install'][19], 2);
         }
         

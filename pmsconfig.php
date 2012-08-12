@@ -44,7 +44,7 @@
     echo '<BODY>';
     
     Common::printBodyHeader(); 
-    Users::checkUserAccess("config") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
+    Users::checkUserAccess("config") || die ('<DIV CLASS="error">'.$LANG['msg'][34].'</DIV');
     
     echo '<DIV ID="container" ALIGN="center">';
     echo '<H2>'.$LANG['buttons'][11].'</H2>';
@@ -108,13 +108,21 @@
     
     echo '<TABLE CLASS="data tblConfig">';
     echo '<FORM METHOD="post" NAME="frmCrypt" ID="frmCrypt">';
+    
+    $lastUpdateMPass = $objConfig->getConfigValue("lastupdatempass");
+    
+    if ( $lastUpdateMPass > 0 ){
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][43].'</TD><TD>'.date("r",$lastUpdateMPass).'</TD></TR>';
+    }
+    
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][29].'</TD><TD><INPUT TYPE="password" NAME="curMasterPwd" SIZE="20" MAXLENGTH="255"></TD></TR>';
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][30].'</TD><TD><INPUT TYPE="password" NAME="newMasterPwd" SIZE="20" MAXLENGTH="255"></TD></TR>';
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][31].'</TD><TD><INPUT TYPE="password" NAME="newMasterPwdR" SIZE="20" MAXLENGTH="255"></TD></TR>';
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][32].'</TD><TD>';
-    echo '<INPUT TYPE="checkbox" CLASS="checkbox" NAME="confirmPassChange" value="1" />';
+    echo '<IMG SRC="imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" />'.$LANG['config'][42];
     echo '<BR /><IMG SRC="imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" />'.$LANG['config'][33];
     echo '<BR /><IMG SRC="imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" />'.$LANG['config'][34];
+    echo '<BR /><INPUT TYPE="checkbox" CLASS="checkbox" NAME="confirmPassChange" value="1" />';
     echo '</TD></TR>';
     echo '<INPUT TYPE="hidden" NAME="action" VALUE="crypt" />';
     echo '</FORM></TABLE>';

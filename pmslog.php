@@ -38,7 +38,7 @@
     echo '<BODY>';
     
     Common::printBodyHeader(); 
-    Users::checkUserAccess("logview") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
+    Users::checkUserAccess("logview") || die ('<DIV CLASS="error">'.$LANG['msg'][34].'</DIV');
     
     echo '<DIV ID="container" ALIGN="center">';
     echo '<H2>'.$LANG['buttons'][15].'</H2>';
@@ -51,7 +51,7 @@
     
     echo '<DIV ID="resEventLog">';
     echo '<TABLE CLASS="data">';
-    echo '<THEAD><TR CLASS="headerGrey"><TH>'.$LANG['eventlogs'][0].'</TH><TH>'.$LANG['eventlogs'][1].'</TH><TH>'.$LANG['eventlogs'][2].'</TH><TH>'.$LANG['eventlogs'][3].'</TH></TR></THEAD>';
+    echo '<THEAD><TR CLASS="headerGrey"><TH>'.$LANG['eventlogs'][0].'</TH><TH>'.$LANG['eventlogs'][1].'</TH><TH>'.$LANG['eventlogs'][2].'</TH><TH WIDTH="60%">'.$LANG['eventlogs'][3].'</TH></TR></THEAD>';
     echo '<TBODY ID="resSearch"></TBODY></TABLE></DIV>';
         
     echo '<SCRIPT> $("#resSearch").load(pms_root + "/ajax_eventlog.php");</SCRIPT>';

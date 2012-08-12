@@ -3,6 +3,26 @@ var lastlen = 0;
 var usr_inedit = 0;
 var grp_inedit = 0;
 
+var strPassword;
+var charPassword;
+var minPasswordLength = 8;
+var baseScore = 0, score = 0;
+
+var num = {};
+num.Excess = 0;
+num.Upper = 0;
+num.Numbers = 0;
+num.Symbols = 0;
+
+var bonus = {};
+bonus.Excess = 3;
+bonus.Upper = 4;
+bonus.Numbers = 5;
+bonus.Symbols = 5;
+bonus.Combo = 0; 
+bonus.FlatLower = 0;
+bonus.FlatNumber = 0;
+
 jQuery.extend(jQuery.fn.fancybox.defaults, {
     overlayShow : true,
     overlayOpacity : 0,
@@ -564,11 +584,12 @@ function userMgmt(action,id){
                     'content' : txt
                 });
             } else if ( status == 1 && action == "pass"){
+                $("#passLevel").hide();
                 $("#resFancyAccion").html('<span class="altTxtError">' + description + '</span>');
                 $("#resFancyAccion").show();
                 $.fancybox.resize();                
             } else if ( status == 3 ){
-                doLogout();               
+                doLogout();
             } else {
                 var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox({
@@ -728,10 +749,27 @@ function usrMgmtDisable(tbl){
 }
 
 // Función para mostrar el formulario para cambio de clave de usuario
-function usrUpdPass(id,usrlogin){
-    $.fancybox({
-        'href': 'pmsusers_pass.php?usrid='+id+'&usrlogin='+usrlogin,
-        'overlayOpacity' : 0.5
+function usrUpdPass(id,usrlogin){  
+    var datos = {'usrid': id, 'usrlogin': usrlogin};
+    
+    $.fancybox.showActivity();
+
+    $.ajax({
+        type : "GET",
+        cache : false,
+        url	: 'pmsusers_pass.php',
+        data : datos,
+        success: function(data) {
+            if ( data != 0 ){
+                $.fancybox({
+                    'content': data,
+                    'overlayOpacity' : 0.5,
+                    'onComplete' : function(){$('#usrpass').focus();}
+                });
+            } else {
+               doLogout();
+            }
+        }
     });
 }
 
@@ -806,4 +844,117 @@ function getHelp(type, id){
             $.fancybox(txt);
         }
     });     
+}
+
+// Función para generar claves aleatorias. 
+// By Uzbekjon from  http://jquery-howto.blogspot.com.es
+function password(length, special, fancy) {
+    var iteration = 0;
+    var password = "";
+    var randomNumber;
+    
+    $("#passLevel").show();
+    
+    if(special == undefined){
+        var special = false;
+    }
+    
+    while(iteration < length){
+        randomNumber = (Math.floor((Math.random() * 100)) % 94) + 33;
+        if( ! special ){
+            if ((randomNumber >=33) && (randomNumber <=47)) { continue; }
+            if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
+            if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
+            if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+        }
+        iteration++;
+        password += String.fromCharCode(randomNumber);
+    }
+
+    $('input:password').val(password);
+    
+    if ( fancy == true ){
+        var txt = '<div id="fancyView" class="backGrey"><span class="altTxtBlue">' + LANG[15] + "</span> " + password + '</div>';
+        $.fancybox(txt); 
+    } else {
+        alert ( LANG[15] + " " + password);
+    }
+   
+    checkPassLevel(password);
+    //return password;
+}
+
+// Funciónes para analizar al fortaleza de una clave
+// From http://net.tutsplus.com/tutorials/javascript-ajax/build-a-simple-password-strength-checker/
+function checkPassLevel(password){
+    strPassword= password;
+    charPassword = strPassword.split("");
+
+    num.Excess = 0;
+    num.Upper = 0;
+    num.Numbers = 0;
+    num.Symbols = 0;
+    bonus.Combo = 0; 
+    bonus.FlatLower = 0;
+    bonus.FlatNumber = 0;
+    baseScore = 0;
+    score =0;
+
+    if (charPassword.length >= minPasswordLength){
+        baseScore = 50;	
+        analyzeString();	
+        calcComplexity();		
+    } else {
+        baseScore = 0;
+    }
+
+    outputResult();
+}
+
+function analyzeString (){	
+    for (i=0; i<charPassword.length;i++){
+        if (charPassword[i].match(/[A-Z]/g)) {num.Upper++;}
+        if (charPassword[i].match(/[0-9]/g)) {num.Numbers++;}
+        if (charPassword[i].match(/(.*[!,@,#,$,%,^,&,*,?,_,~])/)) {num.Symbols++;} 
+    }
+
+    num.Excess = charPassword.length - minPasswordLength;
+
+    if (num.Upper && num.Numbers && num.Symbols){
+        bonus.Combo = 25; 
+    }
+
+    else if ((num.Upper && num.Numbers) || (num.Upper && num.Symbols) || (num.Numbers && num.Symbols)){
+        bonus.Combo = 15; 
+    }
+
+    if (strPassword.match(/^[\sa-z]+$/)){ 
+        bonus.FlatLower = -15;
+    }
+
+    if (strPassword.match(/^[\s0-9]+$/)){ 
+        bonus.FlatNumber = -35;
+    }
+}
+
+function calcComplexity(){
+    score = baseScore + (num.Excess*bonus.Excess) + (num.Upper*bonus.Upper) + (num.Numbers*bonus.Numbers) + (num.Symbols*bonus.Symbols) + bonus.Combo + bonus.FlatLower + bonus.FlatNumber;
+}	
+
+function outputResult(){
+    var complexity = $("#passLevel");
+
+    if ( charPassword.length == 0 ){
+        complexity.empty().removeClass("weak good strong strongest");
+    } else if (charPassword.length < minPasswordLength){
+        complexity.html(LANG[20]).removeClass("good strong strongest").addClass("weak");
+    } else if (score<50){
+        complexity.html(LANG[18]).removeClass("good strong strongest").addClass("weak");
+    } else if (score>=50 && score<75){
+        complexity.html(LANG[17]).removeClass("weak strong strongest").addClass("good");
+    } else if (score>=75 && score<100){
+        complexity.html(LANG[16]).removeClass("weak good strongest").addClass("strong");
+    } else if (score>=100){
+        complexity.html(LANG[19]).removeClass("weak good strong").addClass("strongest");
+    }
 }

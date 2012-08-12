@@ -306,6 +306,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #resAccion span{padding:5px;border: #A9A9A9 1px solid;}
 
 #resFancyAccion{display: none}
+#resCheck{float: left; width: 80%; padding-top: 10px; }
 
 #fancyView{
 	min-width: 250px;
@@ -319,6 +320,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #fancyView.msgError { background-color: #fee8e6; color: #CC0000; font-weight: bold; border: #fed2ce 1px solid;}
 #fancyView.msgOk { background-color: #ecfde4;; color: green; font-weight: bold; border: #dbfdcb 1px solid;}
 #fancyView.msgWarn { background-color: #FFF2D9; color: orange; font-weight: bold; border: #ffe5b3 1px solid;}
+#fancyView.msgInfo { background-color: #e9e9e9; color: orange; font-weight: bold; border: #ffe5b3 1px solid;}
 
 #fancyView.backGrey{background-color: #f2f2f2 !important;}
 /*#fancyView.backOrange{background-color: #FFF2D9 !important;}*/
@@ -353,7 +355,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 
 .fancyNone{ background-color: transparent !important; }
 .fancydata {border: none;text-align: left;}
-.fancydata .descCampo{width: 125px;}
+.fancydata .descCampo{width: 125px; font-weight: bold;}
 
 #footer{
 	float:left;
@@ -409,6 +411,12 @@ A:focus {text-decoration: none;	color: #FF0000;}
 }
 
 .hide{display: none !important;}
+
+#passLevel { margin-left: 10px; padding: 3px 15px;}
+#passLevel.strongest, #passLevel.strongest:hover { background-color: #ecfde4 !important; color: green; font-weight: bold; border: #dbfdcb 1px solid;}
+#passLevel.strong, #passLevel.strong:hover { background-color: #E6F2FF !important; color: #64b4f4; font-weight: bold; border: #64b4f4  1px solid;}
+#passLevel.good, #passLevel.good:hover { background-color: #FFF2D9 !important; color: orange; font-weight: bold; border: #ffe5b3 1px solid;}
+#passLevel.weak, #passLevel.weak:hover { background-color: #fee8e6 !important; color: #CC0000;  font-weight: bold; border: #fed2ce 1px solid;}
 
 /*Login Page*/
 #boxLogin{
