@@ -33,12 +33,11 @@ function check_session($isAjax = FALSE, $isLogin = FALSE){
     if ( $isLogin == TRUE ) return;
 
     if( ! isset($_SESSION["ulogin"]) ) {
-        //Common::wrLogInfo("Timeout sesión", "Nombre:".$_SESSION['uname'].";Perfil:".$_SESSION['uprofile'].";Grupo:".$_SESSION['ugroup'].";IP:".$_SERVER['REMOTE_ADDR']);
-
         session_destroy();
 
         if ( $isAjax == FALSE ) {
             header("Location: login.php");
+            die();
         } else {
             return 1;
         }
@@ -49,15 +48,17 @@ function check_session($isAjax = FALSE, $isLogin = FALSE){
     if ( $session_maxlife == 0 ) return;
     
     if( isset($_SESSION['timeout']) ){
+
         $session_life = time() - $_SESSION['timeout'];
 
         if( $session_life > $session_maxlife ){
             Common::wrLogInfo($LANG['event'][18], $LANG['eventdesc'][11].":".$_SESSION['uname'].";".$LANG['eventdesc'][12].":".$_SESSION['uprofile'].";".$LANG['eventdesc'][13].":".$_SESSION['ugroup'].";".$LANG['eventdesc'][11].":".$_SERVER['REMOTE_ADDR']);
 
-            session_destroy(); 
-
             if ( $isAjax ) return TRUE;
+            
+            session_destroy();
             header("Location: login.php?session=0");
+            die();
         }
     }
     

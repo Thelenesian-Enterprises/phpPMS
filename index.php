@@ -31,7 +31,8 @@
 
     $userGroupId = $_SESSION["ugroup"];
     $userProfileId = $_SESSION["uprofile"];
-    $userIsAdmin = $_SESSION["uisadmin"];
+    $userIsAdminApp = $_SESSION["uisadminapp"];
+    $strSearch = ( isset($_POST["search"]) ) ? $_POST["search"] : "";
 
     Common::printHeader(FALSE,TRUE);
     
@@ -51,7 +52,7 @@
     echo '<TR>';
     echo '<FORM METHOD="post" NAME="frmSearch" ID="frmSearch" OnSubmit="return Buscar(0);">';
     echo '<TD WIDTH="70%" ALIGN="left">';
-    echo '<LABEL FOR="txtSearch">'.$LANG["buttons"][16].'</LABEL><INPUT TYPE="text" NAME="search" ID="txtSearch" onKeyUp="Buscar(1)" VALUE="'.$_POST["search"].'"/>';
+    echo '<LABEL FOR="txtSearch">'.$LANG["buttons"][16].'</LABEL><INPUT TYPE="text" NAME="search" ID="txtSearch" onKeyUp="Buscar(1)" VALUE="'.$strSearch.'"/>';
     echo '<INPUT TYPE="hidden" NAME="page" VALUE="1">';
     echo '<INPUT TYPE="hidden" NAME="skey" />';
     echo '<INPUT TYPE="hidden" NAME="sorder" />';
@@ -60,16 +61,13 @@
     echo '</TD>';
     echo '<TD ALIGN="right" ROWSPAN="2">';
     
-    if ( ($userGroupId == 1 OR $userProfileId <= 2 OR $userIsAdmin == 1) AND $userGroupId != 99){
+    if ( ($userProfileId <= 2 OR $userIsAdminApp == 1) AND $userGroupId != 99){
         echo '<A HREF="account_add.php"><IMG SRC="imgs/add.png" title="'.$LANG['buttons'][7].'" class="inputImg" /></A>';
     }
     
-    if ( $userGroupId == 1 OR $userIsAdmin == 1 ){ 
+    if ( $userIsAdminApp == 1 ){ 
         echo '<A HREF="pmsconfig.php"><IMG SRC="imgs/config.png" title="'.$LANG['buttons'][11].'" class="inputImg" /></A>';
         echo '<A HREF="pmsbackup.php"><IMG SRC="imgs/backup.png" title="'.$LANG['buttons'][19].'" class="inputImg" /></A>';
-    }
-    
-    if ( $userIsAdmin == 1 ){ 
         echo '<A HREF="pmsusers.php"><IMG SRC="imgs/users.png" title="'.$LANG['buttons'][20].'" class="inputImg" /></A>';
         echo '<A HREF="pmslog.php"><IMG SRC="imgs/log.png" title="'.$LANG['buttons'][21].'" class="inputImg" /></A>';
     }
@@ -79,7 +77,7 @@
     echo '<LABEL FOR="selCLiente">'.$LANG["accounts"][0].'</LABEL><SELECT NAME="cliente" ID="selCLiente" SIZE="1" OnChange="Buscar(0)">';
     echo '<OPTION>'.$LANG["accounts"][1].'</OPTION>';
     
-    $strCliente = $_POST["cliente"];
+    $strCliente = ( isset($_POST["cliente"]) ) ? $_POST["cliente"] : "";
     $arrClientes = $clsAccount->getClientes();
 
     foreach ( $arrClientes as $cliente ){
@@ -94,7 +92,7 @@
     echo '<LABEL FOR="selCategoria">'.$LANG['accounts'][2].'</LABEL><SELECT NAME="categoria" ID="selCategoria" SIZE="1" OnChange="Buscar(0)">';
     echo '<OPTION>'.$LANG['accounts'][3].'</OPTION>';
     
-    $strCategoria = $_POST["categoria"];
+    $strCategoria = ( isset($_POST["categoria"]) ) ? $_POST["categoria"] : "";
 
     foreach ( $clsAccount->getCategorias() as $catName => $catId){
         if ( $strCategoria == $catId ){

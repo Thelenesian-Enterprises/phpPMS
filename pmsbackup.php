@@ -34,7 +34,7 @@
     $objCommon = new Common;
     
     $siteName = $CFG_PMS["siteshortname"];
-    $doBackup = $_POST["doBackup"];
+    $doBackup = ( isset($_POST["doBackup"]) ) ? $_POST["doBackup"] : "" ;
     
     $bakDirPMS = dirname(__FILE__);
     $bakFilePMS = $bakDirPMS.'/backup/'.$siteName.'.tgz';

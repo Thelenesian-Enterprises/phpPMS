@@ -30,15 +30,11 @@
     
     session_start();
     
-    if ( $_SESSION["uisadmin"] == 0 ){
+    if ( ! $_SESSION["uisadminapp"] ){
         return;
     }
     
-    if ( ! $_SESSION["pms_upd"] ){
-        $checkVersion = Config::checkUpdates();
-    } else {
-        $checkVersion = $_SESSION["pms_upd"];
-    }
+    $checkVersion = ( ! isset($_SESSION["pms_upd"]) ) ? Config::checkUpdates() : $checkVersion = $_SESSION["pms_upd"];
     
     session_write_close();
 

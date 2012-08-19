@@ -28,10 +28,6 @@
     define('PMS_ROOT', '.');
     include_once (PMS_ROOT."/inc/includes.php");
     check_session();
-
-    $intUGroupFId = $_SESSION["ugroup"];
-    $intProfileId = $_SESSION["uprofile"];
-    $blnUIsAdmin = $_SESSION["uisadmin"];
     
     Common::printHeader(FALSE,TRUE);
 

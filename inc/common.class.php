@@ -33,12 +33,12 @@ class Common {
     public static function wrLogInfo ($strAccion, $strDescripcion) {
         global $CFG_PMS, $LANG;
         
-        session_start();
+        if ( ! session_id() ) session_start();
         
         if ( $CFG_PMS["logenabled"] == 0 ) return FALSE;
         
-        $strLogin = ( $_SESSION["ulogin"] ) ? $_SESSION["ulogin"] : "-";
-        $intUserId = ( $_SESSION['uid'] ) ? $_SESSION['uid'] : 0;
+        $strLogin = ( isset($_SESSION["ulogin"]) ) ? $_SESSION["ulogin"] : "-";
+        $intUserId = ( isset($_SESSION['uid']) ) ? $_SESSION['uid'] : 0;
         $strAccion = utf8_encode($strAccion);
         $strDescripcion = utf8_encode(addslashes($strDescripcion));
         
@@ -91,11 +91,12 @@ class Common {
         
         $startTime = microtime();
         
-        $strAdmin = ( $_SESSION["uisadmin"] == 1 ) ? "(A)" : "";
+        $strAdminApp = ( $_SESSION["uisadminapp"] ) ? "(A+)" : "";
+        $strAdminAcc = ( $_SESSION["uisadminacc"] ) ? "(A)" : "";
         $strUserName = ( $_SESSION["uname"] ) ? $_SESSION["uname"] : $_SESSION["ulogin"];
         $strUserGroup = ( $_SESSION["ugroupn"] ) ? $_SESSION["ugroupn"] : $_SESSION["ugroup"];
         
-        $strUser = $strUserName." (".$strUserGroup.") $strAdmin";
+        $strUser = "$strUserName ($strUserGroup) ".$strAdminApp.$strAdminAcc;
         $chpass = ( $_SESSION['uisldap'] == 0 ) ? '<IMG SRC="imgs/key.png" CLASS="iconMini" TITLE="'.$LANG['buttons'][0].'" Onclick="usrUpdPass('.$_SESSION["uid"].',\''.$_SESSION["ulogin"].'\')" />' : '';
         
         echo '<NOSCRIPT><DIV ID="nojs">'.$LANG['common'][2].'</DIV></NOSCRIPT>';
@@ -127,7 +128,7 @@ class Common {
         
         echo '</DIV>';
         
-        if ( $CFG_PMS["debug"] && $_SESSION["uisadmin"] == 1 ){
+        if ( $CFG_PMS["debug"] && $_SESSION["uisadminapp"] ){
             $stopTime = microtime();
             
             echo '<DIV ID="debug"><PRE>';
@@ -188,6 +189,8 @@ class Common {
     // Método para imprimir los enlaces y el formulario de "volver"
     function printBackLinks($printBackForm = FALSE){
         global $LANG;
+        
+        $txtLinks = "";
         
         foreach ($this->arrBackLinks as $name => $value){
             $txtLinks .= '<INPUT TYPE="hidden" NAME="'.$name.'" VALUE="'.$value.'" />';

@@ -31,6 +31,7 @@ define('PMS_ROOT', '..');
 
 $jsLang = ( $_GET["lang"] ) ? $_GET["lang"] : "es_ES";
 $pmsRoot = $_GET["root"];
+$arrJsLang = "";
 
 include_once (PMS_ROOT."/locales/".$jsLang.".php");;
 

@@ -1,4 +1,4 @@
-<?
+<?php
 // Copyright (c) 2012 Rubén Domínguez
 //  
 // This file is part of phpPMS.

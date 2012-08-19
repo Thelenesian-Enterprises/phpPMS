@@ -1,4 +1,4 @@
-<?
+<?php
 // Copyright (c) 2012 Rubén Domínguez
 //  
 // This file is part of phpPMS.
@@ -175,7 +175,7 @@ class Files {
             } elseif ( strtoupper($fileExt) == "TXT" ){
                 echo '<div id="fancyView" class="backGrey"><pre>'.$fileData.'</pre></div>';
             } else{
-                echo '<div id="fancyView" class="fancyErr" ><span class="altTxtRed">'.$LANG['msg'][86].'</span></div>';
+                echo '<div id="fancyView" class="msgError" >'.$LANG['msg'][86].'</div>';
             }
         }
         

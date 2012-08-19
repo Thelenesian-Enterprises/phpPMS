@@ -34,8 +34,6 @@
     $objUser = new Users;    
 
     $intAccId = $_POST["accountid"];
-    $intDecode = $_POST["decode"];
-    $strMasterpass = $_POST["masterpass"];
 
     foreach ($_POST as $varPost => $varPostValue){
         if (array_key_exists($varPost, $objCommon->arrBackLinks)) {

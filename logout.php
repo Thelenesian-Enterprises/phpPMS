@@ -1,4 +1,4 @@
-<?
+<?php
 // Copyright (c) 2012 Rubén Domínguez
 //  
 // This file is part of phpPMS.
@@ -27,9 +27,11 @@
 
     define('PMS_ROOT', '.');
     include_once (PMS_ROOT . "/inc/includes.php");
-    check_session(TRUE,TRUE);
+    //check_session(TRUE,TRUE);
+    session_start();
     
     Common::wrLogInfo($LANG['event'][16], $LANG['eventdesc'][11].":".$_SESSION['uname'].";".$LANG['eventdesc'][12].":".$_SESSION['uprofile'].";".$LANG['eventdesc'][13].":".$_SESSION['ugroup'].";".$LANG['eventdesc'][14].":".$_SERVER['REMOTE_ADDR']);
+    
     session_destroy();
     
     echo '<div id="fancyView" class="msgWarn">'.$LANG['msg'][74].'</div>';

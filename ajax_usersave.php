@@ -80,7 +80,8 @@
         $objUser->strNotes = addslashes($post_usrnotes);
         $objUser->intGroupId = $post_usrgroup;
         $objUser->intProfile = $post_usrprofile;
-        $objUser->blnAdmin = ( $post_chkadmin == "true" ) ? 1 : 0 ;
+        $objUser->blnAdminApp = ( $post_chkadminapp == "true" ) ? 1 : 0 ;
+        $objUser->blnAdminAcc = ( $post_chkadminacc == "true" ) ? 1 : 0 ;
         $objUser->blnDisabled = ( $post_chkdisabled == "true" ) ? 1 : 0;
         
         switch ($objUser->checkUserExist()){

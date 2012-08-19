@@ -240,7 +240,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #container #tblUsers TD.checkbox{text-align: center;}
 #container #tblUsers TD.ilabel{width: 5%;text-align: right;padding: 0 5px 0 5px;font-weight: bold;color: #797979;}
 #container #tblGroups TD.ilabel{width: 10%;text-align: right;padding: 0 5px 0 5px;font-weight: bold;color: #797979;}
-#container #tblUsers TD.itext{width: 20%;}
+/*#container #tblUsers TD.itext{width: 20%;}*/
 #container #tblGroups TD.itext{width: 45%;padding-left:15px;}
 
 #container #tblUsers .usr_even>TD{padding-bottom: 15px;}
@@ -260,6 +260,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #container #tblUsers INPUT.icheck{width: 10px;}
 #container #tblUsers .txtdisabled{background-color: #dde5eb;}
 #container #tblUsers .inedit, #container #tblGroups .inedit{background-color:#E8FF99; }
+#container #tblUsers .inedit:focus, #container #tblGroups .inedit:focus{font-weight: normal !important; }
 #container #tblUsers SELECT{width: 120px;}
 #container #tblActions {border: 0;}
 #container #tblActions INPUT{border: 0;}

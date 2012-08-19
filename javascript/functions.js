@@ -19,7 +19,7 @@ bonus.Excess = 3;
 bonus.Upper = 4;
 bonus.Numbers = 5;
 bonus.Symbols = 5;
-bonus.Combo = 0; 
+bonus.Combo = 0;
 bonus.FlatLower = 0;
 bonus.FlatNumber = 0;
 
@@ -36,9 +36,9 @@ jQuery.extend(jQuery.fn.fancybox.defaults, {
 //});
 
 // Función para limpiar un formulario
-function Clear(id,search){
-    $("#"+id).resetForm();
-   
+function Clear(id, search){
+    $("#" + id).resetForm();
+    
     if ( search == 1 ){
         document.frmSearch.search.value = "";
         document.frmSearch.cliente.selectedIndex = 0;
@@ -307,30 +307,32 @@ function delAccount(id,action){
 
 // Función para guardar la configuración
 function configMgmt(action){
+    var datos, url, txt;
+    
     switch(action){
         case "addcat":
-            var datos = $("#frmAddCategory").serialize();
-            var url = pms_root + '/ajax_categorymgmt.php';
+            datos = $("#frmAddCategory").serialize();
+            url = pms_root + '/ajax_categorymgmt.php';
             break;
         case "editcat":
-            var datos = $("#frmEditCategory").serialize();
-            var url = pms_root + '/ajax_categorymgmt.php';
+            datos = $("#frmEditCategory").serialize();
+            url = pms_root + '/ajax_categorymgmt.php';
             break;
         case "delcat":
-            var datos = $("#frmDelCategory").serialize();
-            var url = pms_root + '/ajax_categorymgmt.php';
+            datos = $("#frmDelCategory").serialize();
+            url = pms_root + '/ajax_categorymgmt.php';
             break;
         case "saveconfig":
             $("#allowed_exts option").prop('selected',true);
             $("#wikifilter option").prop('selected',true);
             $("#ldapuserattr option").prop('selected',true);
             
-            var datos = $("#frmConfig").serialize();
-            var url = pms_root + '/ajax_configsave.php';
+            datos = $("#frmConfig").serialize();
+            url = pms_root + '/ajax_configsave.php';
             break;
         case "savempwd":
-            var datos = $("#frmCrypt").serialize();
-            var url = pms_root + '/ajax_configsave.php';
+            datos = $("#frmCrypt").serialize();
+            url = pms_root + '/ajax_configsave.php';
             break;
         default:
             return;
@@ -349,7 +351,7 @@ function configMgmt(action){
             var description = $(xml).find("description").text();
 
             if ( status == 0 ){
-                var txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
+                txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
                 $("#resAccion").empty();
                 $('#btnGuardar').attr('disabled', true);
                 $.fancybox({
@@ -357,14 +359,14 @@ function configMgmt(action){
                     'content' : txt
                 });
             } else {
-                var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
+                txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt);
                 $("#resAccion").empty();
                 $('#btnGuardar').removeAttr("disabled");						
             }
         },
         error:function(jqXHR, textStatus, errorThrown){
-            var txt = '<div id="fancyView" class="msgError">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></div>';
+            txt = '<div id="fancyView" class="msgError">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></div>';
             $.fancybox(txt);
         }
     });
@@ -533,12 +535,13 @@ function userMgmt(action,id){
             var usrlogin = $("#usrlogin_"+ id).val();
             var usrprofile = $("#usrprofile_"+ id).val();
             var usrgroup = $("#usrgroup_"+ id).val();
-            var chkadmin = $("#chkadmin_"+ id).is(':checked');
+            var chkadminapp = $("#chkadminapp_"+ id).is(':checked');
+            var chkadminacc = $("#chkadminacc_"+ id).is(':checked');
             var chkdisabled = $("#chkdisabled_"+ id).is(':checked');
             var usremail = $("#usremail_"+ id).val();
             var usrnotes = $("#usrnotes_"+ id).val();
             
-            var datos = {'savetyp':2,'usrid':id,'usrname':usrname,'usrlogin':usrlogin,'usrprofile':usrprofile,'usrgroup':usrgroup,'chkadmin':chkadmin,'chkdisabled':chkdisabled,'usremail':usremail,'usrnotes':usrnotes};
+            var datos = {'savetyp':2,'usrid':id,'usrname':usrname,'usrlogin':usrlogin,'usrprofile':usrprofile,'usrgroup':usrgroup,'chkadminapp':chkadminapp,'chkadminacc':chkadminacc,'chkdisabled':chkdisabled,'usremail':usremail,'usrnotes':usrnotes};
             
             $('input:text').prop('readonly',true)
             $('input:checkbox').prop('disabled',true)
@@ -716,22 +719,24 @@ function usrMgmtEnable(id,tbl){
     $(".usrrow_"+ id ).find(':text,:checkbox,select').addClass("inedit");
     
     var ldap = $("#usrldap_"+ id).val();
-
+    
+    // Reset de los campos del formulario
     $('input:text').prop('readonly',true);
     $('input:checkbox').prop('disabled',true);
     $('select').prop('disabled',true);
 
+    // Habilitar los campos del formulario
     $("#usrname_"+ id).prop('readonly',false);
     $("#usrnotes_"+ id).prop('readonly',false);
     $("#usrgroup_"+ id).prop('disabled',false);
     $("#usrprofile_"+ id).prop('disabled',false);
+    $("#chkadminapp_"+ id).prop('disabled',false);
+    $("#chkadminacc_"+ id).prop('disabled',false);
 
-    if ( ldap == 0 ){
-        $("#usrname_"+ id).prop('readonly',false);
+    if ( ldap == 0 || id == 0){
         $("#usrlogin_"+ id).prop('readonly',false);
         $("#usremail_"+ id).prop('readonly',false);
         $("#usrnotes_"+ id).prop('readonly',false);
-        $("#chkadmin_"+ id).prop('disabled',false);
         $("#chkdisabled_"+ id).prop('disabled',false);
         $("#usrgroup_"+ id).prop('disabled',false);
         $("#usrprofile_"+ id).prop('disabled',false);

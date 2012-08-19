@@ -245,7 +245,7 @@ class Config {
 
         if ( $adminCount[0] == 0 ){
             $strQuery = "INSERT INTO users (vacUName,vacULogin,intUGroupFid,intUProfile,blnIsAdmin,vacUPassword,blnFromLdap) 
-                        VALUES('PMS Admin','admin',1,0,1,MD5('admin'),0);";
+                        VALUES('PMS Admin','admin',1,0,1,MD5('admin'),0)";
             $resQuery = $this->dbh->query($strQuery);
 
             if ( $resQuery ){
@@ -299,6 +299,8 @@ class Config {
     // Método para realizar los backups
     public function doDbBackup($bakDirPMS){
         global $CFG_PMS, $LANG;
+        $arrOut = "";
+        $strError = "";
         
         $siteName = $CFG_PMS["siteshortname"];
         $bakDstDir = $bakDirPMS.'/backup';

@@ -1,4 +1,4 @@
-<?
+<?php
 // Copyright (c) 2012 Rubén Domínguez
 //  
 // This file is part of phpPMS.
@@ -37,7 +37,7 @@
         return FALSE;              
     }
 
-    if ( $_GET['id'] ){
+    if ( isset($_GET['id']) ){
         $accountId = $_GET['id'];
         $blnDelete = $_GET['del'];
 

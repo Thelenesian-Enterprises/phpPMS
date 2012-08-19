@@ -194,7 +194,7 @@ $LANG['users'][3]="Login";
 $LANG['users'][4]="Notes";
 $LANG['users'][5]="Profile";
 $LANG['users'][6]="Group";
-$LANG['users'][7]="Admin";
+$LANG['users'][7]="Application Admin";
 $LANG['users'][8]="Disabled";
 $LANG['users'][9]="Password";
 $LANG['users'][10]="Password (repeat)";
@@ -207,6 +207,7 @@ $LANG['users'][16]="Full username";
 $LANG['users'][17]="Session login";
 $LANG['users'][18]="Administrator";
 $LANG['users'][19]="Email address";
+$LANG['users'][20]="Accounts Admin";
 
 $LANG['groups'][0]="Name";
 $LANG['groups'][1]="Description";
@@ -320,6 +321,7 @@ $LANG['msg'][97]="Maximum file size is 16MB";
 $LANG['msg'][98]="ERROR: Unable to do LDAP search";
 $LANG['msg'][99]="Application version differs from installed. You need to <A HREF=\"install/install.php\">update</A>";
 $LANG['msg'][100]="Master password updated<BR />You need to restart session to update it";
+$LANG['msg'][101]="The passwords are the same";
 
 
 $LANG['event'][0]="Session start (LDAP)";
@@ -345,6 +347,7 @@ $LANG['event'][19]="DB Backup";
 $LANG['event'][20]="Incorrect login";
 $LANG['event'][21]="Modify configuration";
 $LANG['event'][22]="Password view";
+$LANG['event'][23]="Access check";
 
 $LANG['eventdesc'][0]="Error while getting user data on DB";
 $LANG['eventdesc'][1]="Error while updating user password on DB";
@@ -364,6 +367,7 @@ $LANG['eventdesc'][14]="IP";
 $LANG['eventdesc'][15]="activation pending.";
 $LANG['eventdesc'][16]="Name";
 $LANG['eventdesc'][17]="Account";
+$LANG['eventdesc'][18]="Access denied to";
 
 $LANG['mailevent'][0]="New account";
 $LANG['mailevent'][1]="Account modified";
@@ -396,7 +400,7 @@ $LANG['install'][20]="Please, before continue, you should do a database backup";
 $LANG['install'][21]="Environment configuration finished";
 $LANG['install'][22]="DB connection user already exist";
 $LANG['install'][23]="Click here for login";
-$LANG['install'][24]="Updating to versión ".PMS_VERSION." finished";
+$LANG['install'][24]="Updating finished";
 $LANG['install'][25]="phpPMS Installation";
 $LANG['install'][26]="Next";
 $LANG['install'][27]="Update";
@@ -428,6 +432,8 @@ $LANG['install'][52]="Invalid user/password for DB connection";
 $LANG['install'][53]="Invalid DB o user does not have permissions";
 $LANG['install'][54]="There were errors while updating DB";
 $LANG['install'][55]="You are not using default URL '/phppms'. Please, you should setup properly this option";
+$LANG['install'][56]="Install";
+$LANG['install'][57]="HTTPS protocol isn't being used to connect with the server. The data (users, passwords, etc), will be sent without any encryption";
 
 $LANG['js'][0]="Query error";
 $LANG['js'][1]="There was an error";

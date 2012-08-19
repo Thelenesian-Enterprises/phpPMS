@@ -28,8 +28,6 @@
     define('PMS_ROOT', '.');
     include_once (PMS_ROOT."/inc/includes.php");
 
-    $resXML = array( "status" => 0, "description" => "");
-    
     // Comprobamos si la sesión ha caducado
    if ( check_session(TRUE) ) return "0";
     

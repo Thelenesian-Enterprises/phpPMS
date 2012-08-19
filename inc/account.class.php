@@ -63,7 +63,7 @@ class Account {
         $this->dbh = $objConfig->connectDb();
     }
     
-    // Función para obtener los datos de una cuenta
+    // Método para obtener los datos de una cuenta
     public function getAccount ($intAccId) {
         $strQuery = "SELECT acc.intAccountId, acc.vacCliente, acc.vacName, acc.intCategoryFid, acc.intUserFId, 
                     acc.intUGroupFId, acc.intUEditFId, c.vacCategoryName, acc.vacLogin, acc.vacUrl, acc.vacPassword, 
@@ -109,7 +109,7 @@ class Account {
         $this->strAccUserEditName = $resResult["vacUEditName"];
     }
 
-    // Función para actualizar una cuenta
+    // Método para actualizar una cuenta
     public function updateAccount () {
         global $LANG;
         
@@ -142,7 +142,7 @@ class Account {
         return $resQuery;
     }
 
-    // Función para actualizar la clave de una cuenta
+    // Método para actualizar la clave de una cuenta
     public function updateAccountPass () {
         global $LANG;
         
@@ -174,7 +174,7 @@ class Account {
         return $resQuery;
     }
 
-    // Función para crear una cuenta
+    // Método para crear una cuenta
     public function createAccount () {
         global $LANG;
         
@@ -221,7 +221,7 @@ class Account {
         return $resQuery;
     }
 
-    // Función para eliminar una cuenta
+    // Método para eliminar una cuenta
     public function deleteAccount ($intAccId, $intUId) {
         global $LANG;
         
@@ -249,8 +249,12 @@ class Account {
         return $resQuery;
     }
     
-    // Función para actualizar los grupos secundarios de las cuentas
+    // Método para actualizar los grupos secundarios de las cuentas
     private function updateAccGroups(){
+        $valuesDel = "";
+        $valuesNew = "";
+        $strQueryDel = "";
+        $strQuery = "";
         
         $accOldUGroups = $this->getGroupsAccount($this->intAccId);
         $accNewUGroups = $this->strAccUserGroupsId;
@@ -325,7 +329,7 @@ class Account {
         return TRUE;
     }
 
-    // Función para guardar el estado anterior de una cuenta
+    // Método para guardar el estado anterior de una cuenta
     private function addHistorico ($intAccId, $blnEliminada) {
         $objAccountHist = new Account;
 
@@ -375,8 +379,10 @@ class Account {
         return $resQuery;
     }
 
-    // Función para obtener los grupos secundarios de la cuenta
+    // Método para obtener los grupos secundarios de la cuenta
     public function getGroupsAccount ($intAccId = "") {
+        $resResult = "";
+        
         if ( $intAccId ){
             $strQuery = "SELECT intUGroupId FROM acc_usergroups WHERE intAccId = ".(int)$intAccId;
         } else {
@@ -398,7 +404,7 @@ class Account {
         return $resResult;
     }
 
-    // Función para obtener los grupos secundarios
+    // Método para obtener los grupos secundarios
     public function getSecGroups () {
         $strQuery = "SELECT intUGroupId,vacUGroupName FROM usergroups";		
         $resQuery = $this->dbh->query($strQuery);
@@ -418,7 +424,7 @@ class Account {
         return $arrGroups;
     }
 
-    // Función para obtener los clientes
+    // Método para obtener los clientes
     public function getClientes () {
         $strQuery = "SELECT vacCliente FROM accounts GROUP BY vacCliente ORDER BY vacCliente";		
         $resQuery = $this->dbh->query($strQuery);
@@ -436,7 +442,7 @@ class Account {
         return $resResult;
     }	
 
-    // Función para modificar el contador de vistas de la cuenta
+    // Método para modificar el contador de vistas de la cuenta
     public function incrementViewCounter ($intAccId) {
         $strQuery = "SELECT intCountView FROM accounts WHERE intAccountId = ".(int)$intAccId." LIMIT 1";
         $resQuery = $this->dbh->query($strQuery);
@@ -464,7 +470,7 @@ class Account {
         return $resQuery;
     }
 
-    // Función para modificar el contador de vistas de clave de la cuenta
+    // Método para modificar el contador de vistas de clave de la cuenta
     public function incrementDecryptCounter ($intAccId) {
         $strQuery = "SELECT intCountDecrypt FROM accounts WHERE intAccountId = ".(int)$intAccId." LIMIT 1";
         $resQuery = $this->dbh->query($strQuery);
@@ -492,13 +498,14 @@ class Account {
         return $resQuery;
     }
 
-    // Función para obtener el número de cuentas a las que tiene acceso el usuario
+    // Método para obtener el número de cuentas a las que tiene acceso el usuario
     public function getAccountMax () {
         $intUGroupFId = $_SESSION["ugroup"];
         $intUId = $_SESSION["uid"];
-        $blnUIsAdmin = $_SESSION['uisadmin'];
+        $blnUIsAdminApp = $_SESSION['uisadminapp'];
+        $blnUIsAdminAcc = $_SESSION['uisadminacc'];
 
-        if ( ! $blnUIsAdmin ){
+        if ( ! $blnUIsAdminApp && ! $blnUIsAdminAcc ){
             $strQuery = "SELECT COUNT(DISTINCT intAccountId) FROM accounts acc
                         LEFT JOIN acc_usergroups aug ON acc.intAccountId=aug.intAccId 
                         WHERE acc.intUGroupFId = ".(int)$intUGroupFId." 
@@ -522,7 +529,7 @@ class Account {
         return $intAccountMax[0];
     }
 
-    // Función para resetear la clave MD5 de las cuentas
+    // Método para resetear la clave MD5 de las cuentas
     public function ResetAllAccountMd5Pass () {
         $strQuery = "UPDATE accounts SET vacMd5Password = '0'";
         $resQuery = $this->dbh->query($strQuery);
@@ -536,7 +543,7 @@ class Account {
         return $resQuery;
     }
 
-    // Función para modificar la clave MD5 de la cuenta
+    // Método para modificar la clave MD5 de la cuenta
     public function writeAccountMd5Pass ($strAccMd5Pwd, $intAccId) {
         $strQuery = "UPDATE accounts SET vacMd5Password = '$strAccMd5Pwd' WHERE intAccountId = ".(int)$intAccId;
         $resQuery = $this->dbh->query($strQuery);
@@ -550,7 +557,7 @@ class Account {
         return $resQuery;
     }
 
-    // Función para obtener las categorías disponibles
+    // Método para obtener las categorías disponibles
     public function getCategorias(){
         $strQuery = "SELECT intCategoryId, vacCategoryName FROM categories ORDER BY vacCategoryName";
         $resQuery = $this->dbh->query($strQuery);
@@ -571,12 +578,13 @@ class Account {
         return $resCategorias;
     }
  
-    // Función para comprobar los permisos de acceso a una cuenta
+    // Método para comprobar los permisos de acceso a una cuenta
     public function checkAccountAccess($strAction, $intAccUserId = "", $intAccId = "", $intAccUserGroupId = ""){
         $userGroupId = $_SESSION["ugroup"];
         $userProfileId = $_SESSION["uprofile"];
         $userId = $_SESSION["uid"];
-        $blnUIsAdmin = $_SESSION["uisadmin"];
+        $blnUIsAdminApp = $_SESSION["uisadminapp"];
+        $blnUIsAdminAcc = $_SESSION["uisadminacc"];
         
         // Convertimos en array la lista de grupos de la cuenta
         if ( $this->intAccId AND $intAccId == "" ){
@@ -594,27 +602,49 @@ class Account {
             
         switch ($strAction){
             case "view":
-                if ( ($userId == $intAccUserId OR $userGroupId = $intAccUserGroupId OR $blnUIsAdmin == 1 OR in_array($userGroupId, $arrAccUGroups)) AND $userProfileId <= 4 ){
+                if ( ($userId == $intAccUserId 
+                        || $userGroupId == $intAccUserGroupId 
+                        || $blnUIsAdminApp
+                        || $blnUIsAdminAcc 
+                        || in_array($userGroupId, $arrAccUGroups)) 
+                        && $userProfileId <= 4 ){
                     return TRUE;
                 }
                 break;
             case "viewpass":
-                if ( ($userId == $intAccUserId OR $userGroupId = $intAccUserGroupId OR $blnUIsAdmin == 1 OR in_array($userGroupId, $arrAccUGroups)) AND $userProfileId <= 3 ){
+                if ( ($userId == $intAccUserId 
+                        || $userGroupId == $intAccUserGroupId 
+                        || $blnUIsAdminApp 
+                        || $blnUIsAdminAcc 
+                        || in_array($userGroupId, $arrAccUGroups)) 
+                        && $userProfileId <= 3 ){
                     return TRUE;
                 }
                 break;         
             case "edit":
-                if ( ($userId == $intAccUserId OR $userGroupId = $intAccUserGroupId OR $blnUIsAdmin == 1 OR in_array($userGroupId, $arrAccUGroups)) AND $userProfileId <= 2 ){
+                if ( ($userId == $intAccUserId 
+                        || $userGroupId == $intAccUserGroupId 
+                        || $blnUIsAdminApp 
+                        || $blnUIsAdminAcc) 
+                        && $userProfileId <= 2 ){
                     return TRUE;
                 }
                 break;
             case "del":
-                if ( ($userId == $intAccUserId OR $userGroupId = $intAccUserGroupId OR $blnUIsAdmin == 1 OR in_array($userGroupId, $arrAccUGroups)) AND $userProfileId <= 1 ){
+                if ( ($userId == $intAccUserId 
+                        || $userGroupId == $intAccUserGroupId 
+                        || $blnUIsAdminApp 
+                        || $blnUIsAdminAcc) 
+                        && $userProfileId <= 1 ){
                     return TRUE;
                 }
                 break;
             case "chpass":
-                if ( ($userId == $intAccUserId OR $userGroupId = $intAccUserGroupId OR $blnUIsAdmin == 1) AND $userProfileId <= 2 ){
+                if ( ($userId == $intAccUserId 
+                        || $userGroupId == $intAccUserGroupId 
+                        || $blnUIsAdminApp 
+                        || $blnUIsAdminAcc ) 
+                        && $userProfileId <= 2 ){
                     return TRUE;
                 }
                 break;
@@ -624,6 +654,7 @@ class Account {
 
     function updateAllAccountsMPass($strCurMasterPass, $strNewMasterPwd){
         global $LANG;
+        $accOkIds = "";
         
         Common::wrLogInfo($LANG['event'][17],$LANG['eventdesc'][6]);
          

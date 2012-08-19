@@ -25,8 +25,6 @@
  * 
  */
 
-define('PMS_ROOT', '..');
-
 // Función para imprimir los mensajes
 function printMsg($msg,$status = 0){
     global $LANG;
@@ -61,7 +59,7 @@ function createDbFile() {
 //        return TRUE;
 //    }
     
-    if ( ! $dbhost OR ! $dbuser OR ! $dbpass OR ! $dbname ){
+    if ( ! $dbhost || ! $dbuser || ! $dbpass || ! $dbname ){
         printMsg($LANG['install'][8], 1);
         return FALSE;
     }
@@ -96,7 +94,7 @@ function checkDBFile(){
 }
 
 // Función para comprobar la conexión a la BBDD
-function checkDB($useDB = FALSE, $useFile = TRUE){
+function checkDB($useDB = FALSE, $useFile = TRUE, $silent = FALSE){
     global $LANG;
     
     if ( $useFile ){
@@ -138,7 +136,9 @@ function checkDB($useDB = FALSE, $useFile = TRUE){
         unset($mysqli);
         return FALSE;
     } else{
-        printMsg($LANG['install'][13]." $dbUser@$dbHost -> $dbName");
+        if ( ! $silent ){
+            printMsg($LANG['install'][13]." $dbUser@$dbHost -> $dbName");
+        }
         unset($mysqli);
         return TRUE;
     }
@@ -200,7 +200,10 @@ function updateDB(){
                 $mysqli->query($buffer);
                 
                 if ( $mysqli->errno > 0 ){
-                    if ( $mysqli->errno == 1050 OR $mysqli->errno == 1060 OR $mysqli->errno == 1061 OR $mysqli->errno == 1062 ){
+                    if ( $mysqli->errno == 1050 
+                            || $mysqli->errno == 1060 
+                            || $mysqli->errno == 1061 
+                            || $mysqli->errno == 1062 ){
                         continue;
                     } else {
                         $nError++;
@@ -393,7 +396,7 @@ function checkModules(){
 // Función para crear el formulario de datos de la BBDD
 function mkDbForm(){
     global $LANG, $instLang;
-
+    
     echo '<TABLE CLASS="tblConfig">';
     echo '<FORM METHOD="post" NAME="frmDbConfig" ID="frmConfig" ACTION="install.php" />';
 
@@ -409,21 +412,34 @@ function mkDbForm(){
     echo '<TD><INPUT TYPE="password" NAME="dbadminpass" VALUE="" /></TD>';
     echo '</TR>';
 
+    if ( checkDBFile() ){
+        if ( checkDB(FALSE, TRUE, TRUE)){
+            $objConfig = new Config;
+            $isInstalled = $objConfig->getConfigValue("install");
+            unset($objConfig);
+        }
+    }
+    
+    
     echo '<TR><TD CLASS="descCampo">'.$LANG['install'][32].'</TD>';
     echo '<TD><INPUT TYPE="text" NAME="dbname" VALUE="phppms" /></TD>';
-    echo '</TR>';    
+    echo '</TR>';
     
-    echo '<TR><TD CLASS="descCampo">'.$LANG['install'][33].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="dbuser" VALUE="phppms" /></TD>';
-    echo '</TR>';
+    if ( ! isset($isInstalled) ){
+        echo '<TR><TD CLASS="descCampo">'.$LANG['install'][33].'</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="dbuser" VALUE="phppms" /></TD>';
+        echo '</TR>';
 
-    echo '<TR><TD CLASS="descCampo">'.$LANG['install'][34].'</TD>';
-    echo '<TD><INPUT TYPE="password" NAME="dbpass" VALUE="" /></TD>';
-    echo '</TR>';
-   
+        echo '<TR><TD CLASS="descCampo">'.$LANG['install'][34].'</TD>';
+        echo '<TD><INPUT TYPE="password" NAME="dbpass" VALUE="" /></TD>';
+        echo '</TR>';
+    }
+    
     echo '</TABLE>';
     echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][27].'" />';
-    echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][26].'" />';
+    
+    if ( ! isset($isInstalled) ) echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][56].'" />';
+    
     echo '<INPUT TYPE="hidden" NAME="instLang" VALUE="'.$instLang.'" />';
     echo '<INPUT TYPE="hidden" NAME="step" VALUE="3" />';
     echo '</FORM>';      
@@ -511,5 +527,114 @@ function printBack($step){
     echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][47].'" />';
     echo '<INPUT TYPE="hidden" NAME="instLang" VALUE="'.$instLang.'" />';
     echo '<INPUT TYPE="hidden" NAME="step" VALUE="'.$step.'" /></FORM>';
+}
+
+function installProcess($step,$instLang,$submit){
+    global $LANG;
+    
+    if ( $step == 1){ // Comprobaciones iniciales
+        echo '<TABLE ID="tblInstall">';
+        if ( checkPhpVersion() && checkModules() ){
+            $filePath = dirname(__FILE__)."/".PMS_ROOT."/inc";
+            $fileName = $filePath."/db.class.php";
+
+            if ( ! isset($_SERVER['HTTPS']) ){
+                printMsg($LANG['install'][57], 2);
+            }
+            
+            if ( ! preg_match("/^\/phppms\//", $_SERVER["REQUEST_URI"]) ){
+                printMsg($LANG['install'][19], 2);
+            }
+
+            if ( ! is_writable($filePath) ){
+                printMsg($LANG['install'][9]." ('$filePath')", 2);
+            }
+
+            if (checkDBFile() ){
+                printMsg($LANG['install'][7], 2);
+            }
+
+            printMsg($LANG['install'][20],2);
+
+            echo '</TABLE>';
+            echo '<FORM METHOD="post" NAME="frmConfig" ID="frmConfig" ACTION="install.php" />';
+            echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][26].'" />';
+            echo '<INPUT TYPE="hidden" NAME="instLang" VALUE="'.$instLang.'" />';
+            echo '<INPUT TYPE="hidden" NAME="step" VALUE="2" /></FORM>';
+        }
+    } elseif ( $step == 2){ // Introducir datos de conexión a la BBDD
+        mkDbForm();
+    } elseif ( $step == 3){ // Actualiza/Instala
+        $isOk = FALSE;
+
+        echo '<TABLE ID="tblInstall">';
+
+        if ( $submit == $LANG["install"][27] ){
+            if ( ! checkDBFile() 
+                    && ( ! $_POST["dbhost"] 
+                    || ! $_POST["dbuser"] 
+                    || ! $_POST["dbpass"] 
+                    || ! $_POST["dbname"] ) ){
+                printMsg($LANG["install"][51],1);
+            } else {
+                if ( ! checkDBFile() ) {
+                    if ( checkDB(TRUE, FALSE) ) {
+                        createDbFile();
+                    }
+                }
+
+                if ( checkDBFile() && checkDB() && updateDB() ){
+                    printMsg($LANG["install"][38],2);
+                    updateVersion();
+                    printMsg($LANG["install"][24]." (v".PMS_VERSION.")");
+                    echo '</TABLE>';
+                    echo '<DIV ID="access"><A CLASS="round" HREF="'.PMS_ROOT.'/login.php">'.$LANG['install'][23].'</A></DIV>';
+                    $isOk = TRUE;
+                }
+            }
+        } elseif ( $submit == $LANG["install"][56] ){
+            if ( ! checkDBFile() ) {
+                if ( createDbFile() ){
+                    if ( createDB() ){
+                        echo '</TABLE>';
+                        echo '<FORM METHOD="post" NAME="frmConfig" ID="frmConfig" ACTION="install.php" />';
+                        echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG["install"][26].'" />';
+                        echo '<INPUT TYPE="hidden" NAME="instLang" VALUE="'.$instLang.'" />';
+                        echo '<INPUT TYPE="hidden" NAME="step" CLASS="button round" VALUE="4" /></FORM>';
+                        $isOk = TRUE;
+                    }
+                }
+            } else {
+                printMsg($LANG['install'][0], 1);
+            }
+        }
+
+        if ( ! $isOk ){
+            echo '</TABLE>';
+            printBack(2);
+        }        
+    } elseif ( $step == 4){ // Muestra opciones de configuración en caso de instalar
+        mkConfigForm();
+    } elseif ( $step == 5 ){ // Guardar opciones de configuración y fin
+        echo '<TABLE ID="tblInstall">';
+
+        if ( checkDB() ) {
+            if ( file_exists("config.ini") || file_exists(PMS_ROOT."/config.ini") ){
+                printMsg($LANG['install'][22], 2);
+            }
+
+            $objConfig = new Config;
+
+            if ( $objConfig->mkInitialConfig($_POST) ){
+                printMsg($LANG['install'][21]);
+                echo '</TABLE>';
+                echo '<DIV ID="access"><A CLASS="round" HREF="'.PMS_ROOT.'/login.php">'.$LANG['install'][23].'</A></DIV>';
+            } else {
+                printMsg($LANG['install'][39], 1);
+                echo '</TABLE>';
+                printBack(4);
+            }
+        }        
+    }
 }
 ?>

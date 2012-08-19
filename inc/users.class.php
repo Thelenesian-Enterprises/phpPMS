@@ -38,7 +38,8 @@ class Users {
     var $strNotes;
     var $intCount;
     var $intProfile;
-    var $blnAdmin;
+    var $blnAdminApp;
+    var $blnAdminAcc;
     var $blnDisabled;
     
     var $arrUserInfo;
@@ -57,7 +58,7 @@ class Users {
     // Método para obtener los datos del usuario en MySQL
     public function getUserInfo($strLogin) {
         $strQuery = "SELECT intUserId, vacUName, intUGroupFid, vacULogin, vacUEmail, txtUNotes, 
-                    intUCount, intUProfile, vacUGroupName, blnIsAdmin, blnFromLdap, blnDisabled 
+                    intUCount, intUProfile, vacUGroupName, blnIsAdminApp, blnIsAdminAcc, blnFromLdap, blnDisabled 
                     FROM users LEFT JOIN usergroups ON users.intUGroupFid=usergroups.intUGroupId 
                     WHERE vacULogin = '".$this->dbh->real_escape_string($strLogin)."' LIMIT 1";
         $resQuery = $this->dbh->query($strQuery);
@@ -76,9 +77,10 @@ class Users {
     // Método para mostrar la tabla de gestión de usuarios
     public function getUsersTable(){
         global $LANG;
+        $rowclass = "";
         
         $strQuery = "SELECT intUserId, vacUName, intUGroupFid, vacULogin, vacUEmail, txtUNotes, intUProfile, 
-                    blnIsAdmin, blnFromLdap, blnDisabled FROM users ORDER BY vacUName";
+                    blnIsAdminApp, blnIsAdminAcc, blnFromLdap, blnDisabled FROM users ORDER BY vacUName";
         $resQuery = $this->dbh->query($strQuery);
         
         if ( ! $resQuery ) {
@@ -113,7 +115,8 @@ class Users {
             $useremail = $user["vacUEmail"];
             $usernotes = $user["txtUNotes"];
                    
-            $chkadmin = ( $user["blnIsAdmin"] ) ? 'checked="checked"' : '';
+            $chkadminapp = ( $user["blnIsAdminApp"] ) ? 'checked="checked"' : '';
+            $chkadminacc = ( $user["blnIsAdminAcc"] ) ? 'checked="checked"' : '';
             $chkdisabled = ( $user["blnDisabled"] ) ? 'checked="checked"' : '';
             
             if ( $user["blnFromLdap"] ){
@@ -130,7 +133,7 @@ class Users {
             $lnkDel = '<TD><INPUT TYPE="image" SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][31].'" CLASS="inputImg" Onclick="return userMgmt(\'del\','.$intUsrId.');" /></TD>';
             $lnkSave = '<TD><INPUT TYPE="image" SRC="imgs/check.png" TITLE="'.$LANG['buttons'][30].'" CLASS="inputImg" Onclick="return userMgmt(\'save\','.$intUsrId.');" /></TD>';
 
-            $rowclass = ( $rowclass == "row_odd" ) ? "row_even": "row_odd";
+            $rowclass = ( $rowclass == "row_odd" ) ? "row_even" : "row_odd";
 
             echo '<TR CLASS="usr_odd usrrow_'.$intUsrId.' '.$rowclass.'">';
             echo '<TD CLASS="ilabel">'.$LANG['users'][1].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usrname_'.$intUsrId.'" NAME="usrname_'.$intUsrId.'" TITLE="'.$username.'" VALUE="'.$username.'" CLASS="txtuser '.$clsdisabled.'" readonly /></LABEL></TD>';
@@ -141,9 +144,11 @@ class Users {
                 echo '<OPTION VALUE="'.$profileid.'" '.$profileselected.'>'.$profiledesc.'</OPTION>';
             }
             echo '</SELECT></TD>';
-            echo '<TD CLASS="ilabel">'.$LANG['users'][7].'</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkadmin_'.$intUsrId.'" NAME="chkadmin_'.$intUsrId.'" CLASS="icheck" '.$chkadmin.' disabled /></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][7].'</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkadminapp_'.$intUsrId.'" NAME="chkadminapp_'.$intUsrId.'" CLASS="icheck" '.$chkadminapp.' disabled /></TD>';
+            echo '<TD CLASS="ilabel"></TD><TD CLASS="checkbox"></TD>';
             echo '<TD ROWSPAN="2"><TABLE ID="tblActions"><TR>'.$lnkEdit.$lnkSave.$lnkDel.$lnkPass.'</TR></TABLE></TD>';
-            echo '</TR><TR CLASS="usr_even usrrow_'.$intUsrId.' '.$rowclass.'">';
+            echo '</TR>';
+            echo '<TR CLASS="usr_even usrrow_'.$intUsrId.' '.$rowclass.'">';
             echo '<TD CLASS="ilabel">'.$LANG['users'][2].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usremail_'.$intUsrId.'" NAME="usremail_'.$intUsrId.'" TITLE="'.$useremail.'" VALUE="'.$useremail.'" CLASS="txtemail '.$clsdisabled.'" readonly/></LABEL></TD>';
             echo '<TD CLASS="ilabel">'.$LANG['users'][4].'</TD><TD CLASS="itext"><INPUT TYPE="text" id="usrnotes_'.$intUsrId.'" NAME="usrnotes_'.$intUsrId.'" TITLE="'.$usernotes.'" VALUE="'.$usernotes.'" CLASS="txtnotes '.$clsdisabled.'" readonly /></TD>';
             echo '<TD CLASS="ilabel">'.$LANG['users'][6].'</TD><TD CLASS="itext"><SELECT ID="usrgroup_'.$intUsrId.'" NAME="usrgroup_'.$intUsrId.'" CLASS="'.$clsdisabled.'" disabled>';
@@ -152,6 +157,7 @@ class Users {
                 echo '<OPTION VALUE="'.$groupid.'" '.$grpselected.'>'.$groupname.'</OPTION>';
             }
             echo '</SELECT></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][20].'</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkadminacc_'.$intUsrId.'" NAME="chkadminacc_'.$intUsrId.'" CLASS="icheck" '.$chkadminacc.' disabled /></TD>';
             echo '<TD CLASS="ilabel">'.$LANG['users'][8].'</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkdisabled_'.$intUsrId.'" NAME="chkdisabled_'.$intUsrId.'" CLASS="icheck" '.$chkdisabled.' disabled /></TD>';
             echo '</TR>';
             
@@ -166,7 +172,7 @@ class Users {
 
     // Método para mostrar la tabla de nuevo usuario
     public function getNewUserTable(){
-        global $LANG;
+        global $LANG;        
 
         $objAccount = new Account;
         $usersgroups = $objAccount->getSecGroups();
@@ -206,6 +212,8 @@ class Users {
     // Método para mostrar la tabla de gestión de grupos
     public function getGroupsTable(){
         global $LANG;
+        $rowclass = "";
+        $clsdisabled = "";
         
         $strQuery = "SELECT intUGroupId, vacUGroupName, vacUGroupDesc FROM usergroups ORDER BY vacUGroupName";
         $resQuery = $this->dbh->query($strQuery);
@@ -239,7 +247,7 @@ class Users {
             echo '<TR CLASS="grprow_'.$intGrpId.' '.$rowclass.'">';
             echo '<TD CLASS="itext"><INPUT TYPE="text" ID="grpname_'.$intGrpId.'" NAME="grpname_'.$intGrpId.'" TITLE="'.$groupname.'" VALUE="'.$groupname.'" CLASS="txtgroup '.$clsdisabled.'" readonly /></LABEL></TD>';
             echo '<TD CLASS="itext"><INPUT TYPE="text" ID="grpdesc_'.$intGrpId.'" NAME="grpdesc_'.$intGrpId.'" TITLE="'.$groupdesc.'" VALUE="'.$groupdesc.'" CLASS="txtdesc '.$clsdisabled.'" readonly /></TD>';
-            echo '<TD><TABLE ID="tblActions"><TR>'.$lnkEdit.$lnkSave.$lnkDel.$lnkPass.'</TR></TABLE></TD>';
+            echo '<TD><TABLE ID="tblActions"><TR>'.$lnkEdit.$lnkSave.$lnkDel.'</TR></TABLE></TD>';
             echo '</TR>';
             echo '<INPUT TYPE="hidden" ID="grpid_'.$intGrpId.'" NAME="grpid_'.$intGrpId.'" VALUE="'.$intGrpId.'" />';
             
@@ -442,14 +450,16 @@ class Users {
         switch ($strAction){
             case "add":
                 $strQuery = "INSERT INTO users (vacUName, vacULogin, vacUEmail, txtUNotes, intUGroupFid, 
-                            intUProfile, blnIsAdmin, vacUPassword, blnFromLdap) 
+                            intUProfile, blnIsAdminApp, blnIsAdminAcc, vacUPassword, blnFromLdap) 
                             VALUES ('".$this->dbh->real_escape_string($this->strName)."',
                             '".$this->dbh->real_escape_string($this->strLogin)."',
                             '".$this->dbh->real_escape_string($this->strEmail)."',
                             '".$this->dbh->real_escape_string($this->strNotes)."',
                             ".(int)$this->intGroupId.",
                             ".(int)$this->intProfile.",
-                            ".(int)$this->blnAdmin.",MD5('".$this->dbh->real_escape_string($this->strPwd)."'),0)";
+                            ".(int)$this->blnAdminApp.",
+                            ".(int)$this->blnAdminAcc.",
+                            MD5('".$this->dbh->real_escape_string($this->strPwd)."'),0)";
                 break;
             case "update":
                 $strQuery = "UPDATE users SET vacUName = '".$this->dbh->real_escape_string($this->strName)."',
@@ -458,7 +468,8 @@ class Users {
                             txtUNotes = '".$this->dbh->real_escape_string($this->strNotes)."',
                             intUGroupFid = ".(int)$this->intGroupId.",
                             intUProfile = ".(int)$this->intProfile.",
-                            blnIsAdmin = ".(int)$this->blnAdmin.", 
+                            blnIsAdminApp = ".(int)$this->blnAdminApp.", 
+                            blnIsAdminAcc = ".(int)$this->blnAdminAcc.", 
                             blnDisabled = ".(int)$this->blnDisabled.",
                             datULastUpdate = NOW() WHERE intUserId = ".(int)$this->intUserId;
                 break;
@@ -545,7 +556,8 @@ class Users {
         $_SESSION['ugroupn'] = $this->arrUserInfo['vacUGroupName'];
         $_SESSION['uid'] = $this->arrUserInfo['intUserId'];
         $_SESSION['uemail'] = $this->arrUserInfo['vacUEmail'];
-        $_SESSION['uisadmin'] = $this->arrUserInfo['blnIsAdmin'];
+        $_SESSION['uisadminapp'] = $this->arrUserInfo['blnIsAdminApp'];
+        $_SESSION['uisadminacc'] = $this->arrUserInfo['blnIsAdminAcc'];
         $_SESSION['uisldap'] = $this->arrUserInfo['blnFromLdap'];
 
         $this->serUserLastLogin();
@@ -758,21 +770,23 @@ class Users {
     }
     
     // Método para comprobar los permisos de acceso del usuario
-    public static function checkUserAccess($strAction,$intUid = 0){
+    public static function checkUserAccess($strAction, $intUid = 0){
+        global $LANG;
+        
         $userProfileId = $_SESSION["uprofile"];
-        $blnUIsAdmin = $_SESSION["uisadmin"];
+        $blnUIsAdminApp = $_SESSION["uisadminapp"];
         
         switch ($strAction){
             case ( $strAction == "backup" || $strAction == "users" || $strAction == "config" || $strAction == "logview"):
-                if ( $blnUIsAdmin == 1 AND $userProfileId <= 1 ) return TRUE;
+                if ( $blnUIsAdminApp && $userProfileId <= 1 ) return TRUE;
                 break;
             case ( $strAction == "chpass" ):
-                if ( ($blnUIsAdmin == 1 AND $userProfileId <= 1) OR $_SESSION["uid"] == $intUid ) return TRUE;
+                if ( ($blnUIsAdminApp && $userProfileId <= 1) || $_SESSION["uid"] == $intUid ) return TRUE;
                 break;                
-            default :
-                Common::wrLogInfo("Check Acceso", "Denegado acceso a '".$strAction."'");
-                return FALSE;
         }
+        
+        Common::wrLogInfo($LANG['event'][23], $LANG['eventdesc'][18]." '".$strAction."'");
+        return FALSE;
     }    
 }
 ?>

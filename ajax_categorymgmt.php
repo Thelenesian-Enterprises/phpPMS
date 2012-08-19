@@ -38,10 +38,10 @@
 
     Users::checkUserAccess("config") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
     
-    $intCategoryFunction = $_POST["categoryFunction"];
-    $strCategoryName = $_POST["categoryName"];
-    $strCategoryNameNew = $_POST["categoryNameNew"];
-    $intCategoryId = $_POST["categoryId"];
+    $intCategoryFunction = ( isset($_POST["categoryFunction"]) ) ? $_POST["categoryFunction"] : "";
+    $strCategoryName = ( isset($_POST["categoryName"]) ) ? $_POST["categoryName"] : "";
+    $strCategoryNameNew = ( isset($_POST["categoryNameNew"]) ) ? $_POST["categoryNameNew"] : "";
+    $intCategoryId = ( isset($_POST["categoryId"]) ) ? $_POST["categoryId"] : "";
 
     $objCategory = new Category;
 

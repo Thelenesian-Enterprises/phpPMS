@@ -51,7 +51,8 @@
     $intUGroupFId = $_SESSION["ugroup"];
     $intProfileId = $_SESSION["uprofile"];
     $intUId = $_SESSION["uid"];
-    $blnUIsAdmin = $_SESSION["uisadmin"];
+    $blnUIsAdminApp = $_SESSION["uisadminapp"];
+    $blnUIsAdminAcc = $_SESSION["uisadminacc"];
     
     if ( $filesEnabled == 1 ){
         $objFiles = new Files;
@@ -117,7 +118,7 @@
     if ( $filesEnabled == 1 ){
         echo '<TH WIDTH="5%"><IMG SRC="imgs/attach.png" TITLE="'.$LANG['accounts'][10].'" /></TH>';
     }
-    echo '<TH WIDTH="20%">'.$LANG['accounts'][11].'</TH>';
+    echo '<TH WIDTH="20%"><IMG SRC="imgs/action.png" TITLE="'.$LANG['accounts'][11].'" /></TH>';
     echo '</TR></THEAD>';
 
     $strQuerySelect = "SELECT DISTINCT acc.intAccountId, acc.vacCliente, g.vacCategoryName, acc.vacName, 
@@ -129,12 +130,14 @@
     
     $strQueryCount = "SELECT COUNT(DISTINCT intAccountId) AS Number FROM accounts 
                     LEFT JOIN acc_usergroups aug ON intAccountId=aug.intAccId ";
+    
+    $strQueryWhere = "";
 
     if ( $strSearch != "" ) {
         $strQueryWhere = " WHERE (vacName LIKE '%$strSearch%' OR vacLogin LIKE '%$strSearch%' OR vacUrl LIKE '%$strSearch%' OR txtNotice LIKE '%$strSearch%' OR vacName LIKE '%$strSearch%')";
         
         // Comprobamos el grupo del usuario y si es admin, para acotar la búsqueda a sus grupos y perfil
-        if ( $intUGroupId != 1 OR $blnUIsAdmin != 1) {
+        if ( ! $blnUIsAdminApp || ! $blnUIsAdminAcc ) {
             $strQueryWhere .= "AND (intUGroupFId = $intUGroupFId OR intUserFId = $intUId OR aug.intUGroupId = $intUGroupFId)";
         }
 
@@ -142,7 +145,7 @@
         if ( $strCliente != $LANG['accounts'][1] ) $strQueryWhere .= " AND vacCliente = '$strCliente'";
 
     } else {
-        if ( $intUGroupFId != 1 AND $blnUIsAdmin == 0 ) {
+        if ( ! $blnUIsAdminApp && ! $blnUIsAdminAcc ) {
             $strQueryWhere = " WHERE (intUGroupFId = $intUGroupFId OR intUserFId = $intUId OR aug.intUGroupId = $intUGroupFId) ";
 
             if ( $strCategory != $LANG['accounts'][3] ) $strQueryWhere .= "AND intCategoryFid = ".$strCategory;
@@ -166,16 +169,16 @@
     $strQueryCount = $strQueryCount.$strQueryWhere;
     
     // Consulta para obtener el número de registros de la búsqueda
-    $resQuery = $objAccount->dbh->query($strQueryCount);
+    $resQueryCount = $objAccount->dbh->query($strQueryCount);
     
-    if ( ! $resQuery ) {
+    if ( ! $resQueryCount ) {
         //echo $strQueryCount;
         Common::wrLogInfo("Search", $objAccount->dbh->error);
         return FALSE;
     }
     
-    $resResult = $resQuery->fetch_assoc();
-    $resQuery->free();
+    $resResult = $resQueryCount->fetch_assoc();
+    $resQueryCount->free();
     
     $intAccountMax = $resResult["Number"];
     $intPageMax = ceil($intAccountMax / $intAccountCount);    
@@ -265,7 +268,6 @@
             echo '</FORM></TD>';
         }
 
-
         if ( $objAccount->checkAccountAccess("viewpass",$intAccUserId, $intAccId, $intAccUserGroupId) ){
             echo '<TD><IMG SRC="imgs/user-pass.png" TITLE="'.$LANG['buttons'][4].'" onClick="verClave('.$intAccId.', 1)" CLASS="inputImg" /></TD>';
         } 
@@ -299,6 +301,7 @@
                 }
             }
         }
+        
         echo '</TR></TABLE></TD></TR>';
 
         if ($strTableClass == "odd") {

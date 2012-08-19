@@ -59,12 +59,12 @@
             return;                
         }
 
-        if ( $post_wikienabled AND ( ! $post_wikisearchurl OR ! $post_wikipageurl OR ! is_array($post_wikifilter) )){
+        if ( isset($post_wikienabled) AND ( ! $post_wikisearchurl OR ! $post_wikipageurl OR ! is_array($post_wikifilter) )){
             $resXML["status"] = 1;
             $resXML["description"] = $LANG['msg'][37];
             Common::printXML($resXML);
             return;            
-        } elseif ( $post_wikienabled ) {
+        } elseif ( isset($post_wikienabled) ) {
             $objConfig->arrConfigValue["wikienabled"] = 1;
             $objConfig->arrConfigValue["wikisearchurl"] = $post_wikisearchurl;
             $objConfig->arrConfigValue["wikipageurl"] = $post_wikipageurl;
@@ -74,12 +74,12 @@
             $objConfig->arrConfigValue["wikienabled"] = 0;
         }
         
-        if ( $post_ldapenabled AND ( ! $post_ldapserver OR ! $post_ldapbase OR ! $post_ldapgroup OR ! is_array($post_ldapuserattr) )){
+        if ( isset($post_ldapenabled) AND ( ! $post_ldapserver OR ! $post_ldapbase OR ! $post_ldapgroup OR ! is_array($post_ldapuserattr) )){
             $resXML["status"] = 1;
             $resXML["description"] = $LANG['msg'][38];
             Common::printXML($resXML);
             return;            
-        } elseif ( $post_ldapenabled ){
+        } elseif (isset($post_ldapenabled) ){
             $objConfig->arrConfigValue["ldapenabled"] = 1;
             $objConfig->arrConfigValue["ldapserver"] = $post_ldapserver;
             $objConfig->arrConfigValue["ldapbase"] = $post_ldapbase;
@@ -90,12 +90,12 @@
             $objConfig->arrConfigValue["ldapenabled"] = 0;
         }
 
-        if ( $post_mailenabled AND ( ! $post_mailserver OR ! $post_mailfrom ) ){
+        if ( isset($post_mailenabled) AND ( ! $post_mailserver OR ! $post_mailfrom ) ){
             $resXML["status"] = 1;
             $resXML["description"] = $LANG['msg'][39];
             Common::printXML($resXML);
             return;             
-        } elseif ( $post_mailenabled ) {
+        } elseif ( isset($post_mailenabled) ) {
             $objConfig->arrConfigValue["mailenabled"] = 1;
             $objConfig->arrConfigValue["mailserver"] = $post_mailserver;
             $objConfig->arrConfigValue["mailfrom"] = $post_mailfrom;            
@@ -127,7 +127,7 @@
         
         $objConfig->arrConfigValue["session_timeout"] = ( $post_session_timeout ) ? (int)$post_session_timeout : 300;
         $objConfig->arrConfigValue["logenabled"] = ( $post_logenabled ) ? 1 : 0;
-        $objConfig->arrConfigValue["debug"] = ( $post_debug ) ? 1 : 0;
+        $objConfig->arrConfigValue["debug"] = ( isset($post_debug) ) ? 1 : 0;
         $objConfig->arrConfigValue["filesenabled"] = ( $post_filesenabled ) ? 1 : 0;
                 
 //        if ($blnMd5Password == "FALSE" AND $blnMd5PasswordOld == "TRUE") {
@@ -146,14 +146,21 @@
         }
 
     } elseif ( $strAction == "crypt"){
-        $strCurMasterPass = $_POST["curMasterPwd"];    
-        $strNewMasterPass = $_POST["newMasterPwd"];
-        $strNewMasterPassR = $_POST["newMasterPwdR"];
-        $intConfirmPassChange = $_POST["confirmPassChange"];
+        $strCurMasterPass = ( isset($_POST["curMasterPwd"]) ) ? $_POST["curMasterPwd"] : "";    
+        $strNewMasterPass = ( isset($_POST["newMasterPwd"]) ) ? $_POST["newMasterPwd"] : "";
+        $strNewMasterPassR = ( isset($_POST["newMasterPwdR"]) ) ? $_POST["newMasterPwdR"] : "";
+        $intConfirmPassChange = ( isset($_POST["confirmPassChange"]) ) ? $_POST["confirmPassChange"] : "";
         
         if ( $strNewMasterPass != "" AND $strCurMasterPass != ""){
             if ( $intConfirmPassChange == 1 ){
                 if ( $strNewMasterPass == $strNewMasterPassR ){
+                    if ( $strNewMasterPass == $strCurMasterPass){
+                        $resXML["status"] = 1;
+                        $resXML["description"] = $LANG['msg'][101];
+                        Common::printXML($resXML);
+                        return;                                           
+                    }
+                    
                     $objCrypt = new Crypt;
 
                     if ( ! $objCrypt->checkHashPass($strCurMasterPass, $objConfig->getConfigValue("masterPwd")) ){

@@ -193,7 +193,7 @@ $LANG['users'][3]="Login";
 $LANG['users'][4]="Notas";
 $LANG['users'][5]="Perfil";
 $LANG['users'][6]="Grupo";
-$LANG['users'][7]="Admin";
+$LANG['users'][7]="Admin Aplicación";
 $LANG['users'][8]="Inactivo";
 $LANG['users'][9]="Clave";
 $LANG['users'][10]="Clave (repetir)";
@@ -206,6 +206,7 @@ $LANG['users'][16]="Nombre de usuario completo";
 $LANG['users'][17]="Login de inicio de sesión";
 $LANG['users'][18]="Administrador de la aplicación";
 $LANG['users'][19]="Dirección de correo";
+$LANG['users'][20]="Admin Cuentas";
 
 $LANG['groups'][0]="Nombre";
 $LANG['groups'][1]="Descripción";
@@ -319,6 +320,7 @@ $LANG['msg'][97]="El tamaño máximo de archivo es de 16MB";
 $LANG['msg'][98]="ERROR: No es posible realizar la búsqueda en LDAP";
 $LANG['msg'][99]="La versión de la aplicación es diferente a la instalada. Es necesario <A HREF=\"install/install.php\">actualizar</A>";
 $LANG['msg'][100]="Clave maestra actualizada<BR />Reinicie la sesión para cambiarla";
+$LANG['msg'][101]="Las claves son idénticas";
 
 $LANG['event'][0]="Inicio sesión (LDAP)";
 $LANG['event'][1]="Inicio sesión (MySQL)";
@@ -343,6 +345,8 @@ $LANG['event'][19]="Backup BBDD";
 $LANG['event'][20]="Login incorrecto";
 $LANG['event'][21]="Modificar configuración";
 $LANG['event'][22]="Ver clave";
+$LANG['event'][23]="Check acceso";
+
 
 $LANG['eventdesc'][0]="Error al obtener los datos del usuario de la BBDD";
 $LANG['eventdesc'][1]="Error al actualizar la clave del usuario en la BBDD";
@@ -362,6 +366,7 @@ $LANG['eventdesc'][14]="IP";
 $LANG['eventdesc'][15]="pendiente de activación.";
 $LANG['eventdesc'][16]="Nombre";
 $LANG['eventdesc'][17]="Cuenta";
+$LANG['eventdesc'][18]="Denegado acceso a";
 
 $LANG['mailevent'][0]="Nueva cuenta";
 $LANG['mailevent'][1]="Modificación de cuenta";
@@ -394,7 +399,7 @@ $LANG['install'][20]="Por favor, antes de continuar, realice una copia de seguri
 $LANG['install'][21]="Configuración del entorno finalizada";
 $LANG['install'][22]="El usuario conexión a la BBDD ya existe";
 $LANG['install'][23]="Pulse aquí para acceder";
-$LANG['install'][24]="Actualización a versión ".PMS_VERSION." finalizada";
+$LANG['install'][24]="Actualización finalizada";
 $LANG['install'][25]="Instalación phpPMS";
 $LANG['install'][26]="Siguiente";
 $LANG['install'][27]="Actualizar";
@@ -408,7 +413,7 @@ $LANG['install'][34]="Clave del usuario de phpPMS";
 $LANG['install'][35]="Error al crear la BBDD";
 $LANG['install'][36]="El archivo de actualización no existe. No es necesaria la actualizacion de la BBDD";
 $LANG['install'][37]="Los permisos del usuario existente son incorrectos";
-$LANG['install'][38]="Utilizando los valores de conexión del archivo 'db.class.php'. Elimínelo si desea reestablecerlos";
+$LANG['install'][38]="Utilizando los valores de conexión guardados";
 $LANG['install'][39]="Error en la configuración del entorno";
 $LANG['install'][40]="No es posible conectar a la BBDD para actualizar. Verifique datos de conexión";
 $LANG['install'][41]="No es posible utilizar la BBDD";
@@ -426,6 +431,8 @@ $LANG['install'][52]="El usuario/clave de conexión a la BBDD es incorrecto";
 $LANG['install'][53]="La BBDD no existe o el usuario no tiene permisos";
 $LANG['install'][54]="Han habido errores durante la actualización de la BBDD";
 $LANG['install'][55]="No está utilizando la URL por defecto '/phppms'. Configure este parámetro correctamente";
+$LANG['install'][56]="Instalar";
+$LANG['install'][57]="No está usando el protocolo HTTPS para comunicarse con el servidor. Los datos (usuarios, claves, etc) se transmitirán sin cifrar";
 
 $LANG['js'][0]="Ha ocurrido un error en la consulta";
 $LANG['js'][1]="Ha ocurrido un error";

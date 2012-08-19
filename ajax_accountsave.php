@@ -89,7 +89,6 @@
             $resXML["description"] = $LANG['msg'][12];
             $resXML["status"] = 1;
         }
-        $changepass = 1;
     }
 
     // En caso de error se detiene

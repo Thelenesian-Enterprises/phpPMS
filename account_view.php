@@ -34,9 +34,9 @@
     $objConfig = new Config;
 
     $intAccountId = $_POST["accountid"];
-    $intDecode = $_POST["decode"];
-    $intDelete = $_POST["delete"];
-    $strMasterpass = $_POST["masterpass"];
+    $intDelete = ( isset($_POST["delete"]) ) ? $_POST["delete"] : "";
+    $blnUIsAdminApp = $_SESSION["uisadminapp"];
+    $blnUIsAdminAcc = $_SESSION["uisadminacc"];
         
     foreach ($_POST as $varPost => $varPostValue){
         if (array_key_exists($varPost, $objCommon->arrBackLinks)) {
@@ -45,8 +45,6 @@
     }
     
     $intUGroupId = $_SESSION["ugroup"];
-    $intProfileId = $_SESSION["uprofile"];
-    $blnUIsAdmin = $_SESSION["uisadmin"];
 
     $objAccount->incrementViewCounter($intAccountId);
     $objAccount->getAccount($intAccountId);
@@ -106,7 +104,7 @@
     echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][28].'</TD><TD>'.$objAccount->strAccUserName.'</TD></TR>';
     echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][29].'</TD><TD>'.$objAccount->strAccUserGroupName.'</TD></TR>';
     
-    if ( $intUGroupId == $objAccount->intAccUserGroupId OR $blnUIsAdmin == 1 ){
+    if ( $intUGroupId == $objAccount->intAccUserGroupId || $blnUIsAdminApp || $blnUIsAdminAcc ){
         echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][30].'</TD>';
 
         $arrAccountGroups = $objAccount->getGroupsAccount($intAccountId);
