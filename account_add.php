@@ -20,7 +20,6 @@
 /**
  *
  * @author nuxsmin
- * @version 0.91b
  * @link http://www.cygnux.org/phppms
  * 
  */
