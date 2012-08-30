@@ -27,7 +27,7 @@
     define('PMS_ROOT', '.');
     include_once (PMS_ROOT."/inc/includes.php");
     
-    if ( check_session(TRUE) ) return "0";
+    if ( check_session(TRUE) ) return;
 
     $objConfig = new Config;
     $objAccount = new Account;

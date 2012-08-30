@@ -243,8 +243,8 @@ class Config {
         $adminCount = $resQuery->fetch_array(MYSQLI_NUM);
 
         if ( $adminCount[0] == 0 ){
-            $strQuery = "INSERT INTO users (vacUName,vacULogin,intUGroupFid,intUProfile,blnIsAdmin,vacUPassword,blnFromLdap) 
-                        VALUES('PMS Admin','admin',1,0,1,MD5('admin'),0)";
+            $strQuery = "INSERT INTO users (vacUName,vacULogin,intUGroupFid,intUProfile,blnIsAdminApp,vacUPassword,blnFromLdap) 
+                        VALUES('PMS Admin','admin',0,0,1,MD5('admin'),0)";
             $resQuery = $this->dbh->query($strQuery);
 
             if ( $resQuery ){

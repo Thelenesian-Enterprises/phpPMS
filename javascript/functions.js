@@ -113,7 +113,7 @@ function searchSort(skey,page,nav){
         data: form_data,
         success: function(response){
             if ( response == 0 ){
-                //location.href='login.php?sesion=1';
+                $("#resBuscar").empty();
                 doLogout();
             } else {
                 $('#resBuscar').html(response);
@@ -128,13 +128,17 @@ function verClave(id,full){
     if ( full == 0 ) {
         $.post( 
             pms_root + '/ajax_viewpass.php',
-            {'accountid' : id, 'full': 0},
-            function( data ) {$( "#clave" ).html(data); 
-        });
+            {'accountid' : id, 'full': 0}, function( data ) {$("#clave").html(data);}
+        );
     } else{
         $.post( pms_root + '/ajax_viewpass.php', {'accountid': id, 'full': full}, 
-            function( data ) {var txt = '<div id="fancyView" class="backGrey">' + data + '</div>'; 
-                $.fancybox(txt);
+            function( data ) {
+                if ( data == 0 ){
+                    doLogout();
+                } else {
+                    var txt = '<div id="fancyView" class="backGrey">' + data + '</div>';
+                    $.fancybox(txt);
+                }
             }
         );
     }
@@ -144,8 +148,7 @@ function verClave(id,full){
 function getUrlVars(){
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
+    for(var i = 0; i < hashes.length; i++){
         hash = hashes[i].split('=');
         vars.push(hash[0]);
         vars[hash[0]] = hash[1];
@@ -173,39 +176,23 @@ function doLogin(){
             
             $("#loading").empty();
             
-            if( status == 0 ){
-                location.href='index.php';
-            } else if ( status == 2 ){
-//                var txt = '<div id="fancyView" class="backOrange"><span class="msgWarn">' + description + '</span></div>';
-//                $.fancybox({
-//                    'content': txt,
-//                    'onClosed' : function() { location.href = 'index.php';}
-//                });
+            if( status == 0 || status == 2 ){
                 location.href = 'index.php';
             } else if ( status == 3 || status == 4 ){
                 var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
-                $.fancybox(txt,
-                    {'onClosed':function (){$("#btnLogin").prop('disabled',false);}
-                });
+                $.fancybox(txt, {'onClosed' : function (){$("#btnLogin").prop('disabled',false);}});
                 $('#smpass').show();
             } else if ( status == 5 ){
                 var txt = '<div id="fancyView" class="msgWarn">' + description + '</div>';
-                 $.fancybox({
-                    'content': txt,
-                    'onClosed' : function() {location.href = 'index.php';}
-                }); 
+                 $.fancybox(txt, {'onClosed' : function(){location.href = 'index.php';}}); 
             } else {
                 var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
-                $.fancybox(txt,
-                    {'onClosed':function (){$("#btnLogin").prop('disabled',false);}
-                });
+                $.fancybox(txt, {'onClosed' : function (){$("#btnLogin").prop('disabled',false);}});
             }},
         error: function (jqXHR, textStatus, errorThrown){
             var txt = '<div id="fancyView" class="msgError">' + LANG[1] + '<p>' + errorThrown + textStatus + '</p></div>';
             $("#loading").empty();
-            $.fancybox(txt,
-                {'onClosed':function (){$("#btnLogin").prop('disabled',false);}
-            });
+            $.fancybox(txt, {'onClosed' : function (){$("#btnLogin").prop('disabled',false);}});
         }
     });
     
@@ -271,7 +258,7 @@ function delAccount(id,action){
     $("#resAccion").html('<img src="imgs/loading.gif" />');
     
     var res = confirm (LANG[8]);
-    if (!res){
+    if ( ! res ){
         $("#resAccion").empty();
         return false;
     }    
@@ -287,10 +274,7 @@ function delAccount(id,action){
 
             if ( status == 0 ){
                 var txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
-                $.fancybox({
-                    'onClosed' : function() {location.href='index.php';},
-                    'content' : txt
-                });
+                $.fancybox(txt,{'onClosed' : function() {location.href='index.php';}});
                 $("#resAccion").empty();
             } else {
                 var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
@@ -354,10 +338,7 @@ function configMgmt(action){
                 txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
                 $("#resAccion").empty();
                 $('#btnGuardar').attr('disabled', true);
-                $.fancybox({
-                    'onClosed' : function() {location.reload(true);},
-                    'content' : txt
-                });
+                $.fancybox(txt,{'onClosed' : function() {location.reload(true);}});
             } else {
                 txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt);
@@ -392,10 +373,8 @@ function downFile(fancy){
 		cache : false,
 		url : pms_root + "/ajax_files.php",
 		data : frm_data,
-		success: function(file) {
-                    //$("#resAccion").html(file);
-                    $.fancybox({'content' : file,'overlayOpacity' : 0.5});
-                    //setTimeout ($.fancybox.resize() , 3000);
+		success: function(response) {
+                    $.fancybox(response,{'overlayOpacity' : 0.5});
                 }
 	});
     } else {
@@ -582,10 +561,7 @@ function userMgmt(action,id){
                 
                 var txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
                 $("#tblUsers").find(':text,:checkbox,select').removeClass("inedit");
-                $.fancybox({
-                    'onClosed' : function() {loadUsrMgmt(1);},
-                    'content' : txt
-                });
+                $.fancybox(txt,{'onClosed':function() {loadUsrMgmt(1);}});
             } else if ( status == 1 && action == "pass"){
                 $("#passLevel").hide();
                 $("#resFancyAccion").html('<span class="altTxtError">' + description + '</span>');
@@ -595,10 +571,7 @@ function userMgmt(action,id){
                 doLogout();
             } else {
                 var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
-                $.fancybox({
-                    'onClosed' : usrMgmtEnable(id),
-                    'content' : txt
-                });                
+                $.fancybox(txt,{'onClosed' : usrMgmtEnable(id)});                
             }
         },
         error:function(jqXHR, textStatus, errorThrown){
@@ -683,10 +656,7 @@ function groupMgmt(action,id){
                 
                 var txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
                 usrMgmtDisable('tblGroups');
-                $.fancybox({
-                    'onClosed' : function() {loadUsrMgmt(3);},
-                    'content' : txt
-                });
+                $.fancybox(txt,{'onClosed' : function() {loadUsrMgmt(3);}});
             } else if ( status == 2) {
                 var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt);
@@ -766,9 +736,8 @@ function usrUpdPass(id,usrlogin){
         data : datos,
         success: function(data) {
             if ( data != 0 ){
-                $.fancybox({
-                    'content': data,
-                    'overlayOpacity' : 0.5,
+                $.fancybox(data,
+                    {'overlayOpacity' : 0.5,
                     'onComplete' : function(){$('#usrpass').focus();}
                 });
             } else {

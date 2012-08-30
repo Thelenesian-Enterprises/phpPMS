@@ -27,10 +27,7 @@
     define('PMS_ROOT', '.');
     include_once (PMS_ROOT."/inc/includes.php");
     
-    if ( check_session(TRUE) == 1 ){
-        echo '<span class="altTxtRed">'.$LANG['msg'][35].'</span>';
-        return;
-    }
+    if ( check_session(TRUE) ) return;
 
     $objAccount = new Account;
 

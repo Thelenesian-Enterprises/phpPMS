@@ -38,7 +38,7 @@ function check_session($isAjax = FALSE, $isLogin = FALSE){
             header("Location: login.php");
             die();
         } else {
-            return 1;
+            return TRUE;
         }
     }
 

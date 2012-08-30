@@ -262,6 +262,8 @@ function createDB(){
                 return FALSE;
             }
         } else {
+            $noPerm = 0;
+            
             // Comprobamos que los permisos sean correctos
             printMsg($LANG['install'][22], 2);
             
