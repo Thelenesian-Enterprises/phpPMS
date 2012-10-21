@@ -88,6 +88,7 @@ $LANG['common'][3]="por";
 $LANG['common'][4]="Aviso";
 $LANG['common'][5]="Error";
 $LANG['common'][6]="Ok";
+$LANG['common'][7]="No disponible";
 
 $LANG['login'][0]="Acceso"; 
 $LANG['login'][1]="Usuario"; 
@@ -432,6 +433,7 @@ $LANG['install'][54]="Han habido errores durante la actualización de la BBDD";
 $LANG['install'][55]="No está utilizando la URL por defecto '/phppms'. Configure este parámetro correctamente";
 $LANG['install'][56]="Instalar";
 $LANG['install'][57]="No está usando el protocolo HTTPS para comunicarse con el servidor. Los datos (usuarios, claves, etc) se transmitirán sin cifrar";
+$LANG['install'][58]="Módulos opcionales no disponibles. Algunas funciones no estarán disponibles";
 
 $LANG['js'][0]="Ha ocurrido un error en la consulta";
 $LANG['js'][1]="Ha ocurrido un error";

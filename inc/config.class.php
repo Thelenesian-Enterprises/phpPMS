@@ -487,51 +487,55 @@ class Config {
         echo '<IMG SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][46].'" CLASS="inputImg" ID="btnDelWikifilter" OnClick="delSelOption(\'wikifilter\')" />';        
         echo '</TD></TR>';
 
-        echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][14].'</TD></TR>';
-        
-        $chkLdap = ( $this->arrConfigValue["ldapenabled"] ) ? 'checked="checked"' : '';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][15];
-        Common::printHelpButton("config", 11);
-        echo '</TD>';
-        echo '<TD><INPUT TYPE="checkbox" NAME="ldapenabled" CLASS="checkbox" '.$chkLdap.' /></TD>';
-        echo '</TR>';
-        
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][16].'</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="ldapserver" VALUE="'.$this->arrConfigValue["ldapserver"].'" /></TD>';
-        echo '</TR>';
+        if ( in_array("ldap", get_loaded_extensions()) ){
+            echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][14].'</TD></TR>';
 
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][17];
-        Common::printHelpButton("config", 12);
-        echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="ldapbase" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapbase"].'" /></TD>';
-        echo '</TR>';
+            $chkLdap = ( $this->arrConfigValue["ldapenabled"] ) ? 'checked="checked"' : '';
+            echo '<TR><TD CLASS="descCampo">'.$LANG['config'][15];
+            Common::printHelpButton("config", 11);
+            echo '</TD>';
+            echo '<TD><INPUT TYPE="checkbox" NAME="ldapenabled" CLASS="checkbox" '.$chkLdap.' /></TD>';
+            echo '</TR>';
 
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][18];
-        Common::printHelpButton("config", 13);
-        echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="ldapgroup" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapgroup"].'" /></TD>';
-        echo '</TR>';
-        
-        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][19];
-        Common::printHelpButton("config", 14);
-        echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="add_ldapuserattr" ID="add_ldapuserattr" />';
-        echo '<IMG SRC="imgs/add.png" TITLE="'.$LANG['buttons'][47].'" CLASS="inputImg" ID="btnAddLdapuserattr" OnClick="addSelOption(\'ldapuserattr\',\'add_ldapuserattr\')" />';
-        echo '<BR /><SELECT ID="ldapuserattr" NAME="ldapuserattr[]" MULTIPLE="multiple" SIZE="3">';
-        
-        if ( $this->arrConfigValue["ldapuserattr"] ){
-            $ldapuserattr = explode("||", $this->arrConfigValue["ldapuserattr"]);
-            sort($ldapuserattr, SORT_STRING);
-            
-            foreach ( $ldapuserattr as $filter ){
-                echo '<OPTION VALUE="'.$filter.'">'.$filter.'</OPTION>';
+            echo '<TR><TD CLASS="descCampo">'.$LANG['config'][16].'</TD>';
+            echo '<TD><INPUT TYPE="text" NAME="ldapserver" VALUE="'.$this->arrConfigValue["ldapserver"].'" /></TD>';
+            echo '</TR>';
+
+            echo '<TR><TD CLASS="descCampo">'.$LANG['config'][17];
+            Common::printHelpButton("config", 12);
+            echo '</TD>';
+            echo '<TD><INPUT TYPE="text" NAME="ldapbase" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapbase"].'" /></TD>';
+            echo '</TR>';
+
+            echo '<TR><TD CLASS="descCampo">'.$LANG['config'][18];
+            Common::printHelpButton("config", 13);
+            echo '</TD>';
+            echo '<TD><INPUT TYPE="text" NAME="ldapgroup" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapgroup"].'" /></TD>';
+            echo '</TR>';
+
+            echo '<TR><TD CLASS="descCampo">'.$LANG['config'][19];
+            Common::printHelpButton("config", 14);
+            echo '</TD>';
+            echo '<TD><INPUT TYPE="text" NAME="add_ldapuserattr" ID="add_ldapuserattr" />';
+            echo '<IMG SRC="imgs/add.png" TITLE="'.$LANG['buttons'][47].'" CLASS="inputImg" ID="btnAddLdapuserattr" OnClick="addSelOption(\'ldapuserattr\',\'add_ldapuserattr\')" />';
+            echo '<BR /><SELECT ID="ldapuserattr" NAME="ldapuserattr[]" MULTIPLE="multiple" SIZE="3">';
+
+            if ( $this->arrConfigValue["ldapuserattr"] ){
+                $ldapuserattr = explode("||", $this->arrConfigValue["ldapuserattr"]);
+                sort($ldapuserattr, SORT_STRING);
+
+                foreach ( $ldapuserattr as $filter ){
+                    echo '<OPTION VALUE="'.$filter.'">'.$filter.'</OPTION>';
+                }
             }
+
+            echo '</SELECT>';
+            echo '<IMG SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][48].'" CLASS="inputImg" ID="btnDelLdapuserattr" OnClick="delSelOption(\'ldapuserattr\')" />';        
+            echo '</TD></TR>';
+        } else{
+            echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][14];
+            echo '<IMG SRC="imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" TITLE="'.$LANG['common'][7].'"/></TD>';
         }
-        
-        echo '</SELECT>';
-        echo '<IMG SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][48].'" CLASS="inputImg" ID="btnDelLdapuserattr" OnClick="delSelOption(\'ldapuserattr\')" />';        
-        echo '</TD></TR>';
-        
 
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][20].'</TD></TR>';
         $chkMail = ( $this->arrConfigValue["mailenabled"] ) ? 'checked="checked"' : '';

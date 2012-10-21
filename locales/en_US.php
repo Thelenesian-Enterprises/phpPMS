@@ -88,7 +88,7 @@ $LANG['common'][3]="by";
 $LANG['common'][4]="Warning";
 $LANG['common'][5]="Error";
 $LANG['common'][6]="Ok";
-$LANG['common'][7]="Incomplete translation";
+$LANG['common'][7]="Unavailable";
 
 $LANG['login'][0]="Login"; 
 $LANG['login'][1]="User"; 
@@ -433,6 +433,7 @@ $LANG['install'][54]="There were errors while updating DB";
 $LANG['install'][55]="You are not using default URL '/phppms'. Please, you should setup properly this option";
 $LANG['install'][56]="Install";
 $LANG['install'][57]="HTTPS protocol isn't being used to connect with the server. The data (users, passwords, etc), will be sent without any encryption";
+$LANG['install'][58]="Optional modules are not available. Some functions won't be available";
 
 $LANG['js'][0]="Query error";
 $LANG['js'][1]="There was an error";

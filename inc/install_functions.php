@@ -121,15 +121,17 @@ function checkDB($useDB = FALSE, $useFile = TRUE, $silent = FALSE){
     
     if ( $mysqli->connect_errno ){
         
-        switch ($mysqli->connect_errno){
-            case 1044:
-                printMsg($LANG['install'][53], 1);
-                break;
-            case 1045:
-                printMsg($LANG['install'][52], 1);
-                break;
-            default :
-                printMsg($LANG['install'][12].": <BR />".$mysqli->connect_errno." - ".$mysqli->connect_error, 1);
+        if ( ! $silent ) {
+            switch ($mysqli->connect_errno){
+                case 1044:
+                    printMsg($LANG['install'][53], 1);
+                    break;
+                case 1045:
+                    printMsg($LANG['install'][52], 1);
+                    break;
+                default :
+                    printMsg($LANG['install'][12].": <BR />".$mysqli->connect_errno." - ".$mysqli->connect_error, 1);
+            }
         }
         
         unset($mysqli);
@@ -200,6 +202,7 @@ function updateDB(){
                 
                 if ( $mysqli->errno > 0 ){
                     if ( $mysqli->errno == 1050 
+                            || $mysqli->errno == 1054 
                             || $mysqli->errno == 1060 
                             || $mysqli->errno == 1061 
                             || $mysqli->errno == 1062 ){
@@ -369,15 +372,19 @@ function checkModules(){
     global $LANG;
     
     $modsError = 0;
+    $modsWarn = 0;
     $modsAvail = get_loaded_extensions();
-    $modsNeed = array("mysql","ldap","mcrypt","curl","SimpleXML");
+    $modsNeed = array("mysql","ldaps","mcrypt","curl","SimpleXML");
 
     echo '<TR><TD>'.$LANG['install'][17].':';
 
     foreach($modsNeed as $module){
         if ( in_array($module, $modsAvail) ){
             echo '<span class="altTxtOk"> \''.$module.'\'</span>';
-        } else {
+        } elseif ( $module == "ldaps" && ! in_array($module, $modsAvail) ) {
+            echo '<span class="altTxtWarn"> \''.$module.'\'</span>';
+            $modsWarn++;
+        }else {
             echo '<span class="altTxtError"> \''.$module.'\'</span>';
             $modsError++;
         }
@@ -385,10 +392,13 @@ function checkModules(){
 
     if ( $modsError > 0 ){
         echo '</TD><TD CLASS="result"><span class="altTxtError">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
-        
         printMsg($LANG['install'][18], 1);
         return FALSE;
-    } else {
+    } elseif ( $modsWarn > 0 ) {
+        echo '</TD><TD CLASS="result"><span class="altTxtWarn">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
+         printMsg($LANG['install'][58], 2);
+        return TRUE;    
+    }else {
         echo '</TD><TD CLASS="result"><span class="altTxtOk">'.strtoupper($LANG['common'][6]).'</span></TD></TR>';
         return TRUE;
     }
@@ -414,7 +424,7 @@ function mkDbForm(){
     echo '</TR>';
 
     if ( checkDBFile() ){
-        if ( checkDB(FALSE, TRUE, TRUE)){
+        if ( checkDB(TRUE, TRUE, TRUE)){
             $objConfig = new Config;
             $isInstalled = $objConfig->getConfigValue("install");
             unset($objConfig);
@@ -551,8 +561,8 @@ function installProcess($step,$instLang,$submit){
                 printMsg($LANG['install'][9]." ('$filePath')", 2);
             }
 
-            if (checkDBFile() ){
-                printMsg($LANG['install'][7], 2);
+            if ( checkDBFile() ){          
+                printMsg($LANG['install'][7],2);
             }
 
             printMsg($LANG['install'][20],2);

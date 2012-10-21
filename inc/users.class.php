@@ -578,7 +578,7 @@ class Users {
     public function authUserLDAP($strUser, $strPass) {
         global $CFG_PMS, $LANG;
 
-        if ( $CFG_PMS["ldapenabled"] == 0 ) return FALSE;
+        if ( $CFG_PMS["ldapenabled"] == 0 || ! in_array("ldap", get_loaded_extensions()) ) return FALSE;
         
         if ( ! $CFG_PMS["ldapbase"] OR ! $CFG_PMS["ldapserver"] OR ! $CFG_PMS["ldapuserattr"] OR ! $CFG_PMS["ldapgroup"] ){
             return FALSE;
