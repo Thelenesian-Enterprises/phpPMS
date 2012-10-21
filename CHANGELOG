@@ -1,3 +1,7 @@
+=== ** v0.962b ** ===
+
+* [MOD] El módulo LDAP es opcional.
+
 === ** v0.961b ** ===
 
 * [BUG] Corrección de fallos críticos de funcionalidad.
@@ -72,6 +76,10 @@
 * [NUEVO] Versión inicial
 
 ---
+
+=== ** v0.962b ** ===
+
+* [MOD] LDAP module is optional.
 
 === ** v0.961b ** ===
 
