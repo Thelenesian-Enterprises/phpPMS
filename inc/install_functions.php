@@ -136,10 +136,24 @@ function checkDB($useDB = FALSE, $useFile = TRUE, $silent = FALSE){
         
         unset($mysqli);
         return FALSE;
-    } else{
+    } else {
+        if ( $useDB == TRUE ){
+            $numTables = 0;
+            $resQuery = $mysqli->query("SHOW TABLES");
+        
+            while ( $resResult = $resQuery->fetch_assoc() ){
+                $numTables++;
+            }
+        
+            if ( $numTables == 0 ){
+                return FALSE;
+            }
+        }
+        
         if ( ! $silent ){
             printMsg($LANG['install'][13]." $dbUser@$dbHost -> $dbName");
         }
+        
         unset($mysqli);
         return TRUE;
     }
@@ -239,6 +253,7 @@ function createDB(){
     $dbUser = $_POST["dbuser"];
     $dbPass = $_POST["dbpass"];
     $dbName = $_POST["dbname"];
+    $dbIsHosting = ( isset($_POST["hosting"]) ) ? TRUE : FALSE;
         
     @$mysqli = new mysqli($dbHost,$dbAdminUser,$dbAdminPass);
     
@@ -247,53 +262,74 @@ function createDB(){
         unset($mysqli);
         return FALSE;
     } else {
-        if ( ! checkDBFile() ) return FALSE;
-                
-        // Comprobamos si el usuario para phpPMS existe
-        $strQuery = "SELECT User FROM mysql.user 
-                    WHERE User = '".$mysqli->real_escape_string($dbUser)."' AND Host = '".$mysqli->real_escape_string($dbHost)."'";
-        $resQuery = $mysqli->query($strQuery);
+        $dbUserConnect = FALSE;
         
-        if ( $resQuery->num_rows == 0 ){
-            $strQuery = "CREATE USER '$dbUser'@'$dbHost' IDENTIFIED BY '$dbPass'";
-            $resQuery = $mysqli->query($strQuery);
-
-            if ( $resQuery ){
-                printMsg($LANG['install'][14].' '.$dbUser.'@'.$dbHost);
-            } else {
-                printMsg($LANG['install'][14].' '.$dbUser.'@'.$dbHost, 1);
-                return FALSE;
-            }
-        } else {
-            $noPerm = 0;
-            
-            // Comprobamos que los permisos sean correctos
-            printMsg($LANG['install'][22], 2);
-            
-            $strQuery = "SELECT Select_priv,Insert_priv,Update_priv,Delete_priv,Lock_tables_priv FROM mysql.db 
+        if ( ! checkDBFile() ) return FALSE;
+        
+        // Comprobamos la conexión a la BBDD y que las tablas existen
+        if ( ! checkDB(TRUE,TRUE,TRUE) ) $dbUserConnect = TRUE;
+        
+        if ( ! $dbIsHosting ) {
+            // Comprobamos si el usuario para phpPMS existe
+            $strQuery = "SELECT User FROM mysql.user 
                         WHERE User = '".$mysqli->real_escape_string($dbUser)."' AND Host = '".$mysqli->real_escape_string($dbHost)."'";
             $resQuery = $mysqli->query($strQuery);
-            $i = 0;
-            
-            if ( $resQuery->num_rows > 0 ){
-                $resResult = $resQuery->fetch_assoc();
-                
-                foreach ( $resResult as $perm ){
-                    if ( $perm == "N"){
-                        $noPerm = 1;
-                        break;                        
+        
+        
+            if ( $resQuery->num_rows == 0 ){
+                if ( ! $dbUserConnect ){
+                    $strQuery = "CREATE USER '$dbUser'@'$dbHost' IDENTIFIED BY '$dbPass'";
+                    $resQuery = $mysqli->query($strQuery);
+
+                    if ( $resQuery ){
+                        printMsg($LANG['install'][14].' '.$dbUser.'@'.$dbHost);
+                    } else {
+                        printMsg($LANG['install'][14].' '.$dbUser.'@'.$dbHost, 1);
+                        return FALSE;
                     }
                 }
-                
-                if ( $noPerm == 1 ){
-                    printMsg($LANG['install'][37], 1);
+            } else {
+                $noPerm = 0;
+
+                // Comprobamos que los permisos sean correctos
+                printMsg($LANG['install'][22], 2);
+
+                $strQuery = "SELECT Select_priv,Insert_priv,Update_priv,Delete_priv,Lock_tables_priv FROM mysql.db 
+                            WHERE User = '".$mysqli->real_escape_string($dbUser)."' AND Host = '".$mysqli->real_escape_string($dbHost)."'";
+                $resQuery = $mysqli->query($strQuery);
+                $i = 0;
+
+                if ( $resQuery->num_rows > 0 ){
+                    $resResult = $resQuery->fetch_assoc();
+
+                    foreach ( $resResult as $perm ){
+                        if ( $perm == "N"){
+                            $noPerm = 1;
+                            break;                        
+                        }
+                    }
+
+                    if ( $noPerm == 1 ){
+                        printMsg($LANG['install'][37], 1);
+                    }
                 }
             }
+        } else {
+            if ( $dbUserConnect == FALSE ) return FALSE;
         }
-
+        
         if ( $mysqli->select_db($mysqli->real_escape_string($dbName)) ){
-            printMsg($LANG['install'][45], 1);
-            return FALSE;                    
+            $numTables = 0;
+            $resQuery = $mysqli->query("SHOW TABLES");
+        
+            while ( $resResult = $resQuery->fetch_assoc() ){
+                $numTables++;
+            }
+           
+            if ( $numTables > 0 ){
+                printMsg($LANG['install'][45], 1);
+                return FALSE;
+            }
         }
         
         $fileName = PMS_ROOT."/install/phpPMS.sql";        
@@ -303,12 +339,14 @@ function createDB(){
             return FALSE;
         }
         
-        $strQuery = "CREATE DATABASE `".$mysqli->real_escape_string($dbName)."` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;";
-        $resQuery = $mysqli->query($strQuery);
+        if ( ! isset($numTables) ){
+            $strQuery = "CREATE DATABASE `".$mysqli->real_escape_string($dbName)."` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;";
+            $resQuery = $mysqli->query($strQuery);
         
-        if ( ! $resQuery ){
-            printMsg($LANG['install'][35]." '$dbName'<BR />".$mysqli->error, 1);
-            return FALSE;
+            if ( ! $resQuery ){
+                printMsg($LANG['install'][35]." '$dbName'<BR />".$mysqli->error, 1);
+                return FALSE;
+            }
         }
         
         if ( ! $mysqli->select_db($dbName) ){
@@ -331,13 +369,15 @@ function createDB(){
             }
         }
 
-        $strQuery = "GRANT SELECT,INSERT,UPDATE,DELETE,LOCK TABLES ON ".$mysqli->real_escape_string($dbName).".* 
-                    TO '".$mysqli->real_escape_string($dbUser)."'@'".$mysqli->real_escape_string($dbHost)."'";
-        $resQuery = $mysqli->query($strQuery);
-        
-        if ( ! $resQuery ){
-            printMsg($LANG['install'][35]." '$dbName'<BR />".$mysqli->error, 1);
-            return FALSE;
+        if ( ! $dbUserConnect && ! $dbIsHosting ){
+            $strQuery = "GRANT SELECT,INSERT,UPDATE,DELETE,LOCK TABLES ON ".$mysqli->real_escape_string($dbName).".* 
+                        TO '".$mysqli->real_escape_string($dbUser)."'@'".$mysqli->real_escape_string($dbHost)."'";
+            $resQuery = $mysqli->query($strQuery);
+
+            if ( ! $resQuery ){
+                printMsg($LANG['install'][35]." '$dbName'<BR />".$mysqli->error, 1);
+                return FALSE;
+            }
         }
         
         printMsg($LANG['install'][15]." '$dbName'");
@@ -408,6 +448,8 @@ function checkModules(){
 function mkDbForm(){
     global $LANG, $instLang;
     
+    $isInstalled = 0;
+    
     echo '<TABLE CLASS="tblConfig">';
     echo '<FORM METHOD="post" NAME="frmDbConfig" ID="frmConfig" ACTION="install.php" />';
 
@@ -436,7 +478,7 @@ function mkDbForm(){
     echo '<TD><INPUT TYPE="text" NAME="dbname" VALUE="phppms" /></TD>';
     echo '</TR>';
     
-    if ( ! isset($isInstalled) ){
+    if ( $isInstalled == 0 ){
         echo '<TR><TD CLASS="descCampo">'.$LANG['install'][33].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="dbuser" VALUE="phppms" /></TD>';
         echo '</TR>';
@@ -446,10 +488,18 @@ function mkDbForm(){
         echo '</TR>';
     }
     
-    echo '</TABLE>';
-    echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][27].'" />';
+    echo '<TR><TD CLASS="descCampo">'.$LANG['install'][59].'</TD>';
+    echo '<TD><INPUT TYPE="checkbox" NAME="hosting" CLASS="checkbox" />';
+    echo '<IMG SRC="'.PMS_ROOT.'/imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" TITLE="'.$LANG['install'][60].'" />';
+    echo '</TD></TR>';
     
-    if ( ! isset($isInstalled) ) echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][56].'" />';
+    echo '</TABLE>';
+    
+    if ( $isInstalled == 0 ) {
+        echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][56].'" />';
+    } else{
+        echo '<INPUT TYPE="submit" NAME="submit" CLASS="button round" VALUE="'.$LANG['install'][27].'" />';
+    }
     
     echo '<INPUT TYPE="hidden" NAME="instLang" VALUE="'.$instLang.'" />';
     echo '<INPUT TYPE="hidden" NAME="step" VALUE="3" />';
@@ -474,16 +524,19 @@ function mkConfigForm(){
     echo '<TD><INPUT TYPE="text" NAME="siteshortname" VALUE="PMS" /></TD>';
     echo '</TR>';
 
-    echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36].'</TD>';
-    echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="/phppms" />';
+    preg_match("/^\/\w+/", $_SERVER["REQUEST_URI"],$siteRoot);
+    
+    
 
-    if ( ! preg_match("/^\/phppms\//", $_SERVER["REQUEST_URI"]) ){
+    if ( ! isset($siteRoot[0]) ){
+        echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36].'</TD>';
+        echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="" />';
         echo '<IMG SRC="'.PMS_ROOT.'/imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" TITLE="'.$LANG['install'][55].'" />';
+        echo '</TD></TR>';
+    } else{
+        echo '<INPUT TYPE="hidden" NAME="siteroot" VALUE="'.$siteRoot[0].'" />';
     }
         
-    echo '</TD>';
-    echo '</TR>';
-
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][37].'</TD>';
     echo '<TD><SELECT NAME="sitelang" SIZE="1">';
     foreach ( $arrLangAvailable as $langOption ){
@@ -575,12 +628,12 @@ function installProcess($step,$instLang,$submit){
         }
     } elseif ( $step == 2){ // Introducir datos de conexión a la BBDD
         mkDbForm();
-    } elseif ( $step == 3){ // Actualiza/Instala
+    } elseif ( $step == 3){ // Actualizar/Instalar
         $isOk = FALSE;
 
         echo '<TABLE ID="tblInstall">';
 
-        if ( $submit == $LANG["install"][27] ){
+        if ( $submit == $LANG["install"][27] ){ // Actualizar 
             if ( ! checkDBFile() 
                     && ( ! $_POST["dbhost"] 
                     || ! $_POST["dbuser"] 
@@ -590,11 +643,14 @@ function installProcess($step,$instLang,$submit){
             } else {
                 if ( ! checkDBFile() ) {
                     if ( checkDB(TRUE, FALSE) ) {
-                        createDbFile();
+                        if ( ! createDbFile() ) {
+                            $LANG['install'][47];
+                            return;
+                        }
                     }
                 }
 
-                if ( checkDBFile() && checkDB() && updateDB() ){
+                if ( checkDB() && updateDB() ){
                     printMsg($LANG["install"][38],2);
                     updateVersion();
                     printMsg($LANG["install"][24]." (v".PMS_VERSION.")");
@@ -603,7 +659,7 @@ function installProcess($step,$instLang,$submit){
                     $isOk = TRUE;
                 }
             }
-        } elseif ( $submit == $LANG["install"][56] ){
+        } elseif ( $submit == $LANG["install"][56] ){ // Instalar
             if ( ! checkDBFile() ) {
                 if ( createDbFile() ){
                     if ( createDB() ){

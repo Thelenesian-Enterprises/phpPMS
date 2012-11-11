@@ -107,6 +107,9 @@ class Users {
         while ( $user = $resQuery->fetch_assoc() ){
             
             $intUsrId = $user["intUserId"];
+            
+            if ( $intUsrId == 1 ) continue;
+            
             $username = $user["vacUName"];
             $userlogin = $user["vacULogin"];
             $userprofile = $user["intUProfile"];
@@ -117,7 +120,7 @@ class Users {
             $chkadminapp = ( $user["blnIsAdminApp"] ) ? 'checked="checked"' : '';
             $chkadminacc = ( $user["blnIsAdminAcc"] ) ? 'checked="checked"' : '';
             $chkdisabled = ( $user["blnDisabled"] ) ? 'checked="checked"' : '';
-            
+
             if ( $user["blnFromLdap"] ){
                 $chkldap = 'checked="checked"';
                 $clsdisabled = 'txtdisabled';

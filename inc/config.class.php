@@ -218,7 +218,7 @@ class Config {
         global $LANG;
         
         if ( $this->getConfigValue("install") == 1 ){
-            echo '<TR><TD>'.$LANG['install'][0].'</TD><TD CLASS="result"><span class="altTxtOrange">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
+            echo '<TR><TD>'.$LANG['install'][0].'</TD><TD CLASS="result"><span class="altTxtWarn">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
             return FALSE;
         }
 
@@ -228,14 +228,14 @@ class Config {
             $this->arrConfigValue["masterPwd"] = $hashMPass;
 
             if ( $this->writeConfig(TRUE) ){
-                echo '<TR><TD>'.$LANG['install'][1].'</TD><TD CLASS="result"><span class="altTxtGreen">'.strtoupper($LANG['common'][6]).'</TD></TR>';
+                echo '<TR><TD>'.$LANG['install'][1].'</TD><TD CLASS="result"><span class="altTxtOk">'.strtoupper($LANG['common'][6]).'</TD></TR>';
             } else {
-                echo '<TR><TD>'.$LANG['install'][2].'</TD><TD CLASS="result"><span class="altTxtRed">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
+                echo '<TR><TD>'.$LANG['install'][2].'</TD><TD CLASS="result"><span class="altTxtError">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
                 return FALSE;
             }
             unset($objCrypt);
         } else {
-            echo '<TR><TD>'.$LANG['install'][3].'</TD><TD CLASS="result"><span class="altTxtOrange">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
+            echo '<TR><TD>'.$LANG['install'][3].'</TD><TD CLASS="result"><span class="altTxtWarn">'.strtoupper($LANG['common'][4]).'</span></TD></TR>';
         }
 
         $strQuery = "SELECT COUNT(vacULogin) FROM users WHERE vacULogin = 'admin'";
@@ -248,20 +248,20 @@ class Config {
             $resQuery = $this->dbh->query($strQuery);
 
             if ( $resQuery ){
-                echo '<TR><TD>'.$LANG['install'][4].'</TD><TD CLASS="result"><span class="altTxtGreen">'.strtoupper($LANG['common'][6]).'</TD></TR>';
+                echo '<TR><TD>'.$LANG['install'][4].'</TD><TD CLASS="result"><span class="altTxtOk">'.strtoupper($LANG['common'][6]).'</TD></TR>';
             } else {
-                echo '<TR><TD>'.$LANG['install'][5].'</TD><TD CLASS="result"><span class="altTxtRed">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
+                echo '<TR><TD>'.$LANG['install'][5].'</TD><TD CLASS="result"><span class="altTxtError">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
                 return FALSE;
             }
         } else {
-            echo '<TR><TD>'.$LANG['install'][6].'</TD><TD CLASS="result"><span class="altTxtOrange">'.strtoupper($LANG['common'][4]).'</TD></TR>';
+            echo '<TR><TD>'.$LANG['install'][6].'</TD><TD CLASS="result"><span class="altTxtWarn">'.strtoupper($LANG['common'][4]).'</TD></TR>';
         }
 
         unset($this->arrConfigValue);
 
         foreach ($arrConfigParams as $configParam => $configValue ){
             if ( ($configParam == "sitename" OR $configParam == "siteshortname" OR $configParam == "siteroot") AND ! $configValue ){
-                echo '<TR><TD>'.$LANG['install'][48].' (\''.$configParam.'\')</TD><TD CLASS="result"><span class="altTxtRed">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
+                echo '<TR><TD>'.$LANG['install'][48].' (\''.$configParam.'\')</TD><TD CLASS="result"><span class="altTxtError">'.strtoupper($LANG['common'][5]).'</span></TD></TR>';
                 return FALSE;
             } elseif ( $configValue == "on" ) {
                 $configValue = 1;
@@ -308,13 +308,13 @@ class Config {
 
         if ( ! is_dir($bakDstDir) ){
             if ( ! @mkdir($bakDstDir, 0550) ){
-                $arrOut[] = '<span class="altTxtRed">'.$LANG['msg'][94].' ('.$bakDstDir.')</span>';
+                $arrOut[] = '<span class="altTxtError">'.$LANG['msg'][94].' ('.$bakDstDir.')</span>';
                 Common::wrLogInfo("Backup BBDD",$strError.";IP:".$_SERVER['REMOTE_ADDR']);
             }
         }
 
         if ( ! is_writable($bakDstDir) ){
-            $arrOut[] = '<span class="altTxtRed">'.$LANG['msg'][89].'</span>';
+            $arrOut[] = '<span class="altTxtError">'.$LANG['msg'][89].'</span>';
         }
 
         if ( ! is_array($arrOut) ){

@@ -434,6 +434,8 @@ $LANG['install'][55]="You are not using default URL '/phppms'. Please, you shoul
 $LANG['install'][56]="Install";
 $LANG['install'][57]="HTTPS protocol isn't being used to connect with the server. The data (users, passwords, etc), will be sent without any encryption";
 $LANG['install'][58]="Optional modules are not available. Some functions won't be available";
+$LANG['install'][59]="Hosting mode";
+$LANG['install'][60]="On hosting mode, neither connection user will be created nor the DB permissions will be checked";
 
 $LANG['js'][0]="Query error";
 $LANG['js'][1]="There was an error";

@@ -434,6 +434,8 @@ $LANG['install'][55]="No está utilizando la URL por defecto '/phppms'. Configur
 $LANG['install'][56]="Instalar";
 $LANG['install'][57]="No está usando el protocolo HTTPS para comunicarse con el servidor. Los datos (usuarios, claves, etc) se transmitirán sin cifrar";
 $LANG['install'][58]="Módulos opcionales no disponibles. Algunas funciones no estarán disponibles";
+$LANG['install'][59]="Modo hosting";
+$LANG['install'][60]="En el modo hosting no se creará el usuario de conexión, ni se verificarán los permisos sobre la BBDD";
 
 $LANG['js'][0]="Ha ocurrido un error en la consulta";
 $LANG['js'][1]="Ha ocurrido un error";
