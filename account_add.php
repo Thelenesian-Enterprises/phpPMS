@@ -24,101 +24,101 @@
  * 
  */
 
-    define('PMS_ROOT', '.');
-    include_once (PMS_ROOT . "/inc/includes.php");
-    check_session();
-    
-    $objAccount = new Account;
-    $objCommon = new Common;
-    $objUser = new Users;
+define('PMS_ROOT', '.');
+include_once (PMS_ROOT . "/inc/includes.php");
+check_session();
 
-    foreach ($_POST as $varPost => $varPostValue){
-        if (array_key_exists($varPost, $objCommon->arrBackLinks)) {
-            $objCommon->arrBackLinks["$varPost"] = $varPostValue;
-        }
+$objAccount = new Account;
+$objCommon = new Common;
+$objUser = new Users;
+
+foreach ($_POST as $varPost => $varPostValue){
+    if (array_key_exists($varPost, $objCommon->arrBackLinks)) {
+        $objCommon->arrBackLinks["$varPost"] = $varPostValue;
     }
-    
-    Common::printHeader(FALSE,TRUE);
+}
 
-    echo '<BODY ONLOAD="document.addaccount.sel_cliente.focus()">';
+Common::printHeader(FALSE,TRUE);
 
-    Common::printBodyHeader();
-    
-    $objUser->checkUserUpdateMPass() || die ('<DIV CLASS="error">'.$LANG['msg'][100].'</DIV');
+echo '<BODY ONLOAD="document.addaccount.name.focus()">';
 
-    echo '<DIV ID="container" ALIGN="center">';
-    echo '<H2>'.$LANG['buttons'][7].'</H2>';
-    echo '<DIV CLASS="action midround">';
-    echo '<IMG SRC="imgs/check.png" TITLE="Guardar" CLASS="inputImg" OnClick="saveAccount(\'frmAddAccount\');" />';
+Common::printBodyHeader();
 
-    $objCommon->printBackLinks(TRUE);
+$objUser->checkUserUpdateMPass() || die ('<DIV CLASS="error">'.$LANG['msg'][100].'</DIV');
 
-    echo '</DIV>';
-    echo '<TABLE CLASS="data">';
-    echo '<FORM ACTION="" METHOD="post" NAME="addaccount" ID="frmAddAccount">';
+echo '<DIV ID="container" ALIGN="center">';
+echo '<H2>'.$LANG['buttons'][7].'</H2>';
+echo '<DIV CLASS="action midround">';
+echo '<IMG SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" OnClick="saveAccount(\'frmAddAccount\');" />';
 
-    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][17].'</TD>';
-    echo '<TD WIDTH="75%"><INPUT NAME="name" TYPE="text" SIZE="30" MAXLENGTH="255"></TD></TR>';
+$objCommon->printBackLinks(TRUE);
 
-    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][0].'</TD>';
-    echo '<TD><SELECT NAME="sel_cliente" SIZE="1">';
+echo '</DIV>';
+echo '<TABLE CLASS="data round">';
+echo '<FORM ACTION="" METHOD="post" NAME="addaccount" ID="frmAddAccount">';
 
-    foreach ( $objAccount->getClientes() as $cliente ){
-        if ( $cliente == $objAccount->strCliente ){
-            echo "<OPTION SELECTED>$cliente</OPTION>";
-        } else {
-            echo "<OPTION>$cliente</OPTION>";
-        }
+echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][17].'</TD>';
+echo '<TD CLASS="valueField"><INPUT NAME="name" TYPE="text" MAXLENGTH="50"></TD></TR>';
+
+echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][0].'</TD>';
+echo '<TD CLASS="valueField"><SELECT NAME="sel_cliente" SIZE="1">';
+
+foreach ( $objAccount->getClientes() as $cliente ){
+    if ( $cliente == $objAccount->strCliente ){
+        echo "<OPTION SELECTED>$cliente</OPTION>";
+    } else {
+        echo "<OPTION>$cliente</OPTION>";
     }
+}
 
-    echo '</SELECT><BR /><BR />';
-    echo '<INPUT TYPE="text" NAME="cliente_new" SIZE="50" VALUE="'.$LANG['accounts'][15].'" onClick="this.value=\'\';"></TD></TR>';
-    
-    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][16].'</TD>';
-    echo '<TD WIDTH="75%">';
-    echo '<SELECT NAME="categoryId" SIZE="1">';
+echo '</SELECT><BR /><BR />';
+echo '<INPUT TYPE="text" NAME="cliente_new" MAXLENGTH="50" VALUE="'.$LANG['accounts'][15].'" onClick="this.value=\'\';"></TD></TR>';
 
-    foreach ( $objAccount->getCategorias() as $catName => $catId){
-        echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>";
+echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][16].'</TD>';
+echo '<TD CLASS="valueField">';
+echo '<SELECT NAME="categoryId" SIZE="1">';
+
+foreach ( $objAccount->getCategorias() as $catName => $catId){
+    echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>";
+}
+
+echo '</SELECT></TD></TR>';
+
+echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][18].'</TD>';
+echo '<TD CLASS="valueField"><INPUT NAME="url" TYPE="text" MAXLENGTH="255"></TD></TR>';
+
+echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][19].'</TD>';
+echo '<TD CLASS="valueField"><INPUT NAME="login" TYPE="text" MAXLENGTH="50"></TD></TR>';
+
+echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][20].'</TD>';
+echo '<TD CLASS="valueField"><INPUT NAME="password" TYPE="password" MAXLENGTH="255" OnKeyUp="checkPassLevel(this.value)">';
+echo '<IMG SRC="imgs/genpass.png" TITLE="'.$LANG['buttons'][50].'" CLASS="inputImg" OnClick="password(11,true,true);" />';
+echo '</TD></TR>';
+
+echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][22].'</TD>';
+echo '<TD CLASS="valueField"><INPUT NAME="password2" TYPE="password" MAXLENGTH="255">';
+echo '<SPAN ID="passLevel" TITLE="'.$LANG['buttons'][51].'" ></SPAN>';
+echo '</TD></TR>';
+
+echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][24].'</TD>';
+echo '<TD CLASS="valueField"><TEXTAREA NAME="notice" TYPE="text" COLS="30" ROWS="5" MAXLENGTH="1000"></TEXTAREA></TD></TR>';
+
+echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][30].'</TD>';
+echo '<TD CLASS="valueField"><SELECT NAME="ugroups[]" MULTIPLE="multiple" SIZE="5" >';
+
+$arrGroups = $objAccount->getSecGroups();
+
+foreach ( $arrGroups as $groupName => $groupId ){
+    if ( $groupId != $_SESSION["ugroup"] ){
+        echo "<OPTION VALUE='$groupId'>$groupName</OPTION>";
     }
-    
-    echo '</SELECT></TD></TR>';
-    
-    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][18].'</TD>';
-    echo '<TD WIDTH=75%><INPUT NAME="url" TYPE="text" SIZE="30" MAXLENGTH="255"></TD></TR>';
+}
 
-    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][19].'</TD>';
-    echo '<TD WIDTH=75%><INPUT NAME="login" TYPE="text" SIZE="30" MAXLENGTH="255"></TD></TR>';
+echo '</SELECT></TD></TR>';
 
-    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][20].'</TD>';
-    echo '<TD WIDTH=75%><INPUT NAME="password" TYPE="password" SIZE="30" MAXLENGTH="255" OnKeyUp="checkPassLevel(this.value)">';
-    echo '<IMG SRC="imgs/genpass.png" TITLE="'.$LANG['buttons'][50].'" CLASS="inputImg" OnClick="password(11,true,true);" />';
-    echo '</TD></TR>';
+echo '<INPUT TYPE="hidden" NAME="savetyp" VALUE="1">';
+echo '</FORM></TABLE>';
+echo '<DIV ID="resAccion"></DIV>';
 
-    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][22].'</TD>';
-    echo '<TD WIDTH=75%><INPUT NAME="password2" TYPE="password" SIZE="30" MAXLENGTH="255">';
-    echo '<SPAN ID="passLevel" TITLE="'.$LANG['buttons'][51].'" ></SPAN>';
-    echo '</TD></TR>';
-
-    echo '<TR><TD WIDTH=25% CLASS="descCampo">'.$LANG['accounts'][24].'</TD>';
-    echo '<TD WIDTH=75%><TEXTAREA NAME="notice" TYPE="text" COLS="30" ROWS="5" MAXLENGTH="255"></TEXTAREA></TD></TR>';
-
-    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][30].'</TD>';
-    echo '<TD><SELECT NAME="ugroups[]" MULTIPLE="multiple" SIZE="5" >';
-    
-    $arrGroups = $objAccount->getSecGroups();
-
-    foreach ( $arrGroups as $groupName => $groupId ){
-        if ( $groupId != $_SESSION["ugroup"] ){
-            echo "<OPTION VALUE='$groupId'>$groupName</OPTION>";
-        }
-    }
-
-    echo '</SELECT></TD></TR>';
-
-    echo '<INPUT TYPE="hidden" NAME="savetyp" VALUE="1">';
-    echo '</FORM></TABLE>';
-    echo '<DIV ID="resAccion"></DIV>';
-    
-    Common::PrintFooter();
+Common::PrintFooter();
 ?>

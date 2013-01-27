@@ -24,6 +24,8 @@
  * 
  */
 
+if ( ! defined('PMS_ROOT') ) die("No es posible acceder directamente a este archivo<br />You can't access directly to this file");
+
 class Config {
 
     var $dbh;
@@ -244,7 +246,7 @@ class Config {
 
         if ( $adminCount[0] == 0 ){
             $strQuery = "INSERT INTO users (vacUName,vacULogin,intUGroupFid,intUProfile,blnIsAdminApp,vacUPassword,blnFromLdap) 
-                        VALUES('PMS Admin','admin',0,0,1,MD5('admin'),0)";
+                        VALUES('PMS Admin','admin',1,0,1,MD5('admin'),0)";
             $resQuery = $this->dbh->query($strQuery);
 
             if ( $resQuery ){
@@ -288,6 +290,7 @@ class Config {
         $this->arrConfigValue["mailenabled"] = 0;
         $this->arrConfigValue["mailserver"] = "";
         $this->arrConfigValue["mailfrom"] = "";
+        $this->arrConfigValue["lastupdatempass"] = time();
         $this->arrConfigValue["install"] = 1;
         $this->arrConfigValue["version"] = PMS_VERSION;
         
@@ -319,7 +322,7 @@ class Config {
 
         if ( ! is_array($arrOut) ){
             Common::wrLogInfo($LANG['event'][19],"IP:".$_SERVER['REMOTE_ADDR']);
-            Common::sendEmail($LANG['mailevent'][3]);
+            Common::sendEmail($LANG['event'][19]);
             
             $this->getChildVars();
             
@@ -341,30 +344,30 @@ class Config {
         
         $this->getConfig();
         
-        echo '<TABLE CLASS="data tblConfig">';
+        echo '<TABLE CLASS="data tblConfig round">';
         echo '<FORM METHOD="post" NAME="frmConfig" ID="frmConfig" />';      
 
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader">'.$LANG['config'][1].'</TD></TR>';
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][2];
         Common::printHelpButton("config", 0);
         echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="sitename" CLASS="txtLong" ID="sitename" VALUE="'.$this->arrConfigValue["sitename"].'" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="sitename" CLASS="txtLong" ID="sitename" VALUE="'.$this->arrConfigValue["sitename"].'" MAXLENGTH="128" /></TD>';
         echo '</TR>';
 
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][3];
         Common::printHelpButton("config", 1);
         echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="siteshortname" VALUE="'.$this->arrConfigValue["siteshortname"].'" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="siteshortname" VALUE="'.$this->arrConfigValue["siteshortname"].'" MAXLENGTH="128" /></TD>';
         echo '</TR>';
         
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36];
         Common::printHelpButton("config", 2);
         echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="'.$this->arrConfigValue["siteroot"].'" />';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="siteroot" VALUE="'.$this->arrConfigValue["siteroot"].'" MAXLENGTH="128" />';
         echo '<IMG SRC="imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" TITLE="'.$LANG['config'][41].'" /></TD>';
 
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][37].'</TD>';
-        echo '<TD><SELECT NAME="sitelang" SIZE="1">';
+        echo '<TD CLASS="valueField"><SELECT NAME="sitelang" SIZE="1">';
         foreach ( $arrLangAvailable as $langOption ){
             $selected = ( $this->arrConfigValue["sitelang"] == $langOption ) ?  "SELECTED" : "";
             
@@ -374,23 +377,23 @@ class Config {
         
 
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][4].'</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="session_timeout" VALUE="'.$this->arrConfigValue["session_timeout"].'" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="session_timeout" VALUE="'.$this->arrConfigValue["session_timeout"].'" MAXLENGTH="4" /></TD>';
         echo '</TR>';
         
         $chkLog = ( $this->arrConfigValue["logenabled"] ) ? 'checked="checked"' : '';
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][5].'</TD>';
-        echo '<TD><INPUT TYPE="checkbox" NAME="logenabled" CLASS="checkbox" '.$chkLog.' /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="logenabled" CLASS="checkbox" '.$chkLog.' /></TD>';
         echo '</TR>';        
 
         $chkDebug = ( $this->arrConfigValue["debug"] ) ? 'checked="checked"' : '';
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][6].'</TD>';
-        echo '<TD><INPUT TYPE="checkbox" NAME="debug" CLASS="checkbox" '.$chkDebug.' /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="debug" CLASS="checkbox" '.$chkDebug.' /></TD>';
         echo '</TR>';
                
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][7];
         Common::printHelpButton("config", 3);
         echo '</TD>';
-        echo '<TD><SELECT NAME="account_link" SIZE="1">';
+        echo '<TD CLASS="valueField"><SELECT NAME="account_link" SIZE="1">';
         if ( $this->arrConfigValue["account_link"] == "TRUE" ){
             echo '<OPTION SELECTED>TRUE</OPTION><OPTION>FALSE</OPTION>';
         } else {
@@ -402,7 +405,7 @@ class Config {
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][8];
         Common::printHelpButton("config", 4);
         echo '</TD>';
-        echo '<TD><SELECT NAME="account_count" SIZE="1">';
+        echo '<TD CLASS="valueField"><SELECT NAME="account_count" SIZE="1">';
         
         $arrAccountCount = array(1,2,3,5,10,15,20,25,30,50,"all");
         
@@ -420,11 +423,11 @@ class Config {
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][39];
         Common::printHelpButton("config", 5);
         echo '</TD>';
-        echo '<TD><INPUT TYPE="checkbox" NAME="filesenabled" CLASS="checkbox" '.$chkFiles.' /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="filesenabled" CLASS="checkbox" '.$chkFiles.' /></TD>';
         echo '</TR>';
         
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][38].'</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="add_ext" ID="add_ext" />';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="add_ext" ID="add_ext" MAXLENGTH="4" />';
         echo '<IMG SRC="imgs/add.png" TITLE="'.$LANG['buttons'][43].'" CLASS="inputImg" ID="btnAddExt" OnClick="addSelOption(\'allowed_exts\',\'add_ext\')" />';        
         echo '<BR /><SELECT ID="allowed_exts" NAME="allowed_exts[]" MULTIPLE="multiple" SIZE="3">';
         
@@ -444,7 +447,7 @@ class Config {
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][40];
         Common::printHelpButton("config", 6);
         echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="allowed_size" VALUE="'.$this->arrConfigValue["allowed_size"].'" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="allowed_size" VALUE="'.$this->arrConfigValue["allowed_size"].'" MAXLENGTH="5" /></TD>';
         echo '</TR>';
         
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][9].'</TD></TR>';
@@ -452,25 +455,25 @@ class Config {
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][10];
         Common::printHelpButton("config", 7);
         echo '</TD>';
-        echo '<TD><INPUT TYPE="checkbox" NAME="wikienabled" CLASS="checkbox" '.$chkWiki.' /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="wikienabled" CLASS="checkbox" '.$chkWiki.' /></TD>';
         echo '</TR>';
         
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][11];
         Common::printHelpButton("config", 8);
         echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="wikisearchurl" CLASS="txtLong" VALUE="'.$this->arrConfigValue["wikisearchurl"].'" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="wikisearchurl" CLASS="txtLong" VALUE="'.$this->arrConfigValue["wikisearchurl"].'" MAXLENGTH="128" /></TD>';
         echo '</TR>';
 
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][12];
         Common::printHelpButton("config", 9);
         echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="wikipageurl" CLASS="txtLong" VALUE="'.$this->arrConfigValue["wikipageurl"].'" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="wikipageurl" CLASS="txtLong" VALUE="'.$this->arrConfigValue["wikipageurl"].'" MAXLENGTH="128" /></TD>';
         echo '</TR>';
 
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][13];
         Common::printHelpButton("config", 10);
         echo '</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="add_wikifilter" ID="add_wikifilter" />';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="add_wikifilter" ID="add_wikifilter" MAXLENGTH="128" />';
         echo '<IMG SRC="imgs/add.png" TITLE="'.$LANG['buttons'][45].'" CLASS="inputImg" ID="btnAddWikifilter" OnClick="addSelOption(\'wikifilter\',\'add_wikifilter\')" />';
         echo '<BR /><SELECT ID="wikifilter" NAME="wikifilter[]" MULTIPLE="multiple" SIZE="3">';
         
@@ -484,7 +487,7 @@ class Config {
         }
         
         echo '</SELECT>';
-        echo '<IMG SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][46].'" CLASS="inputImg" ID="btnDelWikifilter" OnClick="delSelOption(\'wikifilter\')" />';        
+        echo '<IMG SRC="imgs/delete.png" TITLE="'.$LANG['buttons'][46].'" CLASS="inputImg" ID="btnDelWikifilter" OnClick="delSelOption(\'wikifilter\')" />';
         echo '</TD></TR>';
 
         if ( in_array("ldap", get_loaded_extensions()) ){
@@ -494,29 +497,29 @@ class Config {
             echo '<TR><TD CLASS="descCampo">'.$LANG['config'][15];
             Common::printHelpButton("config", 11);
             echo '</TD>';
-            echo '<TD><INPUT TYPE="checkbox" NAME="ldapenabled" CLASS="checkbox" '.$chkLdap.' /></TD>';
+            echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="ldapenabled" CLASS="checkbox" '.$chkLdap.' /></TD>';
             echo '</TR>';
 
             echo '<TR><TD CLASS="descCampo">'.$LANG['config'][16].'</TD>';
-            echo '<TD><INPUT TYPE="text" NAME="ldapserver" VALUE="'.$this->arrConfigValue["ldapserver"].'" /></TD>';
+            echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="ldapserver" VALUE="'.$this->arrConfigValue["ldapserver"].'" MAXLENGTH="128" /></TD>';
             echo '</TR>';
 
             echo '<TR><TD CLASS="descCampo">'.$LANG['config'][17];
             Common::printHelpButton("config", 12);
             echo '</TD>';
-            echo '<TD><INPUT TYPE="text" NAME="ldapbase" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapbase"].'" /></TD>';
+            echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="ldapbase" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapbase"].'" MAXLENGTH="128" /></TD>';
             echo '</TR>';
 
             echo '<TR><TD CLASS="descCampo">'.$LANG['config'][18];
             Common::printHelpButton("config", 13);
             echo '</TD>';
-            echo '<TD><INPUT TYPE="text" NAME="ldapgroup" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapgroup"].'" /></TD>';
+            echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="ldapgroup" CLASS="txtLong" VALUE="'.$this->arrConfigValue["ldapgroup"].'" MAXLENGTH="128" /></TD>';
             echo '</TR>';
 
             echo '<TR><TD CLASS="descCampo">'.$LANG['config'][19];
             Common::printHelpButton("config", 14);
             echo '</TD>';
-            echo '<TD><INPUT TYPE="text" NAME="add_ldapuserattr" ID="add_ldapuserattr" />';
+            echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="add_ldapuserattr" ID="add_ldapuserattr" MAXLENGTH="128" />';
             echo '<IMG SRC="imgs/add.png" TITLE="'.$LANG['buttons'][47].'" CLASS="inputImg" ID="btnAddLdapuserattr" OnClick="addSelOption(\'ldapuserattr\',\'add_ldapuserattr\')" />';
             echo '<BR /><SELECT ID="ldapuserattr" NAME="ldapuserattr[]" MULTIPLE="multiple" SIZE="3">';
 
@@ -540,15 +543,15 @@ class Config {
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][20].'</TD></TR>';
         $chkMail = ( $this->arrConfigValue["mailenabled"] ) ? 'checked="checked"' : '';
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][21].'</TD>';
-        echo '<TD><INPUT TYPE="checkbox" NAME="mailenabled" CLASS="checkbox" '.$chkMail.' /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="mailenabled" CLASS="checkbox" '.$chkMail.' /></TD>';
         echo '</TR>';
       
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][22].'</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="mailserver" SIZE="20" VALUE="'.$this->arrConfigValue["mailserver"].'" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="mailserver" SIZE="20" VALUE="'.$this->arrConfigValue["mailserver"].'" MAXLENGTH="128" /></TD>';
         echo '</TR>';
         
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][23].'</TD>';
-        echo '<TD><INPUT TYPE="text" NAME="mailfrom" SIZE="20" VALUE="'.$this->arrConfigValue["mailfrom"].'" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="mailfrom" SIZE="20" VALUE="'.$this->arrConfigValue["mailfrom"].'" MAXLENGTH="128" /></TD>';
         echo '</TR>'; 
         
         echo '<INPUT TYPE="hidden" NAME="action" VALUE="config" />';

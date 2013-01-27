@@ -24,6 +24,8 @@
  * 
  */
 
+if ( ! defined('PMS_ROOT') ) die("No es posible acceder directamente a este archivo<br />You can't access directly to this file");
+
 class Common {
 
     public $arrBackLinks = array('skey' => '', 'sorder' => '', 'categoria' => '', 'cliente' => '', 'search' => '', 'page' => '');
@@ -79,7 +81,9 @@ class Common {
         $strHead .= "Reply-To: $strTo \r\n";
         $strHead .= "Cc: $strFrom\r\n";
 
-        $strMensaje = $strMensaje." ".$LANG['common'][3]." '".$_SESSION["ulogin"]."'";
+        $strMensaje = $LANG['common'][8].":".$strMensaje."\r\n";
+        $strMensaje .= $LANG['common'][9].":".$_SESSION["ulogin"]."'";
+        
         // Enviar correo
         mail($strTo, $strAsunto, $strMensaje, $strHead);
     }
@@ -91,11 +95,11 @@ class Common {
         $startTime = microtime();
         
         $strAdminApp = ( $_SESSION["uisadminapp"] ) ? "(A+)" : "";
-        $strAdminAcc = ( $_SESSION["uisadminacc"] ) ? "(A)" : "";
+        $strAdminAcc = ( $_SESSION["uisadminacc"] && ! $_SESSION["uisadminapp"] ) ? "(A)" : "";
         $strUserName = ( $_SESSION["uname"] ) ? $_SESSION["uname"] : $_SESSION["ulogin"];
         $strUserGroup = ( $_SESSION["ugroupn"] ) ? $_SESSION["ugroupn"] : $_SESSION["ugroup"];
         
-        $strUser = "$strUserName ($strUserGroup) ".$strAdminApp.$strAdminAcc;
+        $strUser = "$strUserName ($strUserGroup)".$strAdminApp.$strAdminAcc."";
         $chpass = ( $_SESSION['uisldap'] == 0 ) ? '<IMG SRC="imgs/key.png" CLASS="iconMini" TITLE="'.$LANG['buttons'][0].'" Onclick="usrUpdPass('.$_SESSION["uid"].',\''.$_SESSION["ulogin"].'\')" />' : '';
         
         echo '<NOSCRIPT><DIV ID="nojs">'.$LANG['common'][2].'</DIV></NOSCRIPT>';

@@ -24,32 +24,32 @@
  * 
  */
 
-    define('PMS_ROOT', '.');
-    include_once (PMS_ROOT."/inc/includes.php");
-    check_session();
-    
-    Common::printHeader(FALSE,TRUE);
+define('PMS_ROOT', '.');
+include_once (PMS_ROOT."/inc/includes.php");
+check_session();
 
-    echo '<BODY>';
-    
-    Common::printBodyHeader(); 
-    Users::checkUserAccess("logview") || die ('<DIV CLASS="error">'.$LANG['msg'][34].'</DIV');
-    
-    echo '<DIV ID="container" ALIGN="center">';
-    echo '<H2>'.$LANG['buttons'][15].'</H2>';
-    echo '<DIV CLASS="action midround">';
+Common::printHeader(FALSE,TRUE);
 
-    $objCommon = new Common();
-    $objCommon->printBackLinks(TRUE); 
+echo '<BODY>';
 
-    echo '</DIV>';
-    
-    echo '<DIV ID="resEventLog">';
-    echo '<TABLE CLASS="data">';
-    echo '<THEAD><TR CLASS="headerGrey"><TH>'.$LANG['eventlogs'][0].'</TH><TH>'.$LANG['eventlogs'][1].'</TH><TH>'.$LANG['eventlogs'][2].'</TH><TH WIDTH="60%">'.$LANG['eventlogs'][3].'</TH></TR></THEAD>';
-    echo '<TBODY ID="resSearch"></TBODY></TABLE></DIV>';
-        
-    echo '<SCRIPT> $("#resSearch").load(pms_root + "/ajax_eventlog.php");</SCRIPT>';
-    
-    Common::PrintFooter();
+Common::printBodyHeader(); 
+Users::checkUserAccess("logview") || die ('<DIV CLASS="error">'.$LANG['msg'][34].'</DIV');
+
+echo '<DIV ID="container" ALIGN="center">';
+echo '<H2>'.$LANG['buttons'][15].'</H2>';
+echo '<DIV CLASS="action midround">';
+
+$objCommon = new Common();
+$objCommon->printBackLinks(TRUE); 
+
+echo '</DIV>';
+
+echo '<DIV ID="resEventLog">';
+echo '<TABLE CLASS="data round">';
+echo '<THEAD><TR CLASS="headerGrey"><TH>'.$LANG['eventlogs'][0].'</TH><TH>'.$LANG['eventlogs'][1].'</TH><TH>'.$LANG['eventlogs'][2].'</TH><TH WIDTH="60%">'.$LANG['eventlogs'][3].'</TH></TR></THEAD>';
+echo '<TBODY ID="resSearch"></TBODY></TABLE></DIV>';
+
+echo '<SCRIPT> $("#resSearch").load(pms_root + "/ajax/ajax_eventlog.php");</SCRIPT>';
+
+Common::PrintFooter();
 ?>

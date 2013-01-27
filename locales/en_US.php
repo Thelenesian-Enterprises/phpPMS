@@ -89,6 +89,8 @@ $LANG['common'][4]="Warning";
 $LANG['common'][5]="Error";
 $LANG['common'][6]="Ok";
 $LANG['common'][7]="Unavailable";
+$LANG['common'][8]="Action";
+$LANG['common'][9]="Issuer";
 
 $LANG['login'][0]="Login"; 
 $LANG['login'][1]="User"; 
@@ -347,6 +349,7 @@ $LANG['event'][20]="Incorrect login";
 $LANG['event'][21]="Modify configuration";
 $LANG['event'][22]="Password view";
 $LANG['event'][23]="Access check";
+$LANG['event'][24]="Password modify";
 
 $LANG['eventdesc'][0]="Error while getting user data on DB";
 $LANG['eventdesc'][1]="Error while updating user password on DB";
@@ -461,7 +464,7 @@ $LANG['js'][20]="You should use at least 8 characters";
 
 $LANG["help"]["config"][0]="<H2>Site name</H2><P>Sets up long site name to put it on pages header.</P>";
 $LANG["help"]["config"][1]="<H2>Site short name</H2><P>Sets up short site name for titles where it's not possible to use the long one.</P><P>It's used for email sending also.</P>";
-$LANG["help"]["config"][2]="<H2>URL site root</H2><P>Sets up site base URL.<BR />This URL appears on the right side of server name in the location bar.</P><P>Do not modify on doubt.</P><P>Example: /phppms</P>";
+$LANG["help"]["config"][2]="<H2>URL site root</H2><P>Sets up site base URL.</P><P>Do not modify on doubt.</P><P>Example: https://domain.com/phppms</P>";
 $LANG["help"]["config"][3]="<H2>Account name as link</H2><P>Enables account name as a link to account details in search page.</P>";
 $LANG["help"]["config"][4]="<H2>Results per page</H2><P>Number of results that are shown per page when doing a search.</P>";
 $LANG["help"]["config"][5]="<H2>Files management</H2><P>Enables upload/download accounts files.</P>";

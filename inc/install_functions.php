@@ -414,7 +414,7 @@ function checkModules(){
     $modsError = 0;
     $modsWarn = 0;
     $modsAvail = get_loaded_extensions();
-    $modsNeed = array("mysql","ldaps","mcrypt","curl","SimpleXML");
+    $modsNeed = array("mysql","ldap","mcrypt","curl","SimpleXML");
 
     echo '<TR><TD>'.$LANG['install'][17].':';
 
@@ -526,15 +526,19 @@ function mkConfigForm(){
 
     preg_match("/^\/\w+/", $_SERVER["REQUEST_URI"],$siteRoot);
     
-    
-
     if ( ! isset($siteRoot[0]) ){
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36].'</TD>';
         echo '<TD><INPUT TYPE="text" NAME="siteroot" VALUE="" />';
         echo '<IMG SRC="'.PMS_ROOT.'/imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" TITLE="'.$LANG['install'][55].'" />';
         echo '</TD></TR>';
-    } else{
-        echo '<INPUT TYPE="hidden" NAME="siteroot" VALUE="'.$siteRoot[0].'" />';
+    } else {
+        if ( isset($_SERVER["HTTPS"]) ){
+            $strURL = 'https://'.$_SERVER["HTTP_HOST"].$siteRoot[0];
+        } else {
+            $strURL = 'http://'.$_SERVER["HTTP_HOST"].$siteRoot[0];
+        }
+    
+        echo '<INPUT TYPE="hidden" NAME="siteroot" VALUE="'.$strURL.'" />';
     }
         
     echo '<TR><TD CLASS="descCampo">'.$LANG['config'][37].'</TD>';

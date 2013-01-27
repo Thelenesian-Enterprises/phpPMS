@@ -26,7 +26,7 @@
 
 // TODO: comprobar permisos para eliminar archivos
 
-    define('PMS_ROOT', '.');
+    define('PMS_ROOT', '..');
     include_once (PMS_ROOT . "/inc/includes.php");
     
     $objConfig = new Config();
@@ -45,7 +45,7 @@
         return;
     } 
     
-    switch ($_POST['action']){
+    switch ( $_POST['action'] ){
         case "upload":
             $accountId = $_POST['accountId'];
 

@@ -58,7 +58,7 @@ $objConfig = new Config;
 
 if ( ! $objConfig->getDBConfig() ) initError("No se ha podido cargar la configuración<br />Configuration can not be loaded");
 
-define('PMS_CVERSION', '0.962b');
+define('PMS_CVERSION', '0.97b');
 define('PMS_VERSION', $objConfig->getConfigValue("version"));
 define('PMS_ROOTURL', $objConfig->getConfigValue("siteroot"));
 define('PMS_LANG', $objConfig->getConfigValue("sitelang"));

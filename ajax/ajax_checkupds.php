@@ -24,18 +24,22 @@
  * 
  */
 
-define('PMS_ROOT', '.');
+define('PMS_ROOT', '..');
 include_once (PMS_ROOT."/inc/includes.php");
-check_session(TRUE);
 
-$helpType = $_GET["type"];
-$helpId = (int)$_GET["id"];
+session_start();
 
-if ( $helpId >= 0 && $helpType ){
-    echo '<DIV ID="fancycontainer" CLASS="help" ALIGN="center">';
-    echo '<TABLE CLASS="fancydata">';
-    echo '<TR><TD>'.$LANG["help"][$helpType][$helpId].'</TD></TR>';
-    echo '</TABLE></DIV>';
+if ( ! $_SESSION["uisadminapp"] ){
+    return;
 }
 
+$checkVersion = ( ! isset($_SESSION["pms_upd"]) ) ? Config::checkUpdates() : $checkVersion = $_SESSION["pms_upd"];
+
+session_write_close();
+
+if ( is_array($checkVersion) ){
+    echo '<A HREF="'.$checkVersion[1].'" TARGET="_blank" TITLE="'.$LANG['common'][1].'"><IMG SRC="imgs/update.png" />&nbsp;'.$checkVersion[0].'</A>';
+} elseif ( $checkVersion == TRUE ){
+    echo '<IMG SRC="imgs/ok.png" TITLE="'.$LANG['common'][0].'"/>';
+}
 ?>

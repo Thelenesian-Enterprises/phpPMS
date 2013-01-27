@@ -24,28 +24,28 @@
  * 
  */
 
-    define('PMS_ROOT', '.');
-    include_once (PMS_ROOT."/inc/includes.php");
+define('PMS_ROOT', '..');
+include_once (PMS_ROOT."/inc/includes.php");
 
-    // Comprobamos si la sesión ha caducado
-   if ( check_session(TRUE) ) return "0";
-    
-    Users::checkUserAccess("users") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
-    
-    $objUsers = new Users;
-    
-    switch ( $_POST["action"] ){
-        case 1:
-            $objUsers->getUsersTable();
-            break;
-        case 2:
-            $objUsers->getNewUserTable();
-            break;
-        case 3:
-            $objUsers->getGroupsTable();
-            break;
-        case 4:
-            $objUsers->getNewGroupTable();
-            break;
-    }
+// Comprobamos si la sesión ha caducado
+if ( check_session(TRUE) ) return "0";
+
+Users::checkUserAccess("users") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
+
+$objUsers = new Users;
+
+switch ( $_POST["action"] ){
+    case 1:
+        $objUsers->getUsersTable();
+        break;
+    case 2:
+        $objUsers->getNewUserTable();
+        break;
+    case 3:
+        $objUsers->getGroupsTable();
+        break;
+    case 4:
+        $objUsers->getNewGroupTable();
+        break;
+}
 ?>

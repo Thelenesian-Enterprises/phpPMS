@@ -24,14 +24,17 @@
  * 
  */
 
-    define('PMS_ROOT', '.');
-    include_once (PMS_ROOT . "/inc/includes.php");
-    //check_session(TRUE,TRUE);
-    session_start();
-    
-    Common::wrLogInfo($LANG['event'][16], $LANG['eventdesc'][11].":".$_SESSION['uname'].";".$LANG['eventdesc'][12].":".$_SESSION['uprofile'].";".$LANG['eventdesc'][13].":".$_SESSION['ugroup'].";".$LANG['eventdesc'][14].":".$_SERVER['REMOTE_ADDR']);
-    
-    session_destroy();
-    
-    echo '<div id="fancyView" class="msgWarn">'.$LANG['msg'][74].'</div>';
+define('PMS_ROOT', '.');
+include_once (PMS_ROOT . "/inc/includes.php");
+session_start();
+
+$userName = ( isset($_SESSION["uname"]) ) ? $_SESSION["uname"] : "";
+$userProfile = ( isset($_SESSION["uprofile"]) ) ? $_SESSION["uprofile"] : "";
+$userGroup = ( isset($_SESSION["ugroup"]) ) ? $_SESSION["ugroup"] : "";
+
+Common::wrLogInfo($LANG['event'][16], $LANG['eventdesc'][11].":".$userName.";".$LANG['eventdesc'][12].":".$userProfile.";".$LANG['eventdesc'][13].":".$userGroup.";".$LANG['eventdesc'][14].":".$_SERVER['REMOTE_ADDR']);
+
+session_destroy();
+
+echo '<div id="fancyView" class="msgWarn">'.$LANG['msg'][74].'</div>';
 ?>

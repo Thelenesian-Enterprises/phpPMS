@@ -24,6 +24,8 @@
  * 
  */
 
+if ( ! defined('PMS_ROOT') ) die("No es posible acceder directamente a este archivo<br />You can't access directly to this file");
+
 class Account {
     
     public $dbh;
@@ -121,13 +123,14 @@ class Account {
         $this->updateAccGroups() || Common::wrLogInfo(__FUNCTION__,$LANG['eventdesc'][4]);
                 
         $strQuery = "UPDATE accounts SET ";
-        $strQuery .= "vacCliente = '".$this->dbh->real_escape_string($this->strAccCliente)."', ";
-        $strQuery .= "intCategoryFid = ".(int)$this->intAccCategoryId.", ";
-        $strQuery .= "vacName = '".$this->dbh->real_escape_string($this->strAccName)."', ";
-        $strQuery .= "vacLogin = '".$this->dbh->real_escape_string($this->strAccLogin)."', ";
-        $strQuery .= "vacUrl = '".$this->dbh->real_escape_string($this->strAccUrl)."', ";
-        $strQuery .= "txtNotice = '".$this->dbh->real_escape_string($this->strAccNotes)."', ";
-        $strQuery .= "intUEditFId = ".(int)$this->intAccUserEditId;
+        $strQuery .= "vacCliente = '".$this->dbh->real_escape_string($this->strAccCliente)."',";
+        $strQuery .= "intCategoryFid = ".(int)$this->intAccCategoryId.",";
+        $strQuery .= "vacName = '".$this->dbh->real_escape_string($this->strAccName)."',";
+        $strQuery .= "vacLogin = '".$this->dbh->real_escape_string($this->strAccLogin)."',";
+        $strQuery .= "vacUrl = '".$this->dbh->real_escape_string($this->strAccUrl)."',";
+        $strQuery .= "txtNotice = '".$this->dbh->real_escape_string($this->strAccNotes)."',";
+        $strQuery .= "intUEditFId = ".(int)$this->intAccUserEditId.",";
+        $strQuery .= "datChanged = NOW()";
         $strQuery .= " WHERE intAccountId = ".(int)$this->intAccId;
 
         $resQuery = $this->dbh->query($strQuery);
@@ -190,11 +193,11 @@ class Account {
         }
 
         $strQuery .= " VALUES(";
-        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccCliente)."', ";
+        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccCliente)."',";
         $strQuery .= (int)$this->intAccCategoryId.", ";
-        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccName)."', ";
-        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccLogin)."', ";
-        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccUrl)."', ";
+        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccName)."',";
+        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccLogin)."',";
+        $strQuery .= "'".$this->dbh->real_escape_string($this->strAccUrl)."',";
         $strQuery .= "'$this->strAccPwd', ";
         if ( $clsConfig->getConfigValue("md5_pass") == TRUE ) {
                 $strQuery .= "'$this->strAccMd5Pwd', ";

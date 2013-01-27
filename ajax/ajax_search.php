@@ -24,7 +24,7 @@
  * 
  */
 
-    define('PMS_ROOT', '.');
+    define('PMS_ROOT', '..');
     include_once (PMS_ROOT."/inc/includes.php");
     
     if ( check_session(TRUE) ) return;
@@ -40,12 +40,12 @@
 
     global $strSortKey, $strSortOrder, $strCliente, $strCategory, $strSearch, $intPage;
     
-    $strSortKey = $_POST["skey"];
-    $strSortOrder = $_POST["sorder"];
-    $strCliente = $_POST["cliente"];
-    $strCategory = $_POST["categoria"];
-    $strSearch = addslashes($_POST["search"]);
-    $intPage = $_POST["page"];
+    $strSortKey = ( isset($_POST["skey"]) ) ? $_POST["skey"] : "";
+    $strSortOrder = ( isset($_POST["sorder"]) ) ? $_POST["sorder"] : "";
+    $strCliente = ( isset($_POST["cliente"]) ) ? $_POST["cliente"] : "";
+    $strCategory = ( isset($_POST["categoria"]) ) ? $_POST["categoria"] : "";
+    $strSearch = ( isset($_POST["search"]) ) ? $_POST["search"] : "";
+    $intPage = ( isset($_POST["page"]) ) ? (int)$_POST["page"] : 1;
     
     $intUGroupFId = $_SESSION["ugroup"];
     $intProfileId = $_SESSION["uprofile"];
@@ -106,7 +106,7 @@
     }
 
     echo '<TABLE ID="tblBuscar"><THEAD>';
-    echo '<TR CLASS="headerBlue">';
+    echo '<TR CLASS="headerGrey">';
     echo '<TH WIDTH="15%"><A onClick="searchSort(5,'.$intPage.')">'.$LANG['accounts'][0].'</A></TH>';
     echo '<TH WIDTH="15%"><A onClick="searchSort(1,'.$intPage.')">'.$LANG['accounts'][4].'</A></TH>';
     echo '<TH WIDTH="10%"><A onClick="searchSort(2,'.$intPage.')">'.$LANG['accounts'][5].'</A></TH>';
@@ -136,7 +136,7 @@
         $strQueryWhere = " WHERE (vacName LIKE '%$strSearch%' OR vacLogin LIKE '%$strSearch%' OR vacUrl LIKE '%$strSearch%' OR txtNotice LIKE '%$strSearch%' OR vacName LIKE '%$strSearch%')";
         
         // Comprobamos el grupo del usuario y si es admin, para acotar la búsqueda a sus grupos y perfil
-        if ( ! $blnUIsAdminApp || ! $blnUIsAdminAcc ) {
+        if ( ! $blnUIsAdminApp && ! $blnUIsAdminAcc ) {
             $strQueryWhere .= "AND (intUGroupFId = $intUGroupFId OR intUserFId = $intUId OR aug.intUGroupId = $intUGroupFId)";
         }
 
@@ -206,7 +206,8 @@
             $strAccNotes = substr($strAccNotes, 0, 97) . "...";
         }
        
-        echo '<TR CLASS="'.$strTableClass.'" ondblClick="document.frmView_'.$account["intAccountId"].'.submit();">';
+        //echo '<TR CLASS="'.$strTableClass.'" ondblClick="document.frmView_'.$account["intAccountId"].'.submit();">';
+        echo '<TR CLASS="'.$strTableClass.'">';
         echo '<TD CLASS="txtCliente">';
         
         if ( $CFG_PMS["wikienabled"] ){
@@ -234,11 +235,14 @@
         
         echo '</TD><TD>';
         
+        if ( $strAccUrl ) $strAccUrl = ( preg_match("#^https?://.*#i", $strAccUrl) ) ? $strAccUrl : 'http://'.$strAccUrl;
+        
         if ( strlen($strAccUrl) >= 25 ){
             $strAccUrl_short = truncate($strAccUrl,25);
-            $strAccUrl = '<A HREF="http://'.$strAccUrl.'" TARGET="_blank" TITLE="'.$strAccUrl.'">'.$strAccUrl_short.'</A>';
-        } else {			
-            $strAccUrl = '<A HREF="http://'.$strAccUrl.'" TARGET="_blank" TITLE="'.$strAccUrl.'">'.$strAccUrl.'</A>';
+            
+            $strAccUrl = '<A HREF="'.$strAccUrl.'" TARGET="_blank" TITLE="'.$strAccUrl.'">'.$strAccUrl_short.'</A>';
+        } else {
+            $strAccUrl = '<A HREF="'.$strAccUrl.'" TARGET="_blank" TITLE="'.$strAccUrl.'">'.$strAccUrl.'</A>';
         }
 
         echo ( $strAccUrl ) ? $strAccUrl : '&nbsp;';

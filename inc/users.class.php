@@ -24,6 +24,8 @@
  * 
  */
 
+if ( ! defined('PMS_ROOT') ) die("No es posible acceder directamente a este archivo<br />You can't access directly to this file");
+
 class Users {
 
     private $dbh;
@@ -138,8 +140,8 @@ class Users {
             $rowclass = ( $rowclass == "row_odd" ) ? "row_even" : "row_odd";
 
             echo '<TR CLASS="usr_odd usrrow_'.$intUsrId.' '.$rowclass.'">';
-            echo '<TD CLASS="ilabel">'.$LANG['users'][1].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usrname_'.$intUsrId.'" NAME="usrname_'.$intUsrId.'" TITLE="'.$username.'" VALUE="'.$username.'" CLASS="txtuser '.$clsdisabled.'" readonly /></LABEL></TD>';
-            echo '<TD CLASS="ilabel">'.$LANG['users'][3].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usrlogin_'.$intUsrId.'" NAME="usrlogin_'.$intUsrId.'" TITLE="'.$userlogin.'" VALUE="'.$userlogin.'" CLASS="txtlogin '.$clsdisabled.'" readonly /></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][1].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usrname_'.$intUsrId.'" NAME="usrname_'.$intUsrId.'" TITLE="'.$username.'" VALUE="'.$username.'" CLASS="txtuser '.$clsdisabled.'" MAXLENGTH="80" readonly /></LABEL></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][3].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usrlogin_'.$intUsrId.'" NAME="usrlogin_'.$intUsrId.'" TITLE="'.$userlogin.'" VALUE="'.$userlogin.'" CLASS="txtlogin '.$clsdisabled.'" MAXLENGTH="10" readonly /></TD>';
             echo '<TD CLASS="ilabel">'.$LANG['users'][5].'</TD><TD CLASS="itext"><SELECT id="usrprofile_'.$intUsrId.'" NAME="usrprofile_'.$intUsrId.'" CLASS="'.$clsdisabled.'" disabled>';
             foreach ($usersprofiles as $profileid => $profiledesc ){
                 ( $profileid == $userprofile ) ? $profileselected = "selected": $profileselected = "";
@@ -151,11 +153,12 @@ class Users {
             echo '<TD ROWSPAN="2"><TABLE ID="tblActions"><TR>'.$lnkEdit.$lnkSave.$lnkDel.$lnkPass.'</TR></TABLE></TD>';
             echo '</TR>';
             echo '<TR CLASS="usr_even usrrow_'.$intUsrId.' '.$rowclass.'">';
-            echo '<TD CLASS="ilabel">'.$LANG['users'][2].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usremail_'.$intUsrId.'" NAME="usremail_'.$intUsrId.'" TITLE="'.$useremail.'" VALUE="'.$useremail.'" CLASS="txtemail '.$clsdisabled.'" readonly/></LABEL></TD>';
-            echo '<TD CLASS="ilabel">'.$LANG['users'][4].'</TD><TD CLASS="itext"><INPUT TYPE="text" id="usrnotes_'.$intUsrId.'" NAME="usrnotes_'.$intUsrId.'" TITLE="'.$usernotes.'" VALUE="'.$usernotes.'" CLASS="txtnotes '.$clsdisabled.'" readonly /></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][2].'</TD><TD CLASS="itext"><INPUT TYPE="text" ID="usremail_'.$intUsrId.'" NAME="usremail_'.$intUsrId.'" TITLE="'.$useremail.'" VALUE="'.$useremail.'" CLASS="txtemail '.$clsdisabled.'" MAXLENGTH="50" readonly/></LABEL></TD>';
+            echo '<TD CLASS="ilabel">'.$LANG['users'][4].'</TD><TD CLASS="itext"><INPUT TYPE="text" id="usrnotes_'.$intUsrId.'" NAME="usrnotes_'.$intUsrId.'" TITLE="'.$usernotes.'" VALUE="'.$usernotes.'" CLASS="txtnotes '.$clsdisabled.'" MAXLENGTH="1000" readonly /></TD>';
             echo '<TD CLASS="ilabel">'.$LANG['users'][6].'</TD><TD CLASS="itext"><SELECT ID="usrgroup_'.$intUsrId.'" NAME="usrgroup_'.$intUsrId.'" CLASS="'.$clsdisabled.'" disabled>';
             foreach ($usersgroups as $groupname => $groupid){
                 ( $groupid == $usergroup ) ? $grpselected = "selected": $grpselected = "";
+                echo '<OPTION></OPTION>';
                 echo '<OPTION VALUE="'.$groupid.'" '.$grpselected.'>'.$groupname.'</OPTION>';
             }
             echo '</SELECT></TD>';
@@ -183,30 +186,33 @@ class Users {
         $usersprofiles = array($LANG['users'][11],$LANG['users'][12],$LANG['users'][13],$LANG['users'][14],$LANG['users'][15]);
         
         echo '<FORM NAME="frm_tblnewuser" ID="frm_tblnewuser" OnSubmit="return false;" >';
-        echo '<TABLE ID="tblNewUser" CLASS="data"><TBODY>';
+        echo '<TABLE ID="tblNewUser" CLASS="data round"><TBODY>';
         
-        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][1].'</TD><TD><INPUT TYPE="text" ID="usrname_0" NAME="usrname_0" TITLE="'.$LANG['users'][16].'" CLASS="txtuser" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][3].'</TD><TD><INPUT TYPE="text" ID="usrlogin_0" NAME="usrlogin_0" TITLE="'.$LANG['users'][17].'" CLASS="txtloginr" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][1].'</TD><TD CLASS="valueField"><INPUT TYPE="text" ID="usrname_0" NAME="usrname_0" TITLE="'.$LANG['users'][16].'" CLASS="txtuser" MAXLENGTH="80" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][3].'</TD><TD CLASS="valueField"><INPUT TYPE="text" ID="usrlogin_0" NAME="usrlogin_0" TITLE="'.$LANG['users'][17].'" CLASS="txtloginr" MAXLENGTH="10" /></TD></TR>';
         echo '<TR><TD CLASS="descCampo">'.$LANG['users'][5].'</TD>';
-        echo '<TD><SELECT ID="usrprofile_0" NAME="usrprofile_0">';
+        echo '<TD CLASS="valueField"><SELECT ID="usrprofile_0" NAME="usrprofile_0">';
+        echo '<OPTION></OPTION>';
         
         foreach ($usersprofiles as $profileid => $profiledesc ){
-            echo '<OPTION VALUE="'.$profileid.'" '.$profileSELECTed.'>'.$profiledesc.'</OPTION>';
+            echo '<OPTION VALUE="'.$profileid.'">'.$profiledesc.'</OPTION>';
         }
         
         echo '</SELECT></TD></TR>';
         echo '<TR><TD CLASS="descCampo">'.$LANG['users'][6].'</TD>';
-        echo '<TD><SELECT ID="usrgroup_0" NAME="usrgroup_0">';
-        
+        echo '<TD CLASS="valueField"><SELECT ID="usrgroup_0" NAME="usrgroup_0">';
+        echo '<OPTION></OPTION>';
+
         foreach ($usersgroups as $groupname => $groupid){
-            echo '<OPTION VALUE="'.$groupid.'" '.$grpSELECTed.'>'.$groupname.'</OPTION>';
+            echo '<OPTION VALUE="'.$groupid.'">'.$groupname.'</OPTION>';
         }
         echo '</SELECT></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][7].'</TD><TD CLASS="checkbox"><INPUT TYPE="checkbox" ID="chkadmin_0" NAME="chkadmin_0" TITLE="'.$LANG['users'][18].'" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][2].'</TD><TD><INPUT TYPE="text" ID="usremail_0" NAME="usremail_0" TITLE="'.$LANG['users'][19].'" CLASS="txtemail" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][4].'</TD><TD><INPUT TYPE="text" ID="usrnotes_0" NAME="usrnotes_0" CLASS="txtnotes" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][9].'</TD><TD><INPUT TYPE="password" ID="usrpass_0" NAME="usrpass_0" CLASS="txtpass" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][10].'</TD><TD><INPUT TYPE="password" ID="usrpassv_0" NAME="usrpassv_0" CLASS="txtpassv" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][7].'</TD><TD CLASS="valueField checkbox"><INPUT TYPE="checkbox" ID="chkadminapp_0" NAME="chkadminapp_0" TITLE="'.$LANG['users'][18].'" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][20].'</TD><TD CLASS="valueField checkbox"><INPUT TYPE="checkbox" ID="chkadminacc_0" NAME="chkadminacc_0" TITLE="'.$LANG['users'][20].'" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][2].'</TD><TD CLASS="valueField"><INPUT TYPE="text" ID="usremail_0" NAME="usremail_0" TITLE="'.$LANG['users'][19].'" CLASS="txtemail" MAXLENGTH="50" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][4].'</TD><TD CLASS="valueField"><INPUT TYPE="text" ID="usrnotes_0" NAME="usrnotes_0" CLASS="txtnotes" MAXLENGTH="1000" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][9].'</TD><TD CLASS="valueField"><INPUT TYPE="password" ID="usrpass_0" NAME="usrpass_0" CLASS="txtpass" MAXLENGTH="50" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['users'][10].'</TD><TD CLASS="valueField"><INPUT TYPE="password" ID="usrpassv_0" NAME="usrpassv_0" CLASS="txtpassv" MAXLENGTH="50" /></TD></TR>';
         echo '<INPUT TYPE="hidden" ID="usrid_0" NAME="usrid_0" VALUE="0" />';
         echo '</TBODY></TABLE></FORM>';
     }
@@ -247,8 +253,8 @@ class Users {
             $rowclass = ( $rowclass == "row_odd" ) ? "row_even": "row_odd";
         
             echo '<TR CLASS="grprow_'.$intGrpId.' '.$rowclass.'">';
-            echo '<TD CLASS="itext"><INPUT TYPE="text" ID="grpname_'.$intGrpId.'" NAME="grpname_'.$intGrpId.'" TITLE="'.$groupname.'" VALUE="'.$groupname.'" CLASS="txtgroup '.$clsdisabled.'" readonly /></LABEL></TD>';
-            echo '<TD CLASS="itext"><INPUT TYPE="text" ID="grpdesc_'.$intGrpId.'" NAME="grpdesc_'.$intGrpId.'" TITLE="'.$groupdesc.'" VALUE="'.$groupdesc.'" CLASS="txtdesc '.$clsdisabled.'" readonly /></TD>';
+            echo '<TD CLASS="itext"><INPUT TYPE="text" ID="grpname_'.$intGrpId.'" NAME="grpname_'.$intGrpId.'" TITLE="'.$groupname.'" VALUE="'.$groupname.'" CLASS="txtgroup '.$clsdisabled.'" MAXLENGTH="50" readonly /></LABEL></TD>';
+            echo '<TD CLASS="itext"><INPUT TYPE="text" ID="grpdesc_'.$intGrpId.'" NAME="grpdesc_'.$intGrpId.'" TITLE="'.$groupdesc.'" VALUE="'.$groupdesc.'" CLASS="txtdesc '.$clsdisabled.'" MAXLENGTH="255" readonly /></TD>';
             echo '<TD><TABLE ID="tblActions"><TR>'.$lnkEdit.$lnkSave.$lnkDel.'</TR></TABLE></TD>';
             echo '</TR>';
             echo '<INPUT TYPE="hidden" ID="grpid_'.$intGrpId.'" NAME="grpid_'.$intGrpId.'" VALUE="'.$intGrpId.'" />';
@@ -264,10 +270,10 @@ class Users {
         global $LANG;
         
         echo '<FORM NAME="frm_tblnewgroup" ID="frm_tblnewgroup" OnSubmit="return false;" >';
-        echo '<TABLE ID="tblNewGroup" CLASS="data"><TBODY>';
+        echo '<TABLE ID="tblNewGroup" CLASS="data round"><TBODY>';
         
-        echo '<TR><TD CLASS="descCampo">'.$LANG['groups'][0].'</TD><TD><INPUT TYPE="text" ID="grpname_0" NAME="grpname_0" TITLE="'.$LANG['groups'][3].'" /></TD></TR>';
-        echo '<TR><TD CLASS="descCampo">'.$LANG['groups'][1].'</TD><TD><INPUT TYPE="text" ID="grpdesc_0" NAME="grpdesc_0" TITLE="'.$LANG['groups'][4].'" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['groups'][0].'</TD><TD CLASS="valueField"><INPUT TYPE="text" ID="grpname_0" NAME="grpname_0" TITLE="'.$LANG['groups'][3].'" /></TD></TR>';
+        echo '<TR><TD CLASS="descCampo">'.$LANG['groups'][1].'</TD><TD CLASS="valueField"><INPUT TYPE="text" ID="grpdesc_0" NAME="grpdesc_0" TITLE="'.$LANG['groups'][4].'" /></TD></TR>';
         echo '<INPUT TYPE="hidden" ID="grpid_0" NAME="grpid_0" VALUE="0" />';
         echo '</TBODY></TABLE></FORM>';
     }    

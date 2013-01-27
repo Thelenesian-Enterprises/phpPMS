@@ -24,6 +24,8 @@
  * 
  */
 
+if ( ! defined('PMS_ROOT') ) die("No es posible acceder directamente a este archivo<br />You can't access directly to this file");
+
 class Category{
 
     private $dbh;

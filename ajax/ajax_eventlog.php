@@ -24,25 +24,25 @@
  * 
  */
 
-    define('PMS_ROOT', '.');
-    include_once (PMS_ROOT."/inc/includes.php");
-    
-    if ( check_session(TRUE) ) return "0";
+define('PMS_ROOT', '..');
+include_once (PMS_ROOT."/inc/includes.php");
 
-    $objConfig = new Config;
-    $dbh = $objConfig->connectDb();
-    $resQuery = $dbh->query("SELECT * FROM log");
+if ( check_session(TRUE) ) return "0";
 
-    while ( $row = $resQuery->fetch_assoc()){
-        $rowClass = ( $rowClass == "row_even" ) ? "row_odd" : "row_even";
+$objConfig = new Config;
+$dbh = $objConfig->connectDb();
+$resQuery = $dbh->query("SELECT * FROM log");
 
-        echo "<TR CLASS='$rowClass'>";
-        echo "<TD>".$row["datLog"]."</TD>";
-        echo "<TD>".utf8_decode($row["vacAccion"])."</TD>";
-        echo "<TD>".strtoupper($row["vacLogin"])."</TD>";
-        echo "<TD>".str_replace(";","<br />",$row["txtDescripcion"])."</TD>";
-        echo "</TR>";
-    }
-    
-    $resQuery->free();
+while ( $row = $resQuery->fetch_assoc()){
+    $rowClass = ( $rowClass == "row_even" ) ? "row_odd" : "row_even";
+
+    echo "<TR CLASS='$rowClass'>";
+    echo "<TD>".$row["datLog"]."</TD>";
+    echo "<TD>".utf8_decode($row["vacAccion"])."</TD>";
+    echo "<TD>".strtoupper($row["vacLogin"])."</TD>";
+    echo "<TD>".str_replace(";","<br />",$row["txtDescripcion"])."</TD>";
+    echo "</TR>";
+}
+
+$resQuery->free();
 ?>

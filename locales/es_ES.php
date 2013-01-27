@@ -89,6 +89,8 @@ $LANG['common'][4]="Aviso";
 $LANG['common'][5]="Error";
 $LANG['common'][6]="Ok";
 $LANG['common'][7]="No disponible";
+$LANG['common'][8]="Acción";
+$LANG['common'][9]="Realizado por";
 
 $LANG['login'][0]="Acceso"; 
 $LANG['login'][1]="Usuario"; 
@@ -228,7 +230,7 @@ $LANG['msg'][5]="Servidor LDAP no disponible";
 $LANG['msg'][6]="Usuario deshabilitado";
 $LANG['msg'][7]="Usuario/Clave incorrectos";
 $LANG['msg'][8]="Es necesario un nombre de cliente";
-$LANG['msg'][9]="Es necesario un nombre de servicio/recurso";
+$LANG['msg'][9]="Es necesario un nombre de cuenta";
 $LANG['msg'][10]="Es necesario un usuario";
 $LANG['msg'][11]="Es necesario una clave";
 $LANG['msg'][12]="Las claves no coinciden";
@@ -346,7 +348,7 @@ $LANG['event'][20]="Login incorrecto";
 $LANG['event'][21]="Modificar configuración";
 $LANG['event'][22]="Ver clave";
 $LANG['event'][23]="Check acceso";
-
+$LANG['event'][24]="Modificar clave";
 
 $LANG['eventdesc'][0]="Error al obtener los datos del usuario de la BBDD";
 $LANG['eventdesc'][1]="Error al actualizar la clave del usuario en la BBDD";
@@ -367,13 +369,6 @@ $LANG['eventdesc'][15]="pendiente de activación.";
 $LANG['eventdesc'][16]="Nombre";
 $LANG['eventdesc'][17]="Cuenta";
 $LANG['eventdesc'][18]="Denegado acceso a";
-
-$LANG['mailevent'][0]="Nueva cuenta";
-$LANG['mailevent'][1]="Modificación de cuenta";
-$LANG['mailevent'][2]="Eliminación de cuenta";
-$LANG['mailevent'][3]="Realizado backup";
-$LANG['mailevent'][4]="Modificación de clave";
-$LANG['mailevent'][5]="Configuración modificada";
 
 $LANG['install'][0]="Entorno ya instalado";
 $LANG['install'][1]="Clave maestra inicial establecida a '0000'. Es recomendable cambiarla";
@@ -461,7 +456,7 @@ $LANG['js'][20]="Debería utilizar al menos 8 caracteres";
 
 $LANG["help"]["config"][0]="<H2>Nombre del sitio</H2><P>Establece un nombre largo del sitio para situarlo en la cabecera de todas las páginas.</P>";
 $LANG["help"]["config"][1]="<H2>Nombre corto del sitio</H2><P>Establece un nombre corto para títulos donde no es posible utilizar el nombre largo.</P><P>También es utilizado para el envío de correos.</P>";
-$LANG["help"]["config"][2]="<H2>URL raíz del sitio</H2><P>Establece la URL que sirve como base del sitio.<BR />Esta URL aparece a continuación del servidor en la barra de direcciones.</P><P>No modificar en caso de duda.</P><P>Ejemplo: /phppms</P>";
+$LANG["help"]["config"][2]="<H2>URL raíz del sitio</H2><P>Establece la URL que sirve como base del sitio.</P><P>No modificar en caso de duda.</P><P>Ejemplo: https://dominio.com/phppms</P>";
 $LANG["help"]["config"][3]="<H2>Nombre de cuenta como enlace</H2><P>Habilita el nombre de la cuenta de la búsqueda, como enlace a los detalles de la cuenta.</P>";
 $LANG["help"]["config"][4]="<H2>Resultados por página</H2><P>Número de resultados por página a mostrar, al realizar una búsqueda.</P>";
 $LANG["help"]["config"][5]="<H2>Gestión de archivos</H2><P>Habilita la subida/descarga de archivos para las cuentas.</P>";

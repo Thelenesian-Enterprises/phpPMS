@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `intCountView` int(10) unsigned NOT NULL DEFAULT '0',
   `intCountDecrypt` int(10) unsigned NOT NULL DEFAULT '0',
   `datAdded` datetime NOT NULL,
-  `datChanged` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `datChanged` datetime NOT NULL,
   PRIMARY KEY (`intAccountId`),
   KEY `vacCliente` (`vacCliente`),
   FULLTEXT KEY `vacName` (`vacName`),
@@ -164,6 +164,8 @@ CREATE TABLE IF NOT EXISTS `usergroups` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
+
+INSERT INTO `usergroups` (`vacUGroupName`,`vacUGroupDesc`) VALUES('Admins','Admins');
 
 --
 -- Estructura de tabla para la tabla `users`

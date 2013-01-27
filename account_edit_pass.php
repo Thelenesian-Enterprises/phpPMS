@@ -24,59 +24,59 @@
  * 
  */
 
-    define('PMS_ROOT', '.');
-    include_once (PMS_ROOT."/inc/includes.php");
-    check_session();
+define('PMS_ROOT', '.');
+include_once (PMS_ROOT."/inc/includes.php");
+check_session();
 
-    $objAccount = new Account;
-    $objCommon = new Common;
-    $objUser = new Users;    
+$objAccount = new Account;
+$objCommon = new Common;
+$objUser = new Users;    
 
-    $intAccId = $_POST["accountid"];
+$intAccId = $_POST["accountid"];
 
-    foreach ($_POST as $varPost => $varPostValue){
-        if (array_key_exists($varPost, $objCommon->arrBackLinks)) {
-            $objCommon->arrBackLinks["$varPost"] = $varPostValue;
-        }
-    }    
+foreach ($_POST as $varPost => $varPostValue){
+    if (array_key_exists($varPost, $objCommon->arrBackLinks)) {
+        $objCommon->arrBackLinks["$varPost"] = $varPostValue;
+    }
+}    
 
-    $objAccount->getAccount($intAccId);
-        
-    Common::printHeader(FALSE,TRUE);
+$objAccount->getAccount($intAccId);
 
-    echo '<BODY ONLOAD="document.editpass.password.focus()">';
+Common::printHeader(FALSE,TRUE);
 
-    $objCommon->printBodyHeader();
-    
-    $objAccount->checkAccountAccess("chpass") || die ('<DIV CLASS="error"'.$LANG['msg'][91].'</DIV');
-    $objUser->checkUserUpdateMPass() || die ('<DIV CLASS="error">'.$LANG['msg'][100].'</DIV');
-    
-    echo '<DIV ID="container" ALIGN="center">';
-    echo '<H2>'.$LANG['buttons'][10].'</H2>';
-    echo '<DIV CLASS="action midround">';
-    echo '<IMG SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" ID="btnGuardar" OnClick="saveAccount(\'frmEditPass\');">';
-    
-    $objCommon->printBackLinks(TRUE);
-    
-    echo '</DIV>';
-    
-    echo '<FORM ACTION="" METHOD="post" NAME="editpass" ID="frmEditPass" >';
-    echo '<TABLE CLASS="data">';
-    echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][17].'</TD><TD>'.$objAccount->strAccName.'</TD></TR>';
-    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][16].'</TD><TD>'.$objAccount->strAccCategoryName.'</TD></TR>';
-    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][19].'</TD><TD>'.$objAccount->strAccLogin.'</TD></TR>';
-    echo '<TR><TD WIDTH="25%" CLASS="descCampo">'.$LANG['accounts'][18].'</TD><TD><A HREF="'.$objAccount->strAccUrl.'" TARGET="_blank">'.$objAccount->strAccUrl.'</TD></TR>';
-    echo '<TR><TD width=25% CLASS="descCampo">'.$LANG['accounts'][20].'</TD><TD><INPUT TYPE="password" SIZE="100" NAME="password" onKeyUp="checkPassLevel(this.value)">';
-    echo '<IMG SRC="imgs/genpass.png" TITLE="'.$LANG['buttons'][50].'" CLASS="inputImg" OnClick="password(11,true,true);" />';
-    echo '</TD></TR>';
-    echo '<TR><TD width=25% CLASS="descCampo">'.$LANG['accounts'][22].'</TD><TD><INPUT TYPE="password" SIZE="100" NAME="password2">';
-    echo '<SPAN ID="passLevel" TITLE="'.$LANG['buttons'][51].'" ></SPAN>';
-    echo '</TD></TR>';
-    echo '</TABLE>';
-    echo '<INPUT TYPE="hidden" NAME="savetyp" VALUE="4" />';
-    echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$objAccount->intAccId.'" />';
-    echo '</FORM>';
-    echo '<DIV ID="resAccion"></DIV>';
-    
-    Common::PrintFooter();
+echo '<BODY ONLOAD="document.editpass.password.focus()">';
+
+$objCommon->printBodyHeader();
+
+$objAccount->checkAccountAccess("chpass") || die ('<DIV CLASS="error"'.$LANG['msg'][91].'</DIV');
+$objUser->checkUserUpdateMPass() || die ('<DIV CLASS="error">'.$LANG['msg'][100].'</DIV');
+
+echo '<DIV ID="container" ALIGN="center">';
+echo '<H2>'.$LANG['buttons'][10].'</H2>';
+echo '<DIV CLASS="action midround">';
+echo '<IMG SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" ID="btnGuardar" OnClick="saveAccount(\'frmEditPass\');">';
+
+$objCommon->printBackLinks(TRUE);
+
+echo '</DIV>';
+
+echo '<FORM ACTION="" METHOD="post" NAME="editpass" ID="frmEditPass" >';
+echo '<TABLE CLASS="data round">';
+echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][17].'</TD><TD CLASS="valueField">'.$objAccount->strAccName.'</TD></TR>';
+echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][16].'</TD><TD CLASS="valueField">'.$objAccount->strAccCategoryName.'</TD></TR>';
+echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][19].'</TD><TD CLASS="valueField">'.$objAccount->strAccLogin.'</TD></TR>';
+echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][18].'</TD><TD CLASS="valueField"><A HREF="'.$objAccount->strAccUrl.'" TARGET="_blank">'.$objAccount->strAccUrl.'</TD></TR>';
+echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][20].'</TD><TD CLASS="valueField"><INPUT TYPE="password" MAXLENGTH="255" NAME="password" onKeyUp="checkPassLevel(this.value)">';
+echo '<IMG SRC="imgs/genpass.png" TITLE="'.$LANG['buttons'][50].'" CLASS="inputImg" OnClick="password(11,true,true);" />';
+echo '</TD></TR>';
+echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][22].'</TD><TD CLASS="valueField"><INPUT TYPE="password" MAXLENGTH="255" NAME="password2">';
+echo '<SPAN ID="passLevel" TITLE="'.$LANG['buttons'][51].'" ></SPAN>';
+echo '</TD></TR>';
+echo '</TABLE>';
+echo '<INPUT TYPE="hidden" NAME="savetyp" VALUE="4" />';
+echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$objAccount->intAccId.'" />';
+echo '</FORM>';
+echo '<DIV ID="resAccion"></DIV>';
+
+Common::PrintFooter();
 ?>

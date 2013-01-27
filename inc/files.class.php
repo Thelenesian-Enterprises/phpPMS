@@ -24,6 +24,8 @@
  * 
  */
 
+if ( ! defined('PMS_ROOT') ) die("No es posible acceder directamente a este archivo<br />You can't access directly to this file");
+
 class Files {
     
     private $dbh;
@@ -49,7 +51,7 @@ class Files {
         
         $objConfig = new Config();
                 
-        $allowedExts = $objConfig->getConfigValue("allowed_exts");
+        $allowedExts = strtoupper($objConfig->getConfigValue("allowed_exts"));
         $allowedSize = $objConfig->getConfigValue("allowed_size");
         
         if ( $allowedExts ){
@@ -60,14 +62,12 @@ class Files {
             return FALSE;            
         }
          
-        $validated = 0;
-
         if ( $_FILES && $_FILES['file']['name'] ){   
             // Comprobamos la extensión del archivo
-            $fileExt = pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION);
+            $fileExt = strtoupper(pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION));
 
-            if ( ! in_array(strtolower($fileExt), $extsOk) ){
-                echo $LANG['msg'][86]." '$fileExt'";
+            if ( ! in_array($fileExt, $extsOk) ){
+                echo $LANG['msg'][86]." '$fileExt' ";
                 return;
             }
         } else{
@@ -216,7 +216,7 @@ class Files {
         }
 
         // Mostramos el listado de archivos para descargarlos
-        echo '<form action="ajax_files.php" method="POST" name="files_form" id="files_form">';
+        echo '<form action="ajax/ajax_files.php" method="POST" name="files_form" id="files_form">';
         echo '<select name="fileId" size="4" class="files" id="files">';
         while ($file = $resQuery->fetch_assoc()) {
             $fileId = $file["intId"];

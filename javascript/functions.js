@@ -63,7 +63,7 @@ function Buscar(continous){
     $.ajax({
         type: 'POST',
         dataType: 'html',
-        url: pms_root + '/ajax_search.php',
+        url: pms_root + '/ajax/ajax_search.php',
         data: datos,
         success: function(response){
             if ( response == 0 ){
@@ -109,7 +109,7 @@ function searchSort(skey,page,nav){
     $.ajax({
         type: 'POST',
         dataType: 'html',
-        url: pms_root + '/ajax_search.php',
+        url: pms_root + '/ajax/ajax_search.php',
         data: form_data,
         success: function(response){
             if ( response == 0 ){
@@ -127,11 +127,11 @@ function searchSort(skey,page,nav){
 function verClave(id,full){
     if ( full == 0 ) {
         $.post( 
-            pms_root + '/ajax_viewpass.php',
+            pms_root + '/ajax/ajax_viewpass.php',
             {'accountid' : id, 'full': 0}, function( data ) {$("#clave").html(data);}
         );
     } else{
-        $.post( pms_root + '/ajax_viewpass.php', {'accountid': id, 'full': full}, 
+        $.post( pms_root + '/ajax/ajax_viewpass.php', {'accountid': id, 'full': full}, 
             function( data ) {
                 if ( data == 0 ){
                     doLogout();
@@ -168,7 +168,7 @@ function doLogin(){
     $.ajax({
         type: "POST",
         dataType: "xml",
-        url: 'ajax_chklogin.php',
+        url: pms_root + '/ajax/ajax_chklogin.php',
         data: form_data,
         success: function(xml){
             var status = $(xml).find("status").text();
@@ -201,7 +201,7 @@ function doLogin(){
 
 function doLogout() {
     $.fancybox({
-        'href': 'logout.php',
+        'href': pms_root + '/logout.php',
         'onClosed' : function() {location.href = 'login.php';}
     });
 }
@@ -225,7 +225,7 @@ function saveAccount(frm) {
     $.ajax({
         type: 'POST',
         dataType: 'xml',
-        url: pms_root + '/ajax_accountsave.php',
+        url: pms_root + '/ajax/ajax_accountsave.php',
         data: datos,
         success: function(xml){
             var status = $(xml).find("status").text();
@@ -266,7 +266,7 @@ function delAccount(id,action){
     $.ajax({
         type: 'POST',
         dataType: 'xml',
-        url: pms_root + '/ajax_accountsave.php',
+        url: pms_root + '/ajax/ajax_accountsave.php',
         data: datos,
         success: function(xml){
             var status = $(xml).find("status").text();
@@ -296,15 +296,15 @@ function configMgmt(action){
     switch(action){
         case "addcat":
             datos = $("#frmAddCategory").serialize();
-            url = pms_root + '/ajax_categorymgmt.php';
+            url = pms_root + '/ajax/ajax_categorymgmt.php';
             break;
         case "editcat":
             datos = $("#frmEditCategory").serialize();
-            url = pms_root + '/ajax_categorymgmt.php';
+            url = pms_root + '/ajax/ajax_categorymgmt.php';
             break;
         case "delcat":
             datos = $("#frmDelCategory").serialize();
-            url = pms_root + '/ajax_categorymgmt.php';
+            url = pms_root + '/ajax/ajax_categorymgmt.php';
             break;
         case "saveconfig":
             $("#allowed_exts option").prop('selected',true);
@@ -312,11 +312,11 @@ function configMgmt(action){
             $("#ldapuserattr option").prop('selected',true);
             
             datos = $("#frmConfig").serialize();
-            url = pms_root + '/ajax_configsave.php';
+            url = pms_root + '/ajax/ajax_configsave.php';
             break;
         case "savempwd":
             datos = $("#frmCrypt").serialize();
-            url = pms_root + '/ajax_configsave.php';
+            url = pms_root + '/ajax/ajax_configsave.php';
             break;
         default:
             return;
@@ -371,7 +371,7 @@ function downFile(fancy){
 	$.ajax({
 		type : "POST",
 		cache : false,
-		url : pms_root + "/ajax_files.php",
+		url : pms_root + "/ajax/ajax_files.php",
 		data : frm_data,
 		success: function(response) {
                     $.fancybox(response,{'overlayOpacity' : 0.5});
@@ -394,11 +394,11 @@ function delFile(id){
 
     $("#resAccion").html('<img src="imgs/loading.gif" />');
 
-    $.post( pms_root + '/ajax_files.php', {fileId: $("#files").val(), action: 'delete'}, 
+    $.post( pms_root + '/ajax/ajax_files.php', {fileId: $("#files").val(), action: 'delete'}, 
         function( data ) { 
             var txt = '<div id="fancyView" class="msgOk">' + data + '</div>';
             $.fancybox(txt);
-            $("#downFiles").load( pms_root + "/ajax_files.php?id=" + id +"&del=1");
+            $("#downFiles").load( pms_root + "/ajax/ajax_files.php?id=" + id +"&del=1");
             $("#resAccion").empty();
         }
     );
@@ -418,7 +418,7 @@ function upldFile(id){
         success: function(responseText, statusText, xhr, $form){
             var txt = '<div id="fancyView" class="msgOk">' + responseText + '</div>';
             $.fancybox(txt);
-            $("#downFiles").load( pms_root + "/ajax_files.php?id=" + id +"&del=1");
+            $("#downFiles").load( pms_root + "/ajax/ajax_files.php?id=" + id +"&del=1");
             $("#resAccion").empty();
         },
         error:function(jqXHR, textStatus, errorThrown){
@@ -460,7 +460,7 @@ function loadUsrMgmt(action){
     $.ajax({
         type: 'POST',
         dataType: 'html',
-        url: pms_root + '/ajax_usersmgmt.php',
+        url: pms_root + '/ajax/ajax_usersmgmt.php',
         data: datos,
         success: function(response){
             if ( response == 0 ){
@@ -479,7 +479,7 @@ function loadUsrMgmt(action){
 
 // Función para la gestión de usuarios
 function userMgmt(action,id){
-    var url = pms_root + '/ajax_usersave.php';
+    var url = pms_root + '/ajax/ajax_usersave.php';
     var saveError = 0;
     
     switch(action){
@@ -510,15 +510,15 @@ function userMgmt(action,id){
         case "save":
             $("#resAccion").html('<img src="imgs/loading.gif" />');
             
-            var usrname = $("#usrname_"+ id).val();
-            var usrlogin = $("#usrlogin_"+ id).val();
-            var usrprofile = $("#usrprofile_"+ id).val();
-            var usrgroup = $("#usrgroup_"+ id).val();
-            var chkadminapp = $("#chkadminapp_"+ id).is(':checked');
-            var chkadminacc = $("#chkadminacc_"+ id).is(':checked');
-            var chkdisabled = $("#chkdisabled_"+ id).is(':checked');
-            var usremail = $("#usremail_"+ id).val();
-            var usrnotes = $("#usrnotes_"+ id).val();
+            var usrname = $("#usrname_" + id).val();
+            var usrlogin = $("#usrlogin_" + id).val();
+            var usrprofile = $("#usrprofile_" + id).val();
+            var usrgroup = $("#usrgroup_" + id).val();
+            var chkadminapp = $("#chkadminapp_" + id).is(':checked');
+            var chkadminacc = $("#chkadminacc_" + id).is(':checked');
+            var chkdisabled = $("#chkdisabled_" + id).is(':checked');
+            var usremail = $("#usremail_" + id).val();
+            var usrnotes = $("#usrnotes_" + id).val();
             
             var datos = {'savetyp':2,'usrid':id,'usrname':usrname,'usrlogin':usrlogin,'usrprofile':usrprofile,'usrgroup':usrgroup,'chkadminapp':chkadminapp,'chkadminacc':chkadminacc,'chkdisabled':chkdisabled,'usremail':usremail,'usrnotes':usrnotes};
             
@@ -585,7 +585,7 @@ function userMgmt(action,id){
 
 // Función para la gestión de grupos de usuarios
 function groupMgmt(action,id){
-    var url = pms_root + '/ajax_groupsave.php';
+    var url = pms_root + '/ajax/ajax_groupsave.php';
     var saveError = 0;
     
     switch(action){
@@ -688,7 +688,7 @@ function usrMgmtEnable(id,tbl){
     $("#"+tbl).find(':text,:checkbox,select').removeClass("inedit");
     $(".usrrow_"+ id ).find(':text,:checkbox,select').addClass("inedit");
     
-    var ldap = $("#usrldap_"+ id).val();
+    var ldap = $("#usrldap_" + id).val();
     
     // Reset de los campos del formulario
     $('input:text').prop('readonly',true);
@@ -696,23 +696,25 @@ function usrMgmtEnable(id,tbl){
     $('select').prop('disabled',true);
 
     // Habilitar los campos del formulario
-    $("#usrname_"+ id).prop('readonly',false);
-    $("#usrnotes_"+ id).prop('readonly',false);
-    $("#usrgroup_"+ id).prop('disabled',false);
-    $("#usrprofile_"+ id).prop('disabled',false);
-    $("#chkadminapp_"+ id).prop('disabled',false);
-    $("#chkadminacc_"+ id).prop('disabled',false);
+    $("#usrname_" + id).prop('readonly',false);
+    $("#usrnotes_" + id).prop('readonly',false);
+    $("#usrgroup_" + id).prop('disabled',false);
+    $("#usrprofile_" + id).prop('disabled',false);
+    $("#chkadminapp_" + id).prop('disabled',false);
+    $("#chkadminacc_" + id).prop('disabled',false);
 
     if ( ldap == 0 || id == 0){
-        $("#usrlogin_"+ id).prop('readonly',false);
-        $("#usremail_"+ id).prop('readonly',false);
-        $("#usrnotes_"+ id).prop('readonly',false);
-        $("#chkdisabled_"+ id).prop('disabled',false);
-        $("#usrgroup_"+ id).prop('disabled',false);
-        $("#usrprofile_"+ id).prop('disabled',false);
+        $("#usrlogin_" + id).prop('readonly',false);
+        $("#usremail_" + id).prop('readonly',false);
+        $("#usrnotes_" + id).prop('readonly',false);
+        $("#chkdisabled_" + id).prop('disabled',false);
+        $("#usrgroup_" + id).prop('disabled',false);
+        $("#usrprofile_" + id).prop('disabled',false);
+        $("#chkadminapp_" + id).prop('disabled',false);
+        $("#chkadminacc_" + id).prop('disabled',false);        
     }
     
-    $("#usrname_"+ id).focus();
+    $("#usrname_" + id).focus();
 }
 
 // Función para deshabilitar los campos del formulario de usuarios
@@ -732,7 +734,7 @@ function usrUpdPass(id,usrlogin){
     $.ajax({
         type : "GET",
         cache : false,
-        url	: 'pmsusers_pass.php',
+        url : pms_root + '/pmsusers_pass.php',
         data : datos,
         success: function(data) {
             if ( data != 0 ){
@@ -752,7 +754,7 @@ function checkUpds(){
     $.ajax({
         type: 'GET',
         dataType: 'html',
-        url: pms_root + '/ajax_checkupds.php',
+        url: pms_root + '/ajax/ajax_checkupds.php',
         timeout: 2000,
         success: function(response){
             $('#updates').html(response);
@@ -809,7 +811,7 @@ function getHelp(type, id){
     $.ajax({
         type: 'GET',
         dataType: 'html',
-        url: pms_root + '/ajax_help.php?type=' + type + '&id=' + id,
+        url: pms_root + '/ajax/ajax_help.php?type=' + type + '&id=' + id,
         success: function(response){
             $.fancybox(response,{ showCloseButton: false, margin: 0, padding: 0 });
         },

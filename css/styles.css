@@ -14,7 +14,7 @@ TABLE {
 	border:1px solid #d9d9d9;
 	font-size: 11px;
 	border-spacing: 0;
-	padding: 3px;
+	/*padding: 3px;*/
 }
 
 
@@ -26,7 +26,7 @@ TABLE {
 }
 
 TABLE TR.headerBlue { background-color: #E6F2FF;}
-TABLE TR.headerGrey { background-color: #e9e9e9;}
+TABLE TR.headerGrey { background-color: #f2f2f2;}
 TABLE TH { border-bottom: 2px solid white; }
 TABLE TR.odd {background-color:#f9f9f9;}
 TABLE TR.even>TD, TABLE TR.odd>TD { border-bottom:1px solid #d9d9d9 !important; }
@@ -36,25 +36,27 @@ TABLE TR { height:20px; }
 TABLE TD { padding:3px; }
 TABLE TD.txtCliente { font-weight:bold;text-align:center; }
 TABLE TD.descCampo {
-	text-align:right;
-	padding-right:20px;
-	background-color:#f3f3f3;
-	width: 25%;
-	border-bottom:1px solid #d9d9d9;
+    padding-right:20px;
+    width: 25%;
+    font-weight: bold;
+    border-right:1px solid #d9d9d9;
+    color: #555;        
 }
+TABLE TD.valueField {width: 75%; padding-left: 20px;}
 
 FORM { font-size: 11px; border: 0px solid #5dd; margin: 0; }
 
 INPUT, SELECT, TEXTAREA { 
     background-color: #fffef0; 
     color:black;
-    font-size: 11px; 
-    border: 1px solid #b9b9b9;
+    font-size: 11px;
+    border: none;
+    border-bottom: 1px solid #d9d9d9;
 }
 
-INPUT:hover, SELECT:hover, TEXTAREA:hover{background-color: #fffde1;}
+INPUT:hover, SELECT:hover, TEXTAREA:hover{background-color: #fffccd;}
 INPUT:active, SELECT:active, TEXTAREA:active{background-color: #fffde1; color: #045FB4;}
-INPUT:focus, SELECT:focus, TEXTAREA:focus{background-color: #fffde1; color: #045FB4;font-weight:bold;}
+INPUT:focus, SELECT:focus, TEXTAREA:focus{background-color: #fffccd; color: #045FB4;}
 
 INPUT {width: 200px; padding:2px;}
 
@@ -179,9 +181,15 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #container #resBuscar #pageNav A { margin-left: 5px; font-size: 12px; color: #999; }
 #container #resBuscar #pageNav .current {margin-left: 5px; color: darkorange; }
 
-#container .data{width: 100%; border: none; margin-top: 3.5em;}
+#container .data{
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #c9c9c9;
+    margin-top: 3.5em;
+    background-color: #f9f9f9;
+}
 #container .data TD{text-align: left;}
-#container .data TD.descCampo {text-align:right;font-size:12px;font-weight:bold;}
+#container .data TD.descCampo {text-align:right; font-size:12px; font-weight:bold; color: #999}
 #container .data #downFiles FORM{width: 50%;display: inline;}
 #container .data #upldFiles FORM{width: 50%;display: inline;}
 #container .data .actionFiles {display: inline;}
@@ -189,10 +197,10 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #container .tblConfig TD.descCampo{width:27%;font-size:11px; font-weight:bold;}
 #container .tblConfig TD.rowHeader{
     padding: 5px 0 5px 0;
-    background-color:#f9f9f9;
+    background-color:#f5f5f5;
     text-align: center;
     font-weight: bold;
-    border-top:10px solid white;
+    border-top:15px solid #f9f9f9;
     border-bottom:3px solid #a9c1d7;
     letter-spacing: 0.5em;
     color: #696969;
@@ -224,7 +232,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
         display: inline-block;
         height: 3em;
         padding: 0 15px 0 15px;
-        background-color: #f2f2f2;
+        background-color: #f5f5f5;
         text-align: right;
         float:right;
 }
@@ -272,7 +280,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 
 #tblTools SELECT, #tblTools INPUT{margin-left: 15px;}
 #tblTools #txtSearch{width: 55%;}
-#tblTools label{margin-left:15px;}
+#tblTools label{margin-left:15px; color: #999;}
 
 #datos{
 	float:left;
@@ -380,9 +388,9 @@ A:focus {text-decoration: none;	color: #FF0000;}
 #footer IMG{border: none;width: 16px;height: 16px;vertical-align: middle;}
 
 .round{
-	border-radius: 15px;
-	-moz-border-radius:15px !important;
-	-webkit-border-radius:15px !important;
+	border-radius: 10px;
+	-moz-border-radius:10px !important;
+	-webkit-border-radius:10px !important;
 	<!--[if IE 8]>
 	behavior:url(css/border-radius.htc) !important;
 	<![endif]-->
@@ -421,113 +429,97 @@ A:focus {text-decoration: none;	color: #FF0000;}
 
 /*Login Page*/
 #boxLogin{
-	width:350px;
-	height: 200px;
-	margin-top:20px;
-	margin-left: auto;
-	margin-right: auto;
-	padding-left:15px;
+    width:500px;
+    height: 130px;
+    margin: auto;
+    margin-top: 50px;
+    border-top: #d9d9d9 1px solid;
+    border-bottom: #d9d9d9 1px solid;    
+    /*background: url("../imgs/logo.png") no-repeat left top #fff;*/
 }
 
 #boxLogin #error{
-	float:left;
-	width:315px;
-	margin-top:15px;
-	color:orange;
-	border: 1px orange solid;
-	margin-left:auto;
-	margin-right:auto;
+    float:left;
+    width:315px;
+    margin-top:15px;
+    color:orange;
+    border: 1px orange solid;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 #boxLogin #loading{
-	float:left;
-	width:315px;
-	margin-top:15px;
-	color:orange;
-	margin-left:auto;
-	margin-right:auto;
-	font-size: 10px;
+    float:left;
+    width:315px;
+    margin-top:15px;
+    color:orange;
+    margin-left:auto;
+    margin-right:auto;
+    font-size: 10px;
 }
 
-#boxLogin #head{
-	float:left;
-	width:330px;
-	height: 110px;
-}
-#boxLogin #head img{
-	float:left;
-	width: 124px;
-	height: 105px;
-	display: block;
+#boxLogin #imgLogo{
+    float:left;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    top: 15px;
+    left: 0;
+    z-index: 90;
+    filter:alpha(opacity=40);
+    -moz-opacity: 0.4;
+    opacity: 0.4;
 }
 
 #boxLogin #head p{
-	float:left;
-	width: 150px;
-	color:#039;
-	font-weight:bold;
-	margin-top:55px;
-	margin-left:25px;
-}
-
-#boxLogin #logo{
-	float:left;
-	width: 330px;
-	font-size: 18px;
-	font-weight: bold;
-	text-align:left;
-	color: #045FB4;
-	letter-spacing: 3px;
-	background: url("../imgs/bar.png") repeat-x scroll left top #e9e9e9;
-}
-
-#boxLogin #logo IMG{
-	width: 64px;
-	height: 64px;
-	margin-right: 15px;
-	vertical-align: middle;
+    float:left;
+    width: 150px;
+    color:#039;
+    font-weight:bold;
+    margin-top:55px;
+    margin-left:25px;
 }
 
 #boxLogin #login{
-	float:left;
-	width:300px;
-	min-height:100px;
-	margin-top:10px;
-	padding:15px;
-	text-align:left;
-	margin-left:auto;
-	margin-right:auto;
-	border: #d9d9d9 1px solid;
-	background-color: white;
+    float:left;
+    width:350px;
+    min-height:100px;
+    margin-top: 10px;
+    padding: 15px;
+    text-align:left;
+    margin-left:auto;
+    margin-right:auto;
+    background-color: transparent;
 }
 
 #boxLogin #login label{
-	float:left;
-	width:100px;
-	margin: 10px 20px 0 10px;
-	color: #045FB4;
-	font-weight:bold;
-        font-size: 14px;
+    float:left;
+    width:120px;
+    margin: 10px 20px 0 10px;
+    color: #045FB4;
+    font-weight:bold;
+    font-size: 14px;
 }
 
 #boxLogin #login input{
-	float:left;
-	margin-top:10px;
-	border: 1px solid #b9b9b9;
-	color:#039;
-	width:150px;
-	background-color: #e9e9e9;
-        font-size: 14px;
+    float:left;
+    margin-top:10px;
+    border: none;
+    border-bottom: 1px solid #b9b9b9;
+    color:#039;
+    width:150px;
+    background-color: #f2f2f2;
+    font-size: 14px;
 }
 
 #boxLogin #login #btnLogin{
-	float:right;
-	width:24px;
-	height:24px;
-	margin-top:15px;
-	border: none;
-	padding: 0;
-	background-color: transparent !important;
+    float:right;
+    width:24px;
+    height:24px;
+    margin-top:15px;
+    border: none;
+    padding: 0;
+    background-color: transparent !important;
 }
 
 /*Install Page*/

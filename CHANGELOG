@@ -1,3 +1,9 @@
+=== ** v0.97b ** ===
+
+* [BUG] Corregidos fallos de la aplicación.
+* [MOD] Optimización de código.
+* [MOD] Cambios visuales.
+
 === ** v0.962b ** ===
 
 * [MOD] El módulo LDAP es opcional.
@@ -76,6 +82,12 @@
 * [NUEVO] Versión inicial
 
 ---
+
+=== ** v0.97b ** ===
+
+* [BUG] Several bugfixes.
+* [MOD] Code improvements.
+* [MOD] Visual changes.
 
 === ** v0.962b ** ===
 

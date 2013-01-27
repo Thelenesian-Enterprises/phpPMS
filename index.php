@@ -24,85 +24,85 @@
  * 
  */
 
-    define('PMS_ROOT', '.');
-    include_once (PMS_ROOT."/inc/includes.php");
-    check_session();
+define('PMS_ROOT', '.');
+include_once (PMS_ROOT."/inc/includes.php");
+check_session();
 
-    $userGroupId = $_SESSION["ugroup"];
-    $userProfileId = $_SESSION["uprofile"];
-    $userIsAdminApp = $_SESSION["uisadminapp"];
-    $strSearch = ( isset($_POST["search"]) ) ? $_POST["search"] : "";
+$userGroupId = $_SESSION["ugroup"];
+$userProfileId = $_SESSION["uprofile"];
+$userIsAdminApp = $_SESSION["uisadminapp"];
+$strSearch = ( isset($_POST["search"]) ) ? $_POST["search"] : "";
 
-    Common::printHeader(FALSE,TRUE);
-    
-    echo '<BODY ONLOAD="document.frmSearch.search.focus(); Buscar(0); checkUpds();">';
-    
-    Common::printBodyHeader(); 
+Common::printHeader(FALSE,TRUE);
 
-    if ( $userGroupId == 99 ) {
-        Common::PrintFooter();
-        return;
-    }
+echo '<BODY ONLOAD="document.frmSearch.search.focus(); Buscar(0); checkUpds();">';
 
-    $clsAccount = new Account;
-		
-    echo '<DIV ALIGN="center" id="container">';
-    echo '<TABLE ID="tblTools" CLASS="round">';
-    echo '<TR>';
-    echo '<FORM METHOD="post" NAME="frmSearch" ID="frmSearch" OnSubmit="return Buscar(0);">';
-    echo '<TD WIDTH="70%" ALIGN="left">';
-    echo '<LABEL FOR="txtSearch">'.$LANG["buttons"][16].'</LABEL><INPUT TYPE="text" NAME="search" ID="txtSearch" onKeyUp="Buscar(1)" VALUE="'.$strSearch.'"/>';
-    echo '<INPUT TYPE="hidden" NAME="page" VALUE="1">';
-    echo '<INPUT TYPE="hidden" NAME="skey" />';
-    echo '<INPUT TYPE="hidden" NAME="sorder" />';
-    echo '<IMG SRC="imgs/search.png" title="'.$LANG["buttons"][16].'" class="inputImg" id="btnBuscar" onClick="Buscar(0);" />';
-    echo '<IMG SRC="imgs/clear.png" title="'.$LANG["buttons"][17].'" class="inputImg" id="btnLimpiar" onClick="Clear(\'frmSearch\',1); Buscar(0);" />';
-    echo '</TD>';
-    echo '<TD ALIGN="right" ROWSPAN="2">';
-    
-    if ( ($userProfileId <= 2 OR $userIsAdminApp == 1) AND $userGroupId != 99){
-        echo '<A HREF="account_add.php"><IMG SRC="imgs/add.png" title="'.$LANG['buttons'][7].'" class="inputImg" /></A>';
-    }
-    
-    if ( $userIsAdminApp == 1 ){ 
-        echo '<A HREF="pmsconfig.php"><IMG SRC="imgs/config.png" title="'.$LANG['buttons'][11].'" class="inputImg" /></A>';
-        echo '<A HREF="pmsbackup.php"><IMG SRC="imgs/backup.png" title="'.$LANG['buttons'][19].'" class="inputImg" /></A>';
-        echo '<A HREF="pmsusers.php"><IMG SRC="imgs/users.png" title="'.$LANG['buttons'][20].'" class="inputImg" /></A>';
-        echo '<A HREF="pmslog.php"><IMG SRC="imgs/log.png" title="'.$LANG['buttons'][21].'" class="inputImg" /></A>';
-    }
-    
-    echo '</TD></TR>';
-    echo '<TR WIDTH="60%"><TD WIDTH="60%" ALIGN="left">';
-    echo '<LABEL FOR="selCLiente">'.$LANG["accounts"][0].'</LABEL><SELECT NAME="cliente" ID="selCLiente" SIZE="1" OnChange="Buscar(0)">';
-    echo '<OPTION>'.$LANG["accounts"][1].'</OPTION>';
-    
-    $strCliente = ( isset($_POST["cliente"]) ) ? $_POST["cliente"] : "";
-    $arrClientes = $clsAccount->getClientes();
+Common::printBodyHeader(); 
 
-    foreach ( $arrClientes as $cliente ){
-        if ( $cliente == $strCliente ){
-            echo "<OPTION SELECTED>$cliente</OPTION>\n";
-        } else {
-            echo "<OPTION>$cliente</OPTION>\n";
-        }
-    }
-    
-    echo '</SELECT>';
-    echo '<LABEL FOR="selCategoria">'.$LANG['accounts'][2].'</LABEL><SELECT NAME="categoria" ID="selCategoria" SIZE="1" OnChange="Buscar(0)">';
-    echo '<OPTION>'.$LANG['accounts'][3].'</OPTION>';
-    
-    $strCategoria = ( isset($_POST["categoria"]) ) ? $_POST["categoria"] : "";
-
-    foreach ( $clsAccount->getCategorias() as $catName => $catId){
-        if ( $strCategoria == $catId ){
-            echo "<OPTION VALUE='".$catId."' SELECTED>".$catName."</OPTION>\n";
-        } else {
-            echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>\n";
-        }                                    
-    }
-    
-    echo '</SELECT></TD></FORM></TR></TABLE>';
-    echo '<DIV ID="resBuscar"></DIV>';
-    
+if ( $userGroupId == 99 ) {
     Common::PrintFooter();
+    return;
+}
+
+$clsAccount = new Account;
+
+echo '<DIV ALIGN="center" id="container">';
+echo '<TABLE ID="tblTools" CLASS="round">';
+echo '<TR>';
+echo '<FORM METHOD="post" NAME="frmSearch" ID="frmSearch" OnSubmit="return Buscar(0);">';
+echo '<TD WIDTH="70%" ALIGN="left">';
+echo '<LABEL FOR="txtSearch">'.$LANG["buttons"][16].'</LABEL><INPUT TYPE="text" NAME="search" ID="txtSearch" onKeyUp="Buscar(1)" VALUE="'.$strSearch.'"/>';
+echo '<INPUT TYPE="hidden" NAME="page" VALUE="1">';
+echo '<INPUT TYPE="hidden" NAME="skey" />';
+echo '<INPUT TYPE="hidden" NAME="sorder" />';
+echo '<IMG SRC="imgs/search.png" title="'.$LANG["buttons"][16].'" class="inputImg" id="btnBuscar" onClick="Buscar(0);" />';
+echo '<IMG SRC="imgs/clear.png" title="'.$LANG["buttons"][17].'" class="inputImg" id="btnLimpiar" onClick="Clear(\'frmSearch\',1); Buscar(0);" />';
+echo '</TD>';
+echo '<TD ALIGN="right" ROWSPAN="2">';
+
+if ( ($userProfileId <= 2 OR $userIsAdminApp == 1) AND $userGroupId != 99){
+    echo '<A HREF="account_add.php"><IMG SRC="imgs/add.png" title="'.$LANG['buttons'][7].'" class="inputImg" /></A>';
+}
+
+if ( $userIsAdminApp == 1 ){ 
+    echo '<A HREF="pmsconfig.php"><IMG SRC="imgs/config.png" title="'.$LANG['buttons'][11].'" class="inputImg" /></A>';
+    echo '<A HREF="pmsbackup.php"><IMG SRC="imgs/backup.png" title="'.$LANG['buttons'][19].'" class="inputImg" /></A>';
+    echo '<A HREF="pmsusers.php"><IMG SRC="imgs/users.png" title="'.$LANG['buttons'][20].'" class="inputImg" /></A>';
+    echo '<A HREF="pmslog.php"><IMG SRC="imgs/log.png" title="'.$LANG['buttons'][21].'" class="inputImg" /></A>';
+}
+
+echo '</TD></TR>';
+echo '<TR WIDTH="60%"><TD WIDTH="60%" ALIGN="left">';
+echo '<LABEL FOR="selCLiente">'.$LANG["accounts"][0].'</LABEL><SELECT NAME="cliente" ID="selCLiente" SIZE="1" OnChange="Buscar(0)">';
+echo '<OPTION>'.$LANG["accounts"][1].'</OPTION>';
+
+$strCliente = ( isset($_POST["cliente"]) ) ? $_POST["cliente"] : "";
+$arrClientes = $clsAccount->getClientes();
+
+foreach ( $arrClientes as $cliente ){
+    if ( $cliente == $strCliente ){
+        echo "<OPTION SELECTED>$cliente</OPTION>\n";
+    } else {
+        echo "<OPTION>$cliente</OPTION>\n";
+    }
+}
+
+echo '</SELECT>';
+echo '<LABEL FOR="selCategoria">'.$LANG['accounts'][2].'</LABEL><SELECT NAME="categoria" ID="selCategoria" SIZE="1" OnChange="Buscar(0)">';
+echo '<OPTION>'.$LANG['accounts'][3].'</OPTION>';
+
+$strCategoria = ( isset($_POST["categoria"]) ) ? $_POST["categoria"] : "";
+
+foreach ( $clsAccount->getCategorias() as $catName => $catId){
+    if ( $strCategoria == $catId ){
+        echo "<OPTION VALUE='".$catId."' SELECTED>".$catName."</OPTION>\n";
+    } else {
+        echo "<OPTION VALUE='".$catId."'>".$catName."</OPTION>\n";
+    }                                    
+}
+
+echo '</SELECT></TD></FORM></TR></TABLE>';
+echo '<DIV ID="resBuscar"></DIV>';
+
+Common::PrintFooter();
 ?>
