@@ -161,7 +161,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 
 #container {margin:auto; width: 80%;}
 
-#container #tblTools{width: 100%; padding-left: 15px;padding-right: 15px;font-weight: bold;}
+#container #tblTools{width: 100%; padding-left: 15px;padding: 5px;font-weight: bold;}
 
 #container #resBuscar{ width: 100%; margin-top: 10px; min-height: 500px;}
 #container #resBuscar IMG {vertical-align:middle;}
@@ -173,8 +173,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
     background-color: #F9F9F9;
     color: #a9a9a9;
     border:1px solid #d9d9d9;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 5px;
 }
 
 #container #resBuscar #pageNav IMG { margin-left: 5px; }

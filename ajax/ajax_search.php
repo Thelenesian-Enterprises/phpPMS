@@ -52,10 +52,6 @@
     $intUId = $_SESSION["uid"];
     $blnUIsAdminApp = $_SESSION["uisadminapp"];
     $blnUIsAdminAcc = $_SESSION["uisadminacc"];
-    
-    if ( $filesEnabled == 1 ){
-        $objFiles = new Files;
-    }
 
     // Variables por defecto del formulario
     if ( $strCliente == "" ) $strCliente = "TODOS";
@@ -104,21 +100,6 @@
         echo '<INPUT TYPE="hidden" NAME="search" VALUE="'.$strSearch.'" />';
         echo '<INPUT TYPE="hidden" NAME="page" VALUE="'.$intPage.'" />';
     }
-
-    echo '<TABLE ID="tblBuscar"><THEAD>';
-    echo '<TR CLASS="headerGrey">';
-    echo '<TH WIDTH="15%"><A onClick="searchSort(5,'.$intPage.')">'.$LANG['accounts'][0].'</A></TH>';
-    echo '<TH WIDTH="15%"><A onClick="searchSort(1,'.$intPage.')">'.$LANG['accounts'][4].'</A></TH>';
-    echo '<TH WIDTH="10%"><A onClick="searchSort(2,'.$intPage.')">'.$LANG['accounts'][5].'</A></TH>';
-    echo '<TH WIDTH="15%"><A onClick="searchSort(3,'.$intPage.')">'.$LANG['accounts'][6].'</A></TH>';
-    echo '<TH WIDTH="20%"><A onClick="searchSort(4,'.$intPage.')">'.$LANG['accounts'][7].'</A></TH>';
-    echo '<TH WIDTH="20%"><IMG SRC="imgs/notes.png" TITLE="'.$LANG['accounts'][8].'" /></TH>';
-    echo '<TH WIDTH="5%"><IMG SRC="imgs/group.png" TITLE="'.$LANG['accounts'][9].'" /></TH>';
-    if ( $filesEnabled == 1 ){
-        echo '<TH WIDTH="5%"><IMG SRC="imgs/attach.png" TITLE="'.$LANG['accounts'][10].'" /></TH>';
-    }
-    echo '<TH WIDTH="20%"><IMG SRC="imgs/action.png" TITLE="'.$LANG['accounts'][11].'" /></TH>';
-    echo '</TR></THEAD>';
 
     $strQuerySelect = "SELECT DISTINCT acc.intAccountId, acc.vacCliente, g.vacCategoryName, acc.vacName, 
                     acc.vacLogin, acc.vacUrl, acc.txtNotice, acc.intUserFId, acc.intUGroupFId, ug.vacUGroupName
@@ -191,7 +172,27 @@
         return FALSE;
     }
     
-    $strTableClass = "odd";
+    echo '<TABLE ID="tblBuscar">';
+    
+    if ( $resQuery->num_rows > 0){
+        echo '<THEAD>';
+        echo '<TR CLASS="headerGrey">';
+        echo '<TH WIDTH="15%"><A onClick="searchSort(5,'.$intPage.')">'.$LANG['accounts'][0].'</A></TH>';
+        echo '<TH WIDTH="15%"><A onClick="searchSort(1,'.$intPage.')">'.$LANG['accounts'][4].'</A></TH>';
+        echo '<TH WIDTH="10%"><A onClick="searchSort(2,'.$intPage.')">'.$LANG['accounts'][5].'</A></TH>';
+        echo '<TH WIDTH="15%"><A onClick="searchSort(3,'.$intPage.')">'.$LANG['accounts'][6].'</A></TH>';
+        echo '<TH WIDTH="20%"><A onClick="searchSort(4,'.$intPage.')">'.$LANG['accounts'][7].'</A></TH>';
+        echo '<TH WIDTH="20%"><IMG SRC="imgs/notes.png" TITLE="'.$LANG['accounts'][8].'" /></TH>';
+        echo '<TH WIDTH="5%"><IMG SRC="imgs/group.png" TITLE="'.$LANG['accounts'][9].'" /></TH>';
+        if ( $filesEnabled == 1 ){
+            echo '<TH WIDTH="5%"><IMG SRC="imgs/attach.png" TITLE="'.$LANG['accounts'][10].'" /></TH>';
+            $objFiles = new Files;
+        }
+        echo '<TH WIDTH="20%"><IMG SRC="imgs/action.png" TITLE="'.$LANG['accounts'][11].'" /></TH>';
+        echo '</TR></THEAD>';
+
+        $strTableClass = "odd";
+    }
     
     // Mostrar los resultados de la búsqueda
     while ( $account = $resQuery->fetch_assoc()) {

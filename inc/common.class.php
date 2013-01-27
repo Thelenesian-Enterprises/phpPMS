@@ -104,7 +104,7 @@ class Common {
         
         echo '<NOSCRIPT><DIV ID="nojs">'.$LANG['common'][2].'</DIV></NOSCRIPT>';
         echo '<DIV ID="header" CLASS="round"><DIV ID="logo"><IMG SRC="imgs/logo.png" />'.$CFG_PMS["sitename"].'</DIV>';
-        echo '<DIV ID="sesion">'.$strUser.$chpass.'<IMG SRC="imgs/exit1.png" TITLE="'.$LANG['buttons'][1].'" OnClick="doLogout();" /></DIV></DIV>';
+        echo '<DIV ID="sesion">'.$strUser.$chpass.'<IMG SRC="imgs/exit.png" TITLE="'.$LANG['buttons'][1].'" OnClick="doLogout();" /></DIV></DIV>';
 
         // FIXME
         if ( $_SESSION["ugroup"] == 99 ){			
@@ -131,7 +131,7 @@ class Common {
         
         echo '</DIV>';
         
-        if ( $CFG_PMS["debug"] && $_SESSION["uisadminapp"] ){
+        if ( $CFG_PMS["debug"] && isset($_SESSION["uisadminapp"]) ){
             $stopTime = microtime();
             
             echo '<DIV ID="debug"><PRE>';
