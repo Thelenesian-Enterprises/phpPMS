@@ -9,6 +9,6 @@ INSERT INTO config VALUES ('lastupdatempass',0);
 ALTER TABLE users CHANGE datUserLastUpdateMPass datUserLastUpdateMPass INT(11) unsigned NOT NULL DEFAULT '0';
 -- 0.961b
 ALTER TABLE users ADD `blnIsAdminAcc` BOOLEAN NOT NULL DEFAULT '0' AFTER `blnIsAdmin`;
-ALTER TABLE `users` CHANGE `blnIsAdmin` `blnIsAdminApp` TINYINT( 1 ) NOT NULL DEFAULT '0';
--- 0.963b
-ALTER TABLE `phppms`.`accounts` CHANGE COLUMN `datChanged` `datChanged` DATETIME NOT NULL;
+ALTER TABLE users CHANGE `blnIsAdmin` `blnIsAdminApp` TINYINT( 1 ) NOT NULL DEFAULT '0';
+-- 0.97b
+ALTER TABLE accounts CHANGE COLUMN `datChanged` `datChanged` DATETIME NOT NULL;

@@ -687,10 +687,12 @@ class Account {
                 $this->strAccIv = $objCrypt->strInitialVector;
                 $this->intAccId = $row["intAccountId"];
                 $this->strAccMd5Pwd = md5($strDecrypted);
-                $this->intAccUserEditId = $intUId;                
-                if ( ! $this->updateAccountPass() ){
-                    $intErrCount++;
-                    Common::wrLogInfo($LANG['event'][17],$LANG['eventdesc'][8]."'".$this->intAccId."'");
+                $this->intAccUserEditId = $intUId;
+                if ( ! PMS_DEMOMODE ){
+                    if ( ! $this->updateAccountPass() ){
+                        $intErrCount++;
+                        Common::wrLogInfo($LANG['event'][17],$LANG['eventdesc'][8]."'".$this->intAccId."'");
+                    }
                 }
                 $accOkIds .= $this->intAccId.",";
             } else {

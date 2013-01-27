@@ -181,7 +181,7 @@ if ( $frmSaveType == 1 OR $frmSaveType == 2 ){
         $resXML["description"] = $LANG['msg'][71];
     }
 // Eliminar usuario
-} elseif ( $frmSaveType == 4 ){
+} elseif ( $frmSaveType == 4 && ! PMS_DEMOMODE ){
     $objUser->intUserId = $frmUsrId;
 
     if ( $objUser->manageUser("delete") ) {

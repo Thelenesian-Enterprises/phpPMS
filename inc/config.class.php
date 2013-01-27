@@ -342,6 +342,8 @@ class Config {
         
         $arrLangAvailable = array('es_ES','en_US');
         
+        $txtDisabled = ( PMS_DEMOMODE ) ? "DISABLED" : "";
+        
         $this->getConfig();
         
         echo '<TABLE CLASS="data tblConfig round">';
@@ -351,19 +353,19 @@ class Config {
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][2];
         Common::printHelpButton("config", 0);
         echo '</TD>';
-        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="sitename" CLASS="txtLong" ID="sitename" VALUE="'.$this->arrConfigValue["sitename"].'" MAXLENGTH="128" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="sitename" CLASS="txtLong" ID="sitename" VALUE="'.$this->arrConfigValue["sitename"].'" MAXLENGTH="128" '.$txtDisabled.' /></TD>';
         echo '</TR>';
 
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][3];
         Common::printHelpButton("config", 1);
         echo '</TD>';
-        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="siteshortname" VALUE="'.$this->arrConfigValue["siteshortname"].'" MAXLENGTH="128" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="siteshortname" VALUE="'.$this->arrConfigValue["siteshortname"].'" MAXLENGTH="128" '.$txtDisabled.' /></TD>';
         echo '</TR>';
         
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][36];
         Common::printHelpButton("config", 2);
         echo '</TD>';
-        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="siteroot" VALUE="'.$this->arrConfigValue["siteroot"].'" MAXLENGTH="128" />';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="siteroot" VALUE="'.$this->arrConfigValue["siteroot"].'" MAXLENGTH="128" '.$txtDisabled.' />';
         echo '<IMG SRC="imgs/warning.png" ALT="'.$LANG['config'][35].'" CLASS="iconMini" TITLE="'.$LANG['config'][41].'" /></TD>';
 
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][37].'</TD>';
@@ -377,17 +379,17 @@ class Config {
         
 
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][4].'</TD>';
-        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="session_timeout" VALUE="'.$this->arrConfigValue["session_timeout"].'" MAXLENGTH="4" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="session_timeout" VALUE="'.$this->arrConfigValue["session_timeout"].'" MAXLENGTH="4" '.$txtDisabled.' /></TD>';
         echo '</TR>';
         
         $chkLog = ( $this->arrConfigValue["logenabled"] ) ? 'checked="checked"' : '';
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][5].'</TD>';
-        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="logenabled" CLASS="checkbox" '.$chkLog.' /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="logenabled" CLASS="checkbox" '.$chkLog.' '.$txtDisabled.' /></TD>';
         echo '</TR>';        
 
         $chkDebug = ( $this->arrConfigValue["debug"] ) ? 'checked="checked"' : '';
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][6].'</TD>';
-        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="debug" CLASS="checkbox" '.$chkDebug.' /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="debug" CLASS="checkbox" '.$chkDebug.' '.$txtDisabled.' /></TD>';
         echo '</TR>';
                
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][7];
@@ -423,7 +425,7 @@ class Config {
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][39];
         Common::printHelpButton("config", 5);
         echo '</TD>';
-        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="filesenabled" CLASS="checkbox" '.$chkFiles.' /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="filesenabled" CLASS="checkbox" '.$chkFiles.' '.$txtDisabled.' /></TD>';
         echo '</TR>';
         
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][38].'</TD>';
@@ -447,7 +449,7 @@ class Config {
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][40];
         Common::printHelpButton("config", 6);
         echo '</TD>';
-        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="allowed_size" VALUE="'.$this->arrConfigValue["allowed_size"].'" MAXLENGTH="5" /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="text" NAME="allowed_size" VALUE="'.$this->arrConfigValue["allowed_size"].'" MAXLENGTH="5" '.$txtDisabled.' /></TD>';
         echo '</TR>';
         
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][9].'</TD></TR>';
@@ -497,7 +499,7 @@ class Config {
             echo '<TR><TD CLASS="descCampo">'.$LANG['config'][15];
             Common::printHelpButton("config", 11);
             echo '</TD>';
-            echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="ldapenabled" CLASS="checkbox" '.$chkLdap.' /></TD>';
+            echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="ldapenabled" CLASS="checkbox" '.$chkLdap.' '.$txtDisabled.' /></TD>';
             echo '</TR>';
 
             echo '<TR><TD CLASS="descCampo">'.$LANG['config'][16].'</TD>';
@@ -543,7 +545,7 @@ class Config {
         echo '<TR><TD COLSPAN="2" CLASS="rowHeader" >'.$LANG['config'][20].'</TD></TR>';
         $chkMail = ( $this->arrConfigValue["mailenabled"] ) ? 'checked="checked"' : '';
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][21].'</TD>';
-        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="mailenabled" CLASS="checkbox" '.$chkMail.' /></TD>';
+        echo '<TD CLASS="valueField"><INPUT TYPE="checkbox" NAME="mailenabled" CLASS="checkbox" '.$chkMail.' '.$txtDisabled.' /></TD>';
         echo '</TR>';
       
         echo '<TR><TD CLASS="descCampo">'.$LANG['config'][22].'</TD>';

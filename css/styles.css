@@ -449,7 +449,7 @@ A:focus {text-decoration: none;	color: #FF0000;}
 
 #boxLogin #loading{
     float:left;
-    width:315px;
+    width:500px;
     margin-top:15px;
     color:orange;
     margin-left:auto;

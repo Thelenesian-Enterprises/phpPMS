@@ -62,6 +62,7 @@ define('PMS_CVERSION', '0.97b');
 define('PMS_VERSION', $objConfig->getConfigValue("version"));
 define('PMS_ROOTURL', $objConfig->getConfigValue("siteroot"));
 define('PMS_LANG', $objConfig->getConfigValue("sitelang"));
+define('PMS_DEMOMODE', FALSE);
 
 $langFile = PMS_ROOT . "/locales/".PMS_LANG.".php";
 

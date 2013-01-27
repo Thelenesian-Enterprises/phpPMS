@@ -421,7 +421,7 @@ function checkModules(){
     foreach($modsNeed as $module){
         if ( in_array($module, $modsAvail) ){
             echo '<span class="altTxtOk"> \''.$module.'\'</span>';
-        } elseif ( $module == "ldaps" && ! in_array($module, $modsAvail) ) {
+        } elseif ( $module == "ldap" && ! in_array($module, $modsAvail) ) {
             echo '<span class="altTxtWarn"> \''.$module.'\'</span>';
             $modsWarn++;
         }else {
