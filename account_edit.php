@@ -131,7 +131,7 @@ echo '</FORM>';
 
 if ( $objConfig->getConfigValue("filesenabled") == 1 ){
     echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][23].'</TD>';
-    echo '<TD CLASS="valueFiled"><DIV id="downFiles"></DIV>';
+    echo '<TD CLASS="valueField"><DIV id="downFiles"></DIV>';
     echo '<SCRIPT>$("#downFiles").load(pms_root + "/ajax/ajax_files.php?id='.$intAccId.'&del=1");</SCRIPT>';
     echo '<DIV ID="upldFiles">';
     echo '<DIV CLASS="actionFiles"><IMG ID="btnUpload" SRC="imgs/upload.png" TITLE="'.$LANG['accounts'][32].'" CLASS="inputImg" OnClick="upldFile('.$intAccId.')" /></DIV>';
