@@ -55,48 +55,55 @@ $frmUrl = ( isset( $_POST["url"]) ) ? $_POST["url"] : "";
 $intUId = $_SESSION["uid"];
 $intUGroupFId = $_SESSION["ugroup"];
 
-if ( $frmSaveType == 1 ) {
-    // Comprobaciones para nueva cuenta
-    if ( ! $frmName ) {
-        $resXML["description"] = $LANG['msg'][9];
+switch ( $frmSaveType ){
+    case 1:
+        // Comprobaciones para nueva cuenta
+        if ( ! $frmName ) {
+            $resXML["description"] = $LANG['msg'][9];
+            $resXML["status"] = 1;
+        } elseif ( ! $frmSelCustomer && ( ! $frmNewCustomer || preg_match("/^".$LANG['accounts'][15]."/i", $frmNewCustomer) ) ) {
+            $resXML["description"] = $LANG['msg'][8];
+            $resXML["status"] = 1;
+        } elseif ( ! $frmLogin ) {
+            $resXML["description"] = $LANG['msg'][10];
+            $resXML["status"] = 1;
+        } elseif ( ! $frmPassword ) {
+            $resXML["description"] = $LANG['msg'][11];
+            $resXML["status"] = 1;
+        } elseif ( $frmPassword != $frmPasswordV ) {
+            $resXML["description"] = $LANG['msg'][12];
+            $resXML["status"] = 1;
+        }
+        break;
+    case 2:
+        // Comprobaciones para modificación de cuenta
+        if ( ! $frmSelCustomer ) {
+            $resXML["description"] = $LANG['msg'][8];
+            $resXML["status"] = 1;
+        } elseif ( ! $frmName ) {
+            $resXML["description"] = $LANG['msg'][9];
+            $resXML["status"] = 1;
+        } elseif ( ! $frmLogin ) {	
+            $resXML["description"] = $LANG['msg'][10];
+            $resXML["status"] = 1;
+        }
+        break;
+    case 3:
+        break;
+    case 4:
+        // Comprobaciones para modficación de clave
+        if ( ! $frmPassword && ! $frmPasswordV ){
+            $resXML["description"] = $LANG['msg'][13];
+            $resXML["status"] = 1;
+        } elseif ( $frmPassword != $frmPasswordV ) {
+            $resXML["description"] = $LANG['msg'][12];
+            $resXML["status"] = 1;
+        }
+        break;
+    default:
+        $resXML["description"] = $LANG['msg'][24];
         $resXML["status"] = 1;
-    } elseif ( ! $frmSelCustomer && ( ! $frmNewCustomer || preg_match("/^".$LANG['accounts'][15]."/i", $frmNewCustomer) ) ) {
-        $resXML["description"] = $LANG['msg'][8];
-        $resXML["status"] = 1;
-    } elseif ( ! $frmLogin ) {
-        $resXML["description"] = $LANG['msg'][10];
-        $resXML["status"] = 1;
-    } elseif ( ! $frmPassword ) {
-        $resXML["description"] = $LANG['msg'][11];
-        $resXML["status"] = 1;
-    } elseif ( $frmPassword != $frmPasswordV ) {
-        $resXML["description"] = $LANG['msg'][12];
-        $resXML["status"] = 1;
-    }
-} elseif ( $frmSaveType == 2 ) {
-    // Comprobaciones para modificación de cuenta
-    if ( ! $frmSelCustomer ) {
-        $resXML["description"] = $LANG['msg'][8];
-        $resXML["status"] = 1;
-    } elseif ( ! $frmName ) {
-        $resXML["description"] = $LANG['msg'][9];
-        $resXML["status"] = 1;
-    } elseif ( ! $frmLogin ) {	
-        $resXML["description"] = $LANG['msg'][10];
-        $resXML["status"] = 1;
-    }
-} elseif ( $frmSaveType == 4 ) {
-    // Comprobaciones para modficación de clave
-    if ( ! $frmPassword && ! $frmPasswordV ){
-        $resXML["description"] = $LANG['msg'][13];
-        $resXML["status"] = 1;
-    } elseif ( $frmPassword != $frmPasswordV ) {
-        $resXML["description"] = $LANG['msg'][12];
-        $resXML["status"] = 1;
-    }
-} else {
-    $resXML["description"] = $LANG['msg'][24];
-    $resXML["status"] = 1;
+        break;
 }
 
 // En caso de error se detiene

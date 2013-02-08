@@ -161,7 +161,7 @@ class Files {
             // Enviamos el archivo al navegador
             header("Content-length: $fileSize");
             header("Content-type: $fileType");
-            header("Content-Disposition: attachment; filename=$fileName");
+            header("Content-Disposition: attachment; filename=\"$fileName\"");
             
             echo $fileData;
         } else {

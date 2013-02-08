@@ -219,7 +219,6 @@ function checkLogout(){
 function saveAccount(frm) {
     var datos = $("#"+frm).serialize();
     
-    $('#btnGuardar').attr('disabled', true);
     $("#resAccion").html('<img src="imgs/loading.gif" />');                    
 
     $.ajax({
@@ -233,14 +232,14 @@ function saveAccount(frm) {
 
             if ( status == 0 ){
                 var txt = '<div id="fancyView" class="msgOk">' + description + '</div>';
+                $('#btnGuardar').hide();
                 $.fancybox(txt);
                 $("#resAccion").empty();
-                $('#btnGuardar').attr('disabled', true);
             } else {
                 var txt = '<div id="fancyView" class="msgError">' + description + '</div>';
                 $.fancybox(txt);
                 $("#resAccion").empty();
-                $('#btnGuardar').removeAttr("disabled");						
+                $('#btnGuardar').show();
             }
         },
         error:function(jqXHR, textStatus, errorThrown){

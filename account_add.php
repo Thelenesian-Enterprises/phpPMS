@@ -49,7 +49,7 @@ $objUser->checkUserUpdateMPass() || die ('<DIV CLASS="error">'.$LANG['msg'][100]
 echo '<DIV ID="container" ALIGN="center">';
 echo '<H2>'.$LANG['buttons'][7].'</H2>';
 echo '<DIV CLASS="action midround">';
-echo '<IMG SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" OnClick="saveAccount(\'frmAddAccount\');" />';
+echo '<IMG ID="btnGuardar" SRC="imgs/check.png" TITLE="'.$LANG['buttons'][2].'" CLASS="inputImg" OnClick="saveAccount(\'frmAddAccount\');" />';
 
 $objCommon->printBackLinks(TRUE);
 

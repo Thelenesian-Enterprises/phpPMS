@@ -70,7 +70,7 @@ if ( $intDelete == 0 ) {
         echo '<IMG SRC="imgs/edit.png" title="'.$LANG['buttons'][9].'" class="inputImg" OnClick="$(\'#frmEditAccount\').submit();"/>';
     }
     if ( $objAccount->checkAccountAccess("viewpass") ){
-        echo '<IMG SRC="imgs/key.png" TITLE="'.$LANG['buttons'][4].'" onClick="verClave('.$objAccount->intAccId.',0);" CLASS="inputImg" ALT ="'.$LANG['buttons'][4].'"/>';
+        echo '<IMG SRC="imgs/key.png" TITLE="'.$LANG['buttons'][4].'" onClick="verClave('.$objAccount->intAccId.',1);" CLASS="inputImg" ALT ="'.$LANG['buttons'][4].'"/>';
     }                 
 } else {
     if ( $objAccount->checkAccountAccess("del") ){
@@ -88,12 +88,11 @@ echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][0].'</TD><TD CLASS="valueFie
 echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][16].'</TD><TD CLASS="valueField">'.$objAccount->strAccCategoryName.'</TD></TR>';
 echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][19].'</TD><TD CLASS="valueField">'.$objAccount->strAccLogin.'</TD></TR>';
 echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][18].'</TD><TD CLASS="valueField"><A HREF="'. $objAccount->strAccUrl.'" TARGET="_blank">'.$objAccount->strAccUrl.'</A></TD></TR>';
-echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][20].'</TD><TD ID="clave" CLASS="valueField altTextRed">'.$LANG['accounts'][21].'</TD></TR>';
 echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][24].'</TD><TD CLASS="valueField"><TEXTAREA NAME="notice" COLS="97" ROWS="5" READONLY="readonly">'.$objAccount->strAccNotes.'</TEXTAREA></TD></TR>';
 
 if ( $objConfig->getConfigValue("filesenabled") == 1 ){
     echo '<TR><TD CLASS="descCampo">'.$LANG['accounts'][23].'</TD>';
-    echo '<TD><DIV ID="downFiles"></DIV></TD>';
+    echo '<TD CLASS="valueField"><DIV ID="downFiles"></DIV></TD>';
     echo '<SCRIPT> $("#downFiles").load(pms_root + "/ajax/ajax_files.php?id='.$intAccountId.'&del=0");</SCRIPT></TR>';
 }
 
