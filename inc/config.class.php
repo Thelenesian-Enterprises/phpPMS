@@ -575,8 +575,8 @@ class Config {
 
 	if ( $xmlUpd->channel->title ){
 
-            $url = $xmlUpd->channel->item[1]->link;
-            $title = $xmlUpd->channel->item[1]->title;
+            $url = $xmlUpd->channel->item[0]->link;
+            $title = $xmlUpd->channel->item[0]->title;
             //$desc = $xmlUpd->channel->item[0]->description;
             
             preg_match("/phpPMS_(\d\.\d{1,}[a-z]?)\.(tar\.gz|zip)$/", $title, $pubVer);

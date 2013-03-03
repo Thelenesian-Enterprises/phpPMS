@@ -267,7 +267,7 @@ function createDB(){
         if ( ! checkDBFile() ) return FALSE;
         
         // Comprobamos la conexión a la BBDD y que las tablas existen
-        if ( ! checkDB(TRUE,TRUE,TRUE) ) $dbUserConnect = TRUE;
+        if ( checkDB(TRUE,TRUE,TRUE) ) $dbUserConnect = TRUE;
         
         if ( ! $dbIsHosting ) {
             // Comprobamos si el usuario para phpPMS existe
