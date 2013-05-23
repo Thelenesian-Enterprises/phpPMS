@@ -39,15 +39,15 @@ if ( check_session(TRUE) ) {
 
 // Variables POST del formulario
 //extract($_POST, EXTR_PREFIX_ALL, "post");
-$frmSaveType = ( isset($_POST["savetyp"]) ) ? $_POST["savetyp"] : "";
-$frmUsrId = ( isset($_POST["usrid"]) ) ? $_POST["usrid"] : 0;
-$frmLdap = ( isset($_POST["ldap"]) ) ? $_POST["ldap"] : 0;
-$frmUsrName = ( isset($_POST["usrname"]) ) ? $_POST["usrname"] : "";
-$frmUsrLogin = ( isset($_POST["usrlogin"]) ) ? $_POST["usrlogin"] : "";
-$frmUsrProfile = ( isset($_POST["usrprofile"]) ) ? $_POST["usrprofile"] : "";
+$frmSaveType = ( isset($_POST["savetyp"]) ) ? (int)$_POST["savetyp"] : 0;
+$frmUsrId = ( isset($_POST["usrid"]) ) ? (int)$_POST["usrid"] : 0;
+$frmLdap = ( isset($_POST["ldap"]) ) ? (int)$_POST["ldap"] : 0;
+$frmUsrName = ( isset($_POST["usrname"]) ) ? Common::sanitize($_POST["usrname"]) : "";
+$frmUsrLogin = ( isset($_POST["usrlogin"]) ) ? Common::sanitize($_POST["usrlogin"]) : "";
+$frmUsrProfile = ( isset($_POST["usrprofile"]) ) ? (int)$_POST["usrprofile"] : "";
 $frmUsrGroup = ( isset($_POST["usrgroup"]) ) ? $_POST["usrgroup"] : "";
-$frmUsrEmail = ( isset($_POST["usremail"]) ) ? $_POST["usremail"] : "";
-$frmUsrNotes = ( isset($_POST["usrnotes"]) ) ? $_POST["usrnotes"] : "";
+$frmUsrEmail = ( isset($_POST["usremail"]) ) ? Common::sanitize($_POST["usremail"]) : "";
+$frmUsrNotes = ( isset($_POST["usrnotes"]) ) ? Common::sanitize($_POST["usrnotes"]) : "";
 $frmUsrPass = ( isset($_POST["usrpass"]) ) ? $_POST["usrpass"] : "";
 $frmUsrPassV = ( isset($_POST["usrpassv"]) ) ? $_POST["usrpassv"] : "";
 $frmAdminApp = ( isset($_POST["chkadminapp"]) && $_POST["chkadminapp"] == "true" ) ? 1 : 0;

@@ -455,12 +455,13 @@ $LANG['js'][11]="Duplicated value";
 $LANG['js'][12]="Option not selected";
 $LANG['js'][13]="Option added<BR \>You should save configuration in order to take effect";
 $LANG['js'][14]="Option deleted<BR \>You should save configuration in order to take effect";
-$LANG['js'][15]="Generated password:";
+$LANG['js'][15]="Generated password";
 $LANG['js'][16]="High level";
 $LANG['js'][17]="Average level";
 $LANG['js'][18]="Low level";
 $LANG['js'][19]="Higher level";
-$LANG['js'][20]="You should use at least 8 characters";
+$LANG['js'][20]="Use at least 8 characters";
+$LANG['js'][21]="Delete group?";
 
 $LANG["help"]["config"][0]="<H2>Site name</H2><P>Sets up long site name to put it on pages header.</P>";
 $LANG["help"]["config"][1]="<H2>Site short name</H2><P>Sets up short site name for titles where it's not possible to use the long one.</P><P>It's used for email sending also.</P>";

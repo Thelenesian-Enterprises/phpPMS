@@ -447,12 +447,13 @@ $LANG['js'][11]="Valor duplicado";
 $LANG['js'][12]="Opción no seleccionada";
 $LANG['js'][13]="Opción añadida<BR \>Guarde la configuración para que sea efectiva";
 $LANG['js'][14]="Opción eliminada<BR \>Guarde la configuración para que sea efectiva";
-$LANG['js'][15]="Clave generada:";
+$LANG['js'][15]="Clave generada";
 $LANG['js'][16]="Nivel alto";
 $LANG['js'][17]="Nivel medio";
 $LANG['js'][18]="Nivel bajo";
 $LANG['js'][19]="Nivel muy alto";
-$LANG['js'][20]="Debería utilizar al menos 8 caracteres";
+$LANG['js'][20]="Utilizar al menos 8 caracteres";
+$LANG['js'][21]="Borrar el grupo?";
 
 $LANG["help"]["config"][0]="<H2>Nombre del sitio</H2><P>Establece un nombre largo del sitio para situarlo en la cabecera de todas las páginas.</P>";
 $LANG["help"]["config"][1]="<H2>Nombre corto del sitio</H2><P>Establece un nombre corto para títulos donde no es posible utilizar el nombre largo.</P><P>También es utilizado para el envío de correos.</P>";

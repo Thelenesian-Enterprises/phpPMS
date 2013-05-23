@@ -40,11 +40,11 @@
 
     global $strSortKey, $strSortOrder, $strCliente, $strCategory, $strSearch, $intPage;
     
-    $strSortKey = ( isset($_POST["skey"]) ) ? $_POST["skey"] : "";
-    $strSortOrder = ( isset($_POST["sorder"]) ) ? $_POST["sorder"] : "";
-    $strCliente = ( isset($_POST["cliente"]) ) ? $_POST["cliente"] : "";
-    $strCategory = ( isset($_POST["categoria"]) ) ? $_POST["categoria"] : "";
-    $strSearch = ( isset($_POST["search"]) ) ? $_POST["search"] : "";
+    $strSortKey = ( isset($_POST["skey"]) ) ? (int)$_POST["skey"] : "";
+    $strSortOrder = ( isset($_POST["sorder"]) ) ? $_POST["sorder"] : 0;
+    $strCliente = ( isset($_POST["cliente"]) ) ? Common::sanitize($_POST["cliente"]) : 0;
+    $strCategory = ( isset($_POST["categoria"]) ) ? (int)$_POST["categoria"] : 0;
+    $strSearch = ( isset($_POST["search"]) ) ? Common::sanitize($_POST["search"]) : "";
     $intPage = ( isset($_POST["page"]) ) ? (int)$_POST["page"] : 1;
     
     $intUGroupFId = $_SESSION["ugroup"];
@@ -54,10 +54,9 @@
     $blnUIsAdminAcc = $_SESSION["uisadminacc"];
 
     // Variables por defecto del formulario
-    if ( $strCliente == "" ) $strCliente = "TODOS";
-    if ( $strCategory == "" ) $strCategory = "TODAS";
-    if ( $strSortOrder == "" ) $strSortOrder = "ASC";
-    if ( $intPage == "" ) $intPage = 1;
+    if ( ! $strCliente ) $strCliente = $LANG['accounts'][1];
+    if ( ! $strCategory ) $strCategory = $LANG['accounts'][3];
+    if ( ! $strSortOrder ) $strSortOrder = "ASC";
 
     switch ($strSortKey) {
         case 1:

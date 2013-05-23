@@ -38,18 +38,18 @@ if ( check_session(TRUE) ) {
 
 // Variables POST del formulario
 $frmSaveType = ( isset( $_POST["savetyp"]) ) ? (int)$_POST["savetyp"] : 0;
-$frmAccountId = ( isset( $_POST["accountid"]) ) ? $_POST["accountid"] : "";
-$frmSelCustomer = ( isset( $_POST["sel_cliente"]) ) ? $_POST["sel_cliente"] : "";
-$frmNewCustomer = ( isset( $_POST["cliente_new"]) ) ? $_POST["cliente_new"] : "";
-$frmOldCustomer = ( isset( $_POST["cliente_old"]) ) ? $_POST["cliente_old"] : "";
-$frmName = ( isset( $_POST["name"]) ) ? $_POST["name"] : "";
-$frmLogin = ( isset( $_POST["login"]) ) ? $_POST["login"] : "";
-$frmPassword = ( isset( $_POST["password"]) ) ? $_POST["password"] : "";
-$frmPasswordV = ( isset( $_POST["password2"]) ) ? $_POST["password2"] : "";
-$frmCategoryId = ( isset( $_POST["categoryId"]) ) ? $_POST["categoryId"] : 0;
+$frmAccountId = ( isset( $_POST["accountid"]) ) ? (int)$_POST["accountid"] : 0;
+$frmSelCustomer = ( isset( $_POST["sel_cliente"]) ) ? Common::sanitize($_POST["sel_cliente"]) : "";
+$frmNewCustomer = ( isset( $_POST["cliente_new"]) ) ? Common::sanitize($_POST["cliente_new"]) : "";
+$frmOldCustomer = ( isset( $_POST["cliente_old"]) ) ? Common::sanitize($_POST["cliente_old"]) : "";
+$frmName = ( isset( $_POST["name"]) ) ? Common::sanitize($_POST["name"]) : "";
+$frmLogin = ( isset( $_POST["login"]) ) ? Common::sanitize($_POST["login"]) : "";
+$frmPassword = ( isset( $_POST["password"]) ) ? Common::sanitize($_POST["password"]) : "";
+$frmPasswordV = ( isset( $_POST["password2"]) ) ? Common::sanitize($_POST["password2"]) : "";
+$frmCategoryId = ( isset( $_POST["categoryId"]) ) ? (int)$_POST["categoryId"] : 0;
 $frmUGroups = ( isset( $_POST["ugroups"]) ) ? $_POST["ugroups"] : "";
-$frmNotes = ( isset( $_POST["notice"]) ) ? $_POST["notice"] : "";
-$frmUrl = ( isset( $_POST["url"]) ) ? $_POST["url"] : "";
+$frmNotes = ( isset( $_POST["notice"]) ) ? Common::sanitize($_POST["notice"]) : "";
+$frmUrl = ( isset( $_POST["url"]) ) ? Common::sanitize($_POST["url"]) : "";
 
 // Datos del Usuario
 $intUId = $_SESSION["uid"];

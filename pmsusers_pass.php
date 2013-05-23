@@ -30,7 +30,7 @@ if ( check_session(TRUE) ) return "0";
 
 $strError = '<div id="fancyView" class="fancyErr"><span class="altTxtRed">No tiene permisos para realizar esta operación</span></div>';
 
-Users::checkUserAccess("chpass",$_GET["usrid"]) || die ($strError);
+Users::checkUserAccess("chpass",(int)$_GET["usrid"]) || die ($strError);
 
 echo '<DIV ID="fancycontainer" ALIGN="center">';
 echo '<H2>'.$LANG['buttons'][32].'</H2>';

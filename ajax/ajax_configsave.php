@@ -37,14 +37,14 @@ if ( check_session(TRUE) ) {
 
 Users::checkUserAccess("config") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
 
-$frmAction = ( isset( $_POST["action"]) ) ? $_POST["action"] : "";
+$frmAction = ( isset( $_POST["action"]) ) ? Common::sanitize($_POST["action"]) : "";
 
 $objConfig = new Config;
 
 if ( $frmAction == "config" ){
-    $frmSiteName = ( isset( $_POST["sitename"]) ) ? $_POST["sitename"] : "";
-    $frmSiteShortName = ( isset( $_POST["siteshortname"]) ) ? $_POST["siteshortname"] : "";
-    $frmSiteRoot = ( isset( $_POST["siteroot"]) ) ? $_POST["siteroot"] : "";
+    $frmSiteName = ( isset( $_POST["sitename"]) ) ? Common::sanitize($_POST["sitename"]) : "";
+    $frmSiteShortName = ( isset( $_POST["siteshortname"]) ) ? Common::sanitize($_POST["siteshortname"]) : "";
+    $frmSiteRoot = ( isset( $_POST["siteroot"]) ) ? Common::sanitize($_POST["siteroot"]) : "";
     $frmSiteLang = ( isset( $_POST["sitelang"]) ) ? $_POST["sitelang"] : "";
     $frmSessionTimeout = ( isset( $_POST["session_timeout"]) ) ? (int)$_POST["session_timeout"] : 300;
     $frmLogEnabled = ( isset( $_POST["logenabled"]) ) ? 1 : 0;
@@ -56,8 +56,8 @@ if ( $frmAction == "config" ){
     $frmAllowedExts = ( isset( $_POST["allowed_exts"]) ) ? $_POST["allowed_exts"] : "";
 
     $frmWikiEnabled = ( isset( $_POST["wikienabled"]) ) ? 1 : 0;
-    $frmWikiSearchUrl = ( isset( $_POST["wikisearchurl"]) ) ? $_POST["wikisearchurl"] : "";
-    $frmWikiPageUrl = ( isset( $_POST["wikipageurl"]) ) ? $_POST["wikipageurl"] : "";
+    $frmWikiSearchUrl = ( isset( $_POST["wikisearchurl"]) ) ? Common::sanitize($_POST["wikisearchurl"]) : "";
+    $frmWikiPageUrl = ( isset( $_POST["wikipageurl"]) ) ? Common::sanitize($_POST["wikipageurl"]) : "";
     $frmWikiFilter = ( isset( $_POST["wikifilter"]) ) ? $_POST["wikifilter"] : "";
 
     $frmLdapEnabled = ( isset( $_POST["ldapenabled"]) ) ? 1 : 0;

@@ -628,7 +628,7 @@ function groupMgmt(action,id){
             
             var grpname = $("#grpname_"+ id).val();
             
-            var res = confirm ('Borrar el grupo \''+grpname+ '\'?');
+            var res = confirm (LANG[21]);
             if (!res){
                 $("#resAccion").empty();
                 return false;
@@ -849,7 +849,7 @@ function password(length, special, fancy) {
     $('input:password').val(password);
     
     if ( fancy == true ){
-        var txt = '<div id="fancyView" class="backGrey"><span class="altTxtBlue">' + LANG[15] + "</span> " + password + '</div>';
+        var txt = '<div id="fancyView" class="backGrey"><span class="altTxtBlue">' + LANG[15] + "</span><br>" + password + '</div>';
         $.fancybox(txt); 
     } else {
         alert ( LANG[15] + " " + password);

@@ -25,7 +25,7 @@
  */
 
 define('PMS_ROOT', '..');
-define('PMS_VERSION', '0.972b');
+define('PMS_VERSION', '0.973b');
 
 include_once (PMS_ROOT."/inc/crypt.class.php");
 include_once (PMS_ROOT."/inc/config.class.php");

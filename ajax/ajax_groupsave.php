@@ -42,10 +42,10 @@ Users::checkUserAccess("users") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'<
 $objGroup = new Users;
 
 // Variables POST del formulario
-$frmSaveType = ( isset($_POST["savetyp"]) ) ? $_POST["savetyp"] : "";
-$frmGrpId = ( isset($_POST["grpid"]) ) ? $_POST["grpid"] : "";
-$frmGrpName = ( isset($_POST["grpname"]) ) ? $_POST["grpname"] : "";
-$frmGrpDesc = ( isset($_POST["grpdesc"]) ) ? $_POST["grpdesc"] : "";
+$frmSaveType = ( isset($_POST["savetyp"]) ) ? (int)$_POST["savetyp"] : "";
+$frmGrpId = ( isset($_POST["grpid"]) ) ? (int)$_POST["grpid"] : "";
+$frmGrpName = ( isset($_POST["grpname"]) ) ? Common::sanitize($_POST["grpname"]) : "";
+$frmGrpDesc = ( isset($_POST["grpdesc"]) ) ? Common::sanitize($_POST["grpdesc"]) : "";
 
 
 // Nuevo grupo o editar

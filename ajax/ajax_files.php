@@ -37,7 +37,7 @@
     }
 
     if ( isset($_GET['id']) ){
-        $accountId = $_GET['id'];
+        $accountId = (int)$_GET['id'];
         $blnDelete = $_GET['del'];
 
         $objFile = new Files;
@@ -45,27 +45,29 @@
         return;
     } 
     
-    switch ( $_POST['action'] ){
+    $action = ( isset($_POST["action"]) ) ? Common::sanitize($_POST["action"]) : "";
+    
+    switch ( $action ){
         case "upload":
-            $accountId = $_POST['accountId'];
+            $accountId = (int)$_POST['accountId'];
 
             $objFile = new Files;
             $objFile->fileUpload($accountId);
             break;
         case "download":
-            $fileId = $_POST['fileId'];
+            $fileId = (int)$_POST['fileId'];
 
             $objFile = new Files;
             $objFile->fileDownload($fileId);
             break;
         case "view":
-            $fileId = $_POST['fileId'];
+            $fileId = (int)$_POST['fileId'];
 
             $objFile = new Files;
             $objFile->fileDownload($fileId,TRUE);
             break;        
         case "delete":
-            $fileId = $_POST['fileId'];
+            $fileId = (int)$_POST['fileId'];
 
             $objFile = new Files;
             $objFile->fileDelete($fileId);

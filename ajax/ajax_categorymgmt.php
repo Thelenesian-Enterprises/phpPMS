@@ -38,9 +38,9 @@ if ( check_session(TRUE) ) {
 Users::checkUserAccess("config") || die ('<DIV CLASS="error"'.$LANG['msg'][34].'</DIV');
 
 $intCategoryFunction = ( isset($_POST["categoryFunction"]) ) ? (int)$_POST["categoryFunction"] : 0;
-$strCategoryName = ( isset($_POST["categoryName"]) ) ? $_POST["categoryName"] : "";
-$strCategoryNameNew = ( isset($_POST["categoryNameNew"]) ) ? $_POST["categoryNameNew"] : "";
-$intCategoryId = ( isset($_POST["categoryId"]) ) ? $_POST["categoryId"] : "";
+$strCategoryName = ( isset($_POST["categoryName"]) ) ? Common::sanitize($_POST["categoryName"]) : "";
+$strCategoryNameNew = ( isset($_POST["categoryNameNew"]) ) ? Common::sanitize($_POST["categoryNameNew"]) : "";
+$intCategoryId = ( isset($_POST["categoryId"]) ) ? (int)$_POST["categoryId"] : 0;
 
 $objCategory = new Category;
 

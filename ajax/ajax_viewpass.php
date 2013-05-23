@@ -31,7 +31,7 @@ if ( check_session(TRUE) ) return;
 
 $objAccount = new Account;
 
-$intAccId = $_POST["accountid"];
+$intAccId = (int)$_POST["accountid"];
 $fullTxt = $_POST["full"];
 
 $objAccount->getAccount($intAccId);

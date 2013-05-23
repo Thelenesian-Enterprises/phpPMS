@@ -23,6 +23,15 @@
  * 
  */
 
+###########################################################################################
+
+Ir a la wiki para instrucciones actualizadas http://sourceforge.net/p/phppms/wiki/Home/
+
+Go to wiki to get the latest instructions http://sourceforge.net/p/phppms/wiki/Home/
+
+###########################################################################################
+
+
 ## Instalación phpPMS ##
 
 1. ** Prerequisitos **
@@ -34,7 +43,6 @@
     * Módulo PHP ldap
     * Módulo PHP SimpleXML
 
-
 2. ** Instalación **
 
     Instalación de paquetes en Debian GNU/Linux:
@@ -44,30 +52,26 @@
     
 2.1. ** Configuración de directorios y permisos **
 
-Crear un directorio para la aplicación en la raíz del servidor web:
-
-    # mkdir /var/www/phppms
-
 Copiar y descomprimir el archivo phpPMS en el directorio creado:
     
-    # cp phpPMS.tar.gz /var/www/phppms
-    # cd /var/www/phppms
+    # cd /var/www/
+    # cp phpPMS.tar.gz /var/www/
     # tar xzf phpPMS.tar.gz
 
-Cambiar el propietario del directorio 'phppms/inc' (sólo necesario para la instalación).
+Cambiar el propietario del directorio 'phpPMS/inc' (sólo necesario para la instalación).
 Ha de coincidir con el usuario del servidor web:
 
-    # chown www-data /var/www/phppms/inc
+    # chown www-data /var/www/phpPMS/inc
 
-Cambiar el propietario del directorio 'phppms/backup':
+Cambiar el propietario del directorio 'phpPMS/backup':
 
-    # chown www-data /var/www/phppms/backup
+    # chown www-data /var/www/phpPMS/backup
 
 2.2. ** Configuración del entorno **
 
 Abir un navegador y escribir la URL:
 
-https://IP_O_NOMBRE_SERVIDOR/phppms/install/install.php
+https://IP_O_NOMBRE_SERVIDOR/phpPMS/install/install.php
 
 Seguir los pasos del instalador.
 

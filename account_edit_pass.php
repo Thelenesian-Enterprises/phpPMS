@@ -32,7 +32,7 @@ $objAccount = new Account;
 $objCommon = new Common;
 $objUser = new Users;    
 
-$intAccId = $_POST["accountid"];
+$intAccId = (int)$_POST["accountid"];
 
 foreach ($_POST as $varPost => $varPostValue){
     if (array_key_exists($varPost, $objCommon->arrBackLinks)) {

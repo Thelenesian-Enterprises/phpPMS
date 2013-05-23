@@ -32,8 +32,8 @@ $objAccount = new Account;
 $objCommon = new Common;
 $objConfig = new Config;
 
-$intAccountId = $_POST["accountid"];
-$intDelete = ( isset($_POST["delete"]) ) ? $_POST["delete"] : "";
+$intAccountId = (int)$_POST["accountid"];
+$intDelete = ( isset($_POST["delete"]) ) ? (int)$_POST["delete"] : 0;
 $blnUIsAdminApp = $_SESSION["uisadminapp"];
 $blnUIsAdminAcc = $_SESSION["uisadminacc"];
 

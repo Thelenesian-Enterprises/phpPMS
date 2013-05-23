@@ -1,3 +1,15 @@
+=== v0.973b ===
+
+* [NUEVO] Mejoras de seguridad para prevenir XSS.
+* [MOD] Cambio del orden de registros en el visor de eventos.
+* [MOD] Cambio tamaño de tabla en el visor de eventos.
+* [MOD] Tratar caracteres especiales al insertar nuevo registro en el historial de cuentas.
+* [MOD] Modificación de traducciones.
+
+=== v0.972b ===
+
+* [BUG] Corregido fallo al crear la BBDD en la instalación.
+
 === ** v0.971b ** ===
 
 * [BUG] Corregidos fallo al actualizar la BBDD.
@@ -87,6 +99,18 @@
 * [NUEVO] Versión inicial
 
 ---
+
+=== v0.973b ===
+
+* [NEW] Security improvements to avoid XSS.
+* [MOD] Changed the order of records on event log.
+* [MOD] Changed table size on event log.
+* [MOD] Escape special chars when inserting a new history record.
+* [MOD] Modified some translations.
+
+=== v0.972b ===
+
+* [BUG] Bugfix when creating DB on install.
 
 === ** v0.971b ** ===
 

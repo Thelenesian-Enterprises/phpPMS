@@ -31,7 +31,7 @@ check_session();
 $userGroupId = $_SESSION["ugroup"];
 $userProfileId = $_SESSION["uprofile"];
 $userIsAdminApp = $_SESSION["uisadminapp"];
-$strSearch = ( isset($_POST["search"]) ) ? $_POST["search"] : "";
+$strSearch = ( isset($_POST["search"]) ) ? Common::sanitize($_POST["search"]) : "";
 
 Common::printHeader(FALSE,TRUE);
 

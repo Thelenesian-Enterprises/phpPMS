@@ -31,7 +31,7 @@ if ( check_session(TRUE) ) return "0";
 
 $objConfig = new Config;
 $dbh = $objConfig->connectDb();
-$resQuery = $dbh->query("SELECT * FROM log");
+$resQuery = $dbh->query("SELECT * FROM log ORDER BY id DESC");
 
 while ( $row = $resQuery->fetch_assoc()){
     $rowClass = ( $rowClass == "row_even" ) ? "row_odd" : "row_even";
