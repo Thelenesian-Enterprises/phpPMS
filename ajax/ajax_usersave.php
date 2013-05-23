@@ -44,7 +44,7 @@ $frmUsrId = ( isset($_POST["usrid"]) ) ? (int)$_POST["usrid"] : 0;
 $frmLdap = ( isset($_POST["ldap"]) ) ? (int)$_POST["ldap"] : 0;
 $frmUsrName = ( isset($_POST["usrname"]) ) ? Common::sanitize($_POST["usrname"]) : "";
 $frmUsrLogin = ( isset($_POST["usrlogin"]) ) ? Common::sanitize($_POST["usrlogin"]) : "";
-$frmUsrProfile = ( isset($_POST["usrprofile"]) ) ? (int)$_POST["usrprofile"] : "";
+$frmUsrProfile = ( isset($_POST["usrprofile"]) ) ? $_POST["usrprofile"] : "";
 $frmUsrGroup = ( isset($_POST["usrgroup"]) ) ? $_POST["usrgroup"] : "";
 $frmUsrEmail = ( isset($_POST["usremail"]) ) ? Common::sanitize($_POST["usremail"]) : "";
 $frmUsrNotes = ( isset($_POST["usrnotes"]) ) ? Common::sanitize($_POST["usrnotes"]) : "";
@@ -71,7 +71,7 @@ if ( $frmSaveType == 1 OR $frmSaveType == 2 ){
     } elseif ( ! $frmUsrLogin && ! $frmLdap ) {
         $resXML["status"] = 1;
         $resXML["description"] = $LANG['msg'][90];
-    } elseif ( $frmUsrProfile == "" ) {
+    } elseif ( ! $frmUsrProfile ) {
         $resXML["status"] = 1;
         $resXML["description"] = $LANG['msg'][59];
     } elseif ( ! $frmUsrGroup ) {
