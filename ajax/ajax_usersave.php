@@ -71,7 +71,7 @@ if ( $frmSaveType == 1 OR $frmSaveType == 2 ){
     } elseif ( ! $frmUsrLogin && ! $frmLdap ) {
         $resXML["status"] = 1;
         $resXML["description"] = $LANG['msg'][90];
-    } elseif ( ! $frmUsrProfile ) {
+    } elseif ( $frmUsrProfile == "" ) {
         $resXML["status"] = 1;
         $resXML["description"] = $LANG['msg'][59];
     } elseif ( ! $frmUsrGroup ) {
