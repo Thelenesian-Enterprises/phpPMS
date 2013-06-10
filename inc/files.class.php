@@ -56,7 +56,7 @@ class Files {
         
         if ( $allowedExts ){
             // Extensiones aceptadas
-            $extsOk = explode(",",$objConfig->getConfigValue("allowed_exts"));
+            $extsOk = explode(",",$allowedExts);
         } else {
             echo $LANG['msg'][95];
             return FALSE;            
