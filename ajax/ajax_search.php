@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2012 Rubén Domínguez
+// Copyright (c) 2012 RubÃ©n DomÃ­nguez
 //  
 // This file is part of phpPMS.
 //
@@ -115,7 +115,7 @@
     if ( $strSearch != "" ) {
         $strQueryWhere = " WHERE (vacName LIKE '%$strSearch%' OR vacLogin LIKE '%$strSearch%' OR vacUrl LIKE '%$strSearch%' OR txtNotice LIKE '%$strSearch%' OR vacName LIKE '%$strSearch%')";
         
-        // Comprobamos el grupo del usuario y si es admin, para acotar la búsqueda a sus grupos y perfil
+        // Comprobamos el grupo del usuario y si es admin, para acotar la bÃºsqueda a sus grupos y perfil
         if ( ! $blnUIsAdminApp && ! $blnUIsAdminAcc ) {
             $strQueryWhere .= "AND (intUGroupFId = $intUGroupFId OR intUserFId = $intUId OR aug.intUGroupId = $intUGroupFId)";
         }
@@ -147,7 +147,7 @@
     $strQuery = $strQuerySelect.$strQueryWhere.$strQueryOrder.$strQueryLimit;
     $strQueryCount = $strQueryCount.$strQueryWhere;
     
-    // Consulta para obtener el número de registros de la búsqueda
+    // Consulta para obtener el nÃºmero de registros de la bÃºsqueda
     $resQueryCount = $objAccount->dbh->query($strQueryCount);
     
     if ( ! $resQueryCount ) {
@@ -162,7 +162,7 @@
     $intAccountMax = $resResult["Number"];
     $intPageMax = ceil($intAccountMax / $intAccountCount);    
 
-    // Consulta de la búsqueda de cuentas
+    // Consulta de la bÃºsqueda de cuentas
     $resQuery = $objAccount->dbh->query($strQuery);
     
     if ( ! $resQuery ) {
@@ -193,12 +193,13 @@
         $strTableClass = "odd";
     }
     
-    // Mostrar los resultados de la búsqueda
+    // Mostrar los resultados de la bÃºsqueda
     while ( $account = $resQuery->fetch_assoc()) {
         $intAccId = $account["intAccountId"];
         $strAccName = $account["vacName"];
         $strAccNotes = $account["txtNotice"];
         $strAccUrl = $account["vacUrl"];
+	$strAccLogin = $account["vacLogin"];
         $intAccUserId = $account["intUserFId"];
         $intAccUserGroupId = $account["intUGroupFId"];
         
@@ -234,16 +235,26 @@
         echo ($vacLogin) ? $vacLogin : '&nbsp;';
         
         echo '</TD><TD>';
-        
-        if ( $strAccUrl ) $strAccUrl = ( preg_match("#^https?://.*#i", $strAccUrl) ) ? $strAccUrl : 'http://'.$strAccUrl;
-        
-        if ( strlen($strAccUrl) >= 25 ){
-            $strAccUrl_short = truncate($strAccUrl,25);
-            
-            $strAccUrl = '<A HREF="'.$strAccUrl.'" TARGET="_blank" TITLE="'.$strAccUrl.'">'.$strAccUrl_short.'</A>';
-        } else {
-            $strAccUrl = '<A HREF="'.$strAccUrl.'" TARGET="_blank" TITLE="'.$strAccUrl.'">'.$strAccUrl.'</A>';
-        }
+
+	if ( $strAccUrl ) $isHTTPLink = ( preg_match("#^https?://.*#i", $strAccUrl) ) ? 'yes' : 'no';
+	if ( $isHTTPLink=="yes") {
+		if ( strlen($strAccUrl) >= 25 ){
+			$strAccUrl_short = truncate($strAccUrl,25);
+			
+			$strAccUrl = '<A HREF="'.$strAccUrl.'" TARGET="_blank" TITLE="'.$strAccUrl.'">'.$strAccUrl_short.'</A>';
+		} else {
+			$strAccUrl = '<A HREF="'.$strAccUrl.'" TARGET="_blank" TITLE="'.$strAccUrl.'">'.$strAccUrl.'</A>';
+		}
+	} else {
+		$objAccount->getAccount($intAccId);
+		$objCrypt = new Crypt;
+		$strMasterPwd = $_SESSION["mPass"];
+		$strDecrypted = $objCrypt->decrypt($objAccount->strAccPwd, $strMasterPwd, $objAccount->strAccIv);
+		$strDisplayUrl = 'click here to Login to '.$strAccName;
+		$strLoginURL = str_replace("{user}",$strAccLogin,$strAccUrl);
+		$strLoginURL = str_replace("{password}",$strDecrypted,$strLoginURL);
+		$strAccUrl = '<A HREF="'.$strLoginURL.'" style="cursor: pointer" TITLE="LinkURL'.$intAccId.'">'.$strDisplayUrl.'</A>';
+	}
 
         echo ( $strAccUrl ) ? $strAccUrl : '&nbsp;';
         echo '</TD><TD>';
@@ -261,7 +272,7 @@
         
         echo '<TD ALIGN="center"><TABLE CLASS="altTable"><TR>';
         
-        // Comprobación de accesos para mostrar enlaces de acciones de cuenta
+        // ComprobaciÃ³n de accesos para mostrar enlaces de acciones de cuenta
         if ( $objAccount->checkAccountAccess("view",$intAccUserId, $intAccId, $intAccUserGroupId) ){
             echo '<TD><FORM ACTION="account_view.php" METHOD="post" NAME="frmView_'.$account["intAccountId"].'">';
             echo '<INPUT TYPE="hidden" NAME="accountid" VALUE="'.$account["intAccountId"].'">';
